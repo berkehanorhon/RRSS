@@ -1,4 +1,4 @@
-# vue-test2
+# RRSS-Demo
 
 ## Project setup
 ```
