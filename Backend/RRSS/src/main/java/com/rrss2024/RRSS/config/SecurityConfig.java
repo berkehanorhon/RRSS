@@ -1,4 +1,4 @@
-package com.rrss2024.RRSS.configs;
+package com.rrss2024.RRSS.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

@@ -1,4 +1,4 @@
-package com.rrss2024.RRSS.controllers;
+package com.rrss2024.RRSS.controller;
 
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
