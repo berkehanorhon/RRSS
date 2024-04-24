@@ -1,18 +1,45 @@
 <template>
-  <div class="home">
-    <img alt="Vue logo" src="../assets/logo.png">
-    <HelloWorld msg="Welcome to Your Vue.js App"/>
+  <div class="home-container">
+    <sidebar></sidebar>
+    <product-timeline></product-timeline>
   </div>
 </template>
 
 <script>
-// @ is an alias to /src
-import HelloWorld from '@/components/HelloWorld.vue'
+import ProductTimeline from '../components/ProductTimeline.vue';
+import Sidebar from '../components/SideBar.vue';
 
 export default {
   name: 'HomeView',
   components: {
-    HelloWorld
+    'sidebar': Sidebar,
+    'product-timeline': ProductTimeline
   }
 }
 </script>
+
+<style scoped>
+.home-container {
+  display: flex;
+  width: 100%;
+  height: calc(100vh - 60px); /* Navbar'ın yüksekliği çıkarıldı */
+  margin-top: 60px; /* Navbar altına yerleştir */
+}
+
+.sidebar {
+  flex: 0 0 160px; /* Sidebar için sabit genişlik ayarlanmıştır */
+  background-color: rgb(227, 230, 142);
+  padding: 20px;
+  overflow-y: auto; /* Uzun sidebar içeriği için kaydırma çubuğu */
+}
+
+.product-timeline {
+  flex: 1; /* Kalan tüm alanı kaplar */
+  display: flex;
+  flex-direction: column;
+  align-items: center; /* Çocuk elemanları yatay olarak ortalar */
+  background-color: #ffffff;
+  padding: 20px;
+  overflow-y: auto; /* İçerik taşarsa kaydırmayı etkinleştir */
+}
+</style>
