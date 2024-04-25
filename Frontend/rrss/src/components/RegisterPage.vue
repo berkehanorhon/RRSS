@@ -81,8 +81,8 @@ export default {
                     tokenExp: this.tokenExp
                 });
 
-                if (response.status === 200) {
-                    localStorage.setItem('token', response.data.token);
+                if (response.status === 201) {
+                    window.location.href = '/login';
                 }
             } catch (error) {
                 console.error(error);
