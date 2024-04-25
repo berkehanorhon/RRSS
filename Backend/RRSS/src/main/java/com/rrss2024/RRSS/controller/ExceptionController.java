@@ -7,6 +7,7 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.server.ResponseStatusException;
 
 @ControllerAdvice
 public class ExceptionController {
@@ -30,6 +31,11 @@ public class ExceptionController {
     public ResponseEntity<String> handleDataIntegrityViolationException(DataIntegrityViolationException ex) {
         return ResponseEntity.status(HttpStatus.CONFLICT).body("Error: " + ex.getMessage() + 
         "\n Muhtemelen herhangi bir kullanici ya da kategoriye ait olmayan bir ID ile urun eklemeye calistiniz.");
+    }
+
+    @ExceptionHandler(ResponseStatusException.class)
+    public ResponseEntity<String> handleResponseStatusException(ResponseStatusException ex) {
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Error: " + ex.getMessage());
     }
 
     // TODO Daha fazla exception handle etmek gerekebilir.

@@ -26,25 +26,25 @@ public class ProductService {
 		Optional<Product> response = repository.findById(productId);
 		System.out.println(response);
 		return response.get();
-	}
+		}
 
 	public void addProduct(ProductDTO request) {
 		Product product = new Product();
 		product.setCategoryId(request.getCategoryId());
-        String dateString = request.getPublishDate().toString();
-        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
-        try {
-            java.util.Date utilDate = format.parse(dateString);
-            java.sql.Date sqlDate = new java.sql.Date(utilDate.getTime());
-            LocalDate publishDate = sqlDate.toLocalDate(); // Convert java.sql.Date to java.time.LocalDate
-            product.setPublishDate(publishDate);
-        } catch (ParseException e) {
-            e.printStackTrace();
-        }
-
-        product.setTitle(request.getTitle());
-        product.setUserId(request.getUserId());
-        repository.save(product);
+		String dateString = request.getPublishDate().toString();
+		SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+		try {
+			java.util.Date utilDate = format.parse(dateString);
+			java.sql.Date sqlDate = new java.sql.Date(utilDate.getTime());
+			LocalDate publishDate = sqlDate.toLocalDate(); // Convert java.sql.Date to java.time.LocalDate
+			product.setPublishDate(publishDate);
+		} catch (ParseException e) {
+			e.printStackTrace();
+		}
+		product.setTitle(request.getTitle());
+		product.setUserId(request.getUserId());
+		product.setDescription(request.getDescription());
+		repository.save(product);
 	}
 
 	public void updateProduct(Long productId, ProductDTO request) {
@@ -64,7 +64,6 @@ public class ProductService {
 			} catch (ParseException e) {
 				e.printStackTrace();
 			}
-
 			product.setTitle(request.getTitle());
 			product.setUserId(request.getUserId());
 			repository.save(product);

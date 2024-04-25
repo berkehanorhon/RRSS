@@ -9,14 +9,18 @@ import org.springframework.security.web.SecurityFilterChain;
 
 import static org.springframework.security.config.Customizer.withDefaults;
 
+import com.rrss2024.RRSS.component.CustomAuthenticationEntryPoint;
+
 @Configuration
 @EnableWebSecurity
 public class SecurityConfig {
 
     private final AuthenticationProvider authenticationProvider;
+    private final CustomAuthenticationEntryPoint authenticationEntryPoint;
 
-    public SecurityConfig(AuthenticationProvider authenticationProvider) {
+    public SecurityConfig(AuthenticationProvider authenticationProvider, CustomAuthenticationEntryPoint authenticationEntryPoint) {
         this.authenticationProvider = authenticationProvider;
+        this.authenticationEntryPoint = authenticationEntryPoint;
     }
 
     @Bean
@@ -30,8 +34,8 @@ public class SecurityConfig {
                 })
                 // .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS)) Token bazlı doğrulama (şu an stateful) yapılacağı zaman kullanılacak.
                 .oauth2Login(withDefaults()) // Standart OAuth login.
-                .formLogin(withDefaults())
-                .httpBasic(withDefaults()) // Bunu Frontend gelince kaldırıcaz diye düşünüyorum.
+                .formLogin(withDefaults()) // Bunu Frontend gelince kaldırıcaz diye düşünüyorum.
+                .httpBasic(x -> x.authenticationEntryPoint(authenticationEntryPoint)) 
                 .authenticationProvider(authenticationProvider) // Custom provider.
                 .build();
     }
