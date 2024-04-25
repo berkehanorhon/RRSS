@@ -11,6 +11,8 @@ import com.rrss2024.RRSS.dto.RegisterUserDTO;
 import com.rrss2024.RRSS.model.User;
 import com.rrss2024.RRSS.service.AuthenticationService;
 
+import jakarta.validation.Valid;
+
 @RequestMapping("/auth")
 @RestController
 public class AuthenticationController {
@@ -22,13 +24,13 @@ public class AuthenticationController {
     }
 
     @PostMapping("/signup")
-    public ResponseEntity<User> register(@RequestBody RegisterUserDTO registerUserDto) {
+    public ResponseEntity<User> register(@Valid @RequestBody RegisterUserDTO registerUserDto) {
         User registeredUser = authenticationService.signUp(registerUserDto);
         return ResponseEntity.ok(registeredUser);
     }
 
     @PostMapping("/login")
-    public ResponseEntity<User> authenticate(@RequestBody LoginUserDTO loginUserDto) {
+    public ResponseEntity<User> authenticate(@Valid @RequestBody LoginUserDTO loginUserDto) {
         User loggedInUser = authenticationService.authenticate(loginUserDto);
         return ResponseEntity.ok(loggedInUser);
     }
