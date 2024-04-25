@@ -24,17 +24,18 @@ export default {
   },
   methods: {
     fetchProducts() {
-      axios.get('https://your-api-url/products')
-        .then(response => {
-          this.products = response.data.map(product => ({
-            ...product,
-            image: product.image ? require(`@/assets/${product.image}`) : this.defaultImage
-          }));
-        })
-        .catch(error => {
-          console.error("There was an error fetching the products:", error);
-        });
-    },
+      axios.get('http://127.0.0.1:8080/get-all-products')
+      .then(response => {
+      this.products = response.data.map(product => ({
+        ...product,
+        // Eğer ürünün bir resmi yoksa, varsayılan resmi kullan
+        image: product.image ? require(`@/assets/${product.image}`) : this.defaultImage
+      }));
+    })
+    .catch(error => {
+      console.error("There was an error fetching the products:", error);
+    });
+},
     getImage(product) {
       return product.image || require(this.defaultImage);
     }

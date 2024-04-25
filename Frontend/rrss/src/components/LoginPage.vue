@@ -24,14 +24,15 @@ export default {
     methods: {
         async login() {
             try {
-                const response = await axios.post('http://127.0.0.1:8000/auth/login', {
+                const response = await axios.post('http://127.0.0.1:8080/auth/login', {
                     username: this.username,
                     password: this.password
                 });
 
                 if (response.status === 200) {
+                    console.log(response.data.token);
                     localStorage.setItem('token', response.data.token);
-                    window.location.href = '/';
+
                 }
             } catch (error) {
                 console.error(error);

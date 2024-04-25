@@ -5,16 +5,38 @@
             <label for="username">Username:</label>
             <input type="text" id="username" v-model="username" required>
 
-            <label for="email">Email:</label>
-            <input type="email" id="email" v-model="email" required>
-
             <label for="password">Password:</label>
             <input type="password" id="password" v-model="password" required>
 
-            <label for="passwordConfirm">Confirm Password:</label>
-            <input type="password" id="passwordConfirm" v-model="passwordConfirm" required>
+            <label for="firstName">First Name:</label>
+            <input type="text" id="firstName" v-model="firstName" required>
 
-            <p v-if="passwordMismatch" class="error">Passwords do not match!</p>
+            <label for="lastName">Last Name:</label>
+            <input type="text" id="lastName" v-model="lastName" required>
+
+            <label for="birthDate">Birth Date:</label>
+            <input type="date" id="birthDate" v-model="birthDate" required>
+
+            <label for="registrationDate">Registration Date:</label>
+            <input type="date" id="registrationDate" v-model="registrationDate" required>
+
+            <label for="isAdmin">Is Admin:</label>
+            <input type="checkbox" id="isAdmin" v-model="isAdmin">
+
+            <label for="isModerator">Is Moderator:</label>
+            <input type="checkbox" id="isModerator" v-model="isModerator">
+
+            <label for="isMerchant">Is Merchant:</label>
+            <input type="checkbox" id="isMerchant" v-model="isMerchant">
+
+            <label for="email">Email:</label>
+            <input type="email" id="email" v-model="email" required>
+
+            <label for="reputation">Reputation:</label>
+            <input type="number" id="reputation" v-model="reputation" required>
+
+            <label for="tokenExp">Token Expiration:</label>
+            <input type="number" id="tokenExp" v-model="tokenExp" required>
 
             <button type="submit">Register</button>
         </form>
@@ -28,23 +50,35 @@ export default {
     data() {
         return {
             username: '',
-            email: '',
             password: '',
-            passwordConfirm: ''
+            firstName: '',
+            lastName: '',
+            birthDate: '',
+            registrationDate: '',
+            isAdmin: 0,
+            isModerator: 0,
+            isMerchant: 0,
+            email: '',
+            reputation: 0,
+            tokenExp: 0
         };
-    },
-    computed: {
-        passwordMismatch() {
-            return this.password && this.passwordConfirm && this.password !== this.passwordConfirm;
-        }
     },
     methods: {
         async register() {
             try {
-                const response = await axios.post('http://127.0.0.1:8000/auth/register', {
+                const response = await axios.post('http://127.0.0.1:8080/auth/register', {
                     username: this.username,
+                    password: this.password,
+                    firstName: this.firstName,
+                    lastName: this.lastName,
+                    birthDate: this.birthDate,
+                    registrationDate: this.registrationDate,
+                    isAdmin: this.isAdmin,
+                    isModerator: this.isModerator,
+                    isMerchant: this.isMerchant,
                     email: this.email,
-                    password: this.password
+                    reputation: this.reputation,
+                    tokenExp: this.tokenExp
                 });
 
                 if (response.status === 200) {
