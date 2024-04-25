@@ -30,7 +30,8 @@ public class SecurityConfig {
                 })
                 // .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS)) Token bazlı doğrulama (şu an stateful) yapılacağı zaman kullanılacak.
                 .oauth2Login(withDefaults()) // Standart OAuth login.
-                .formLogin(withDefaults()) // Bunu Frontend gelince kaldırıcaz diye düşünüyorum.
+                .formLogin(withDefaults())
+                .httpBasic(withDefaults()) // Bunu Frontend gelince kaldırıcaz diye düşünüyorum.
                 .authenticationProvider(authenticationProvider) // Custom provider.
                 .build();
     }
