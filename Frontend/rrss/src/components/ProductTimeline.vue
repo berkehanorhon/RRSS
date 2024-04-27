@@ -74,7 +74,7 @@ export default {
   },
   methods: {
     fetchProducts() {
-      axios.get('http://127.0.0.1:8080/get-all-products')
+      axios.get('http://127.0.0.1:8080/get-all-products?categoryId=-1')
       .then(response => {
         this.products = response.data.map(product => ({
           ...product,
@@ -112,7 +112,7 @@ export default {
   display: flex;
   justify-content: center;
   align-items: center;
-  height: 80vh; /* Reduced from 100vh */
+  height: auto; /* Reduced from 100vh */
   background-color: #ffffcc; /* Light yellow */
   border: 5px solid black;
   padding: 20px;

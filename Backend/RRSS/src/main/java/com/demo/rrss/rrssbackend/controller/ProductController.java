@@ -32,8 +32,8 @@ public class ProductController {
 
 	@GetMapping("/get-all-products")
 	@ResponseStatus(HttpStatus.OK)
-	public List<Product> getAllProducts() {
-		List<Product> products = service.getAllProducts();
+	public List<Product> getAllProducts(@RequestParam Long categoryId) {
+		List<Product> products = service.getAllProducts(categoryId);
 		return products.stream().limit(50).collect(Collectors.toList());
 	}
 

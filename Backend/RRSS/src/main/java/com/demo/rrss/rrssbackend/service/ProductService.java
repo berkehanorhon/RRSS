@@ -56,7 +56,12 @@ public class ProductService {
 
 	}
 
-	public List<Product> getAllProducts() {
-		return (List<Product>) repository.findAll();
+	public List<Product> getAllProducts(Long categoryId) {
+		if (categoryId == -1)
+			return (List<Product>) repository.findAll();
+		else {
+			List<Product> products = repository.findProductsByCategoryId(categoryId);
+			return products;
+		}
 	}
 }
