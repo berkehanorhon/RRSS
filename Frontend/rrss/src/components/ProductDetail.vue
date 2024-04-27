@@ -1,35 +1,62 @@
 <template>
-    <div class="container">
-      <div v-if="error">
-        <p>{{ error }}</p>
-      </div>
-      <div v-else-if="product" class="product-detail">
-        <h1>{{ product.title }}</h1>
-        <img :src="getImage(product)" alt="Product Image" />
-        <p>{{ product.description }}</p>
-        <p>Category ID: {{ product.categoryId }}</p>
-        <p>Product ID: {{ product.productId }}</p>
-        <p>Publish Date: {{ product.publishDate }}</p>
-        <p>User ID: {{ product.userId }}</p>
-        <div v-if="!error">
-          <h3>Add a Review</h3>
-          <form @submit.prevent="submitReview">
-            <textarea v-model="reviewData" placeholder="Write your review here..."></textarea>
-            <div class="button-group">
-              <button type="submit" class="submit-button">Submit Review</button>
-              <button @click="previousPage" class="nav-button" :disabled="currentPage === 1">Previous</button>
-              <button @click="nextPage" class="nav-button" :disabled="currentPage === totalPages">Next</button>
-            </div>
-          </form>
-        </div>
-      </div>
-      <p v-if="counter && error">Redirecting in {{ counter }} seconds...</p>
+  <div class="container">
+    <div v-if="error">
+    <p>{{ error }}</p>
     </div>
+    <div v-else-if="product" class="product-detail">
+    <h1>{{ product.title }}</h1>
+    <img :src="getImage(product)" alt="Product Image" />
+    <p>{{ product.description }}</p>
+    <p>Category ID: {{ product.categoryId }}</p>
+    <p>Product ID: {{ product.productId }}</p>
+    <p>Publish Date: {{ product.publishDate }}</p>
+    <p>User ID: {{ product.userId }}</p>
+    <div v-if="!error">
+      <ReviewForm :productId="product.productId" :userId="product.userId" @review-submitted="fetchProduct" />
+    </div>
+    </div>
+    <p v-if="counter && error">Redirecting in {{ counter }} seconds...</p>
+  </div>
   </template>
   
   <script>
-  // Your script remains the same
-  </script>
+  import axios from 'axios';
+  import ReviewForm from './ReviewForm.vue';
+
+  export default {
+  name: 'ProductDetail',
+  components: {
+    ReviewForm,
+  },
+  data() {
+    return {
+      product: null,
+      error: null,
+      reviewData: '',
+      productId: this.$route.params.productId,
+      defaultImage: require('@/assets/logo.png'),
+    };
+  },
+  methods: {
+    fetchProduct() {
+      axios.get(`http://localhost:8080/get-product?productId=${this.productId}`)
+        .then(response => {
+          this.product = response.data;
+        })
+        .catch(error => {
+          this.error = 'An error occurred while fetching the product.';
+          console.error(error);
+        });
+    },
+    getImage(product) {
+      return product.image || this.defaultImage;
+    },
+  },
+  mounted() {
+    this.fetchProduct();
+  },
+};
+</script>
   
   <style scoped>
   .container {
@@ -58,7 +85,7 @@
   
   .button-group {
     display: flex;
-    justify-content: space-between;
+    justify-content: center; /* Changed from space-between to center */
     margin-top: 20px;
   }
   

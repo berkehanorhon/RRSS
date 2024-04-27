@@ -39,7 +39,7 @@ public class ReviewController {
 	}
 
 	@PostMapping(value = "/add-review", consumes = MediaType.APPLICATION_JSON_VALUE)
-	@ResponseStatus(HttpStatus.CREATED)
+	@ResponseStatus(HttpStatus.OK)
 	public void addReview(@RequestBody ReviewRequest review) {
 		service.addReview(review);
 	}

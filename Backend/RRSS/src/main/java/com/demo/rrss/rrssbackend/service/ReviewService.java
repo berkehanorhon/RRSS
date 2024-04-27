@@ -1,7 +1,5 @@
 package com.demo.rrss.rrssbackend.service;
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.List;
 import java.util.Optional;
 
@@ -29,17 +27,7 @@ public class ReviewService {
 		review.setProductId(request.getProductId());
 		review.setUserId(request.getUserId());
 		review.setReviewData(request.getReviewData());
-
-		String dateString = request.getPublishDate();
-		SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
-		try {
-			java.util.Date utilDate = format.parse(dateString);
-			java.sql.Date sqlDate = new java.sql.Date(utilDate.getTime());
-			review.setPublishDate(sqlDate);
-		} catch (ParseException e) {
-			e.printStackTrace();
-		}
-
+		review.setPublishDate(new java.sql.Timestamp(new java.util.Date().getTime()));
 		repository.save(review);
 	}
 
@@ -50,16 +38,7 @@ public class ReviewService {
 			review.setProductId(request.getProductId());
 			review.setUserId(request.getUserId());
 			review.setReviewData(request.getReviewData());
-
-			String dateString = request.getPublishDate();
-			SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
-			try {
-				java.util.Date utilDate = format.parse(dateString);
-				java.sql.Date sqlDate = new java.sql.Date(utilDate.getTime());
-				review.setPublishDate(sqlDate);
-			} catch (ParseException e) {
-				e.printStackTrace();
-			}
+			review.setPublishDate(new java.sql.Timestamp(new java.util.Date().getTime()));
 
 			repository.save(review);
 		} else {

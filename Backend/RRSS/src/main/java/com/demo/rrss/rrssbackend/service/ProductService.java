@@ -1,7 +1,5 @@
 package com.demo.rrss.rrssbackend.service;
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.List;
 import java.util.Optional;
 
@@ -28,16 +26,7 @@ public class ProductService {
 		Product product = new Product();
 		product.setCategoryId(request.getCategoryId());
 		product.setDescription(request.getDescription());
-
-		String dateString = request.getPublishDate();
-		SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
-		try {
-			java.util.Date utilDate = format.parse(dateString);
-			java.sql.Date sqlDate = new java.sql.Date(utilDate.getTime());
-			product.setPublishDate(sqlDate);
-		} catch (ParseException e) {
-			e.printStackTrace();
-		}
+		product.setPublishDate(new java.sql.Timestamp(new java.util.Date().getTime()));
 
 		product.setTitle(request.getTitle());
 		product.setUserId(request.getUserId());
@@ -50,18 +39,7 @@ public class ProductService {
 			Product product = existingProduct.get();
 			product.setCategoryId(request.getCategoryId());
 			product.setDescription(request.getDescription());
-
-			String dateString = request.getPublishDate();
-			SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
-			try {
-				java.util.Date utilDate = format.parse(dateString);
-				java.sql.Date sqlDate = new java.sql.Date(utilDate.getTime());
-				product.setPublishDate(sqlDate);
-			} catch (ParseException e) {
-				e.printStackTrace();
-				// Handle the exception appropriately
-			}
-
+			product.setPublishDate(new java.sql.Timestamp(new java.util.Date().getTime()));
 			product.setTitle(request.getTitle());
 			product.setUserId(request.getUserId());
 			repository.save(product);

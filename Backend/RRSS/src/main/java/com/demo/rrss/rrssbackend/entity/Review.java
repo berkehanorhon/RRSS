@@ -1,7 +1,5 @@
 package com.demo.rrss.rrssbackend.entity;
 
-import java.util.Date;
-
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -29,7 +27,7 @@ public class Review {
 	private Long userId;
 
 	@Column(name = "publish_date")
-	private Date publishDate;
+	private java.sql.Timestamp publishDate;
 
 	@Column(name = "review_data")
 	private String reviewData;

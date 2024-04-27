@@ -15,8 +15,6 @@ public class ProductRequest {
 
 	private Long productId;
 
-	private String publishDate;
-
 	private String title;
 
 	private Long userId;
