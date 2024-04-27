@@ -1,13 +1,13 @@
-package com.rrss2024.RRSS;
+package com.demo.rrss.rrssbackend;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-//Abc.
+
 @SpringBootApplication
-public class RrssApplication {
+public class RrssBackendApplication {
 
 	public static void main(String[] args) {
-		SpringApplication.run(RrssApplication.class, args);
+		SpringApplication.run(RrssBackendApplication.class, args);
 	}
 
 }

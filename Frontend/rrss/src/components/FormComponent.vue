@@ -23,7 +23,6 @@ export default {
     },
     checkboxlabelStyle() {
       return {
-        marginBottom: '5px',
         marginLeft: '5px'
       };
     },
