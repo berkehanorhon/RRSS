@@ -58,7 +58,7 @@ public class ProductService {
 
 	public List<Product> getAllProducts(Long categoryId) {
 		if (categoryId == -1)
-			return (List<Product>) repository.findAll();
+			return repository.findAllMax50();
 		else {
 			List<Product> products = repository.findProductsByCategoryId(categoryId);
 			return products;

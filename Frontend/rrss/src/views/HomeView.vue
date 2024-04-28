@@ -23,13 +23,14 @@ export default {
   display: flex;
   width: 100%;
   height: calc(100vh - 60px); /* Navbar'ın yüksekliği çıkarıldı */
+  border: 2px solid rgb(105, 102, 102);
 }
 
 .sidebar {
   flex: 0 0 160px;
-  background-color: rgb(227, 230, 142);
   padding: 20px;
   overflow-y: auto;
+  margin-right: 2px; /* Sağdan 20px boşluk ekler */
 }
 
 .product-timeline {

@@ -114,7 +114,6 @@ export default {
   align-items: center;
   height: auto; /* Reduced from 100vh */
   background-color: #ffffcc; /* Light yellow */
-  border: 5px solid black;
   padding: 20px;
 }
 

@@ -1,6 +1,6 @@
 <template>
   <div class="sidebar">
-    <h3>Kategoriler</h3>
+    <h3>Categories</h3>
     <ul class="category-list">
       <li v-for="category in categories" :key="category.categoryId">
         <input type="checkbox" :id="category.categoryId" :value="category.categoryId" v-model="checkedCategories">
@@ -32,7 +32,6 @@ export default {
 <style scoped>
 .sidebar {
   width: 250px;
-  background-color: #540e6f;
   padding: 20px;
 }
 

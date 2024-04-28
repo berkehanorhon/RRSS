@@ -1,7 +1,6 @@
 package com.demo.rrss.rrssbackend.controller;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -34,7 +33,7 @@ public class ProductController {
 	@ResponseStatus(HttpStatus.OK)
 	public List<Product> getAllProducts(@RequestParam Long categoryId) {
 		List<Product> products = service.getAllProducts(categoryId);
-		return products.stream().limit(50).collect(Collectors.toList());
+		return products;
 	}
 
 	@PostMapping(value = "/add-product", consumes = MediaType.APPLICATION_JSON_VALUE)

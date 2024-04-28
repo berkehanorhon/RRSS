@@ -64,7 +64,6 @@
     justify-content: center;
     align-items: center;
     height: 100vh;
-    background-color: #ffffcc; /* Light yellow */
     border: 5px solid black;
     padding: 20px;
   }

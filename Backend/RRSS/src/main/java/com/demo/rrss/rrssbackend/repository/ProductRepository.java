@@ -13,4 +13,7 @@ import com.demo.rrss.rrssbackend.entity.Product;
 public interface ProductRepository extends CrudRepository<Product, Long> {
 	@Query(nativeQuery = true, value = "SELECT * FROM Product p WHERE p.category_id = :categoryId ORDER BY p.publish_date DESC LIMIT 50")
 	List<Product> findProductsByCategoryId(@Param("categoryId") Long categoryId);
+
+	@Query(nativeQuery = true, value = "SELECT * FROM Product p ORDER BY p.publish_date DESC LIMIT 50")
+	List<Product> findAllMax50();
 }
