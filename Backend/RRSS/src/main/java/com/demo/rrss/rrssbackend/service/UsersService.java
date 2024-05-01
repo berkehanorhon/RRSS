@@ -30,7 +30,9 @@ public class UsersService {
 	public void addUser(UsersRequest request) {
 		try {
 			Users existingUser = getUserByUsername(request.getUsername());
-			if(existingUser == null) throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Username already exists");
+			if(existingUser == null) {
+				throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Username already exists");
+			}
 		} catch (ResponseStatusException e) {
 			if (!e.getReason().equals("User not found")) {
 				throw e;
