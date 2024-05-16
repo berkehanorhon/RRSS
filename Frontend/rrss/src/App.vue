@@ -24,7 +24,8 @@ export default {
       if (this.isLoggedIn) {
         this.$router.push('/');
       } else {
-        this.$router.push('/login');
+        //this.$router.push('/login');
+        this.$router.push('/merchantpanel');
       }
     },
     logout(event) {
@@ -46,7 +47,7 @@ export default {
 }
 
 nav {
-  padding: 30px;
+  padding: 10px;
   border-bottom: 1px solid black;
   display: flex;
   justify-content: space-between;
