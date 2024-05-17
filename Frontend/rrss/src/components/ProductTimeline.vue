@@ -12,9 +12,11 @@
       </div>
     </div>
     <div class="pagination">
-      <button @click="previousPage" class="nav-button" :disabled="currentPage === 1">Previous</button>
-      <span>Page {{ currentPage }} of {{ totalPages }}</span>
-      <button @click="nextPage" class="nav-button" :disabled="currentPage === totalPages">Next</button>
+      <button class="page-button" @click="previousPage" :disabled="currentPage === 1">Previous</button>
+      <span class="page-text">{{ currentPage }} / {{ totalPages }}</span>
+      <button class="page-button" @click="nextPage" :disabled="currentPage === totalPages">Next</button>
+      
+
     </div>
   </div>
 </template>
@@ -29,18 +31,30 @@ export default {
       products: [],
       defaultImage: require('@/assets/logo.png'),
       currentPage: 1,
-      itemsPerPage: 9
+      itemsPerPage: 18,
+      windowWidth: 0
     };
   },
   computed: {
+    chunkSize() {
+      if (this.windowWidth > 1600) {
+        return 6;
+      } else if (this.windowWidth > 800) {
+        return 4;
+      }
+        else if (this.windowWidth > 600) {
+        return 2;
+      } else {
+        return 1;
+      }
+    },
     paginatedData() {
       const start = (this.currentPage - 1) * this.itemsPerPage;
       const end = start + this.itemsPerPage;
       return this.products.slice(start, end);
     },
     chunkedData() {
-      const chunkSize = 3;
-      return Array(Math.ceil(this.paginatedData.length / chunkSize)).fill().map((_, index) => index * chunkSize).map(begin => this.paginatedData.slice(begin, begin + chunkSize));
+      return Array(Math.ceil(this.paginatedData.length / this.chunkSize)).fill().map((_, index) => index * this.chunkSize).map(begin => this.paginatedData.slice(begin, begin + this.chunkSize));
     },
     totalPages() {
       return Math.ceil(this.products.length / this.itemsPerPage);
@@ -48,10 +62,19 @@ export default {
   },
   mounted() {
     this.fetchProducts();
+    this.windowWidth = window.innerWidth;
+    window.addEventListener('resize', () => {
+      this.windowWidth = window.innerWidth;
+    });
+  },
+  beforeUnmount() {
+    window.removeEventListener('resize', () => {
+      this.windowWidth = window.innerWidth;
+    });
   },
   methods: {
     fetchProducts() {
-      axios.get('http://127.0.0.1:8080/get-all-products')
+      axios.get('http://127.0.0.1:8080/get-all-products?categoryId=-1')
       .then(response => {
         this.products = response.data.map(product => ({
           ...product,
@@ -89,19 +112,21 @@ export default {
   display: flex;
   justify-content: center;
   align-items: center;
-  height: 80vh; /* Reduced from 100vh */
+  height: auto; /* Reduced from 100vh */
   background-color: #ffffcc; /* Light yellow */
-  border: 5px solid black;
   padding: 20px;
 }
 
 .product-container {
-  max-width: 600px; /* Reduced from 800px */
+  width: 92%;
+  max-width: 1500px;
   margin: auto;
   padding: 20px;
   border: 1px solid #ccc;
   border-radius: 10px;
   background-color: #fff;
+  height: auto; /* Changed from 1000px */
+  overflow: auto;
 }
 
 .product-row {
@@ -111,39 +136,58 @@ export default {
 }
 
 .product {
-  flex-basis: calc(30% - 20px); /* Reduced from 33% */
-  box-sizing: border-box; /* Added this line */
+  flex: 0 0 200px; /* Sabit genişlik */
+  box-sizing: border-box;
   background-color: #fff;
   padding: 20px;
-  margin-bottom: 20px;
+  margin: 10px; /* Added margin */
   border: 1px solid #ccc;
   border-radius: 10px;
 }
 
 .product-image {
-  width: 100%; /* Added this line */
-  height: 80px; /* Added this line */
+  width: 173.5; /* Added this line */
+  max-height: 173.5px; /* Added this line */
   object-fit: cover; /* Added this line */
 }
 
 .pagination {
-  display: flex;
+  flex-direction: column;
   justify-content: space-between;
   align-items: center;
   margin-top: 20px;
 }
 
-.nav-button {
+.page-text {
+  margin-left: 10px;
+  margin-right: 10px;
+}
+
+.page-button {
   padding: 10px 20px;
+  margin-top: 10px; /* Add margin top to create space */
   border: none;
   border-radius: 5px;
   background-color: #007BFF;
   color: #fff;
   cursor: pointer;
 }
-
-.nav-button:disabled {
-  background-color: #ccc;
-  cursor: not-allowed;
+/* Not necessary at the moment, could be necessary in the future */
+/* @media (max-width: 1600px) {
+  .product {
+    flex: 0 0 200px;
+  }
 }
+
+@media (max-width: 600px) {
+  .product {
+    flex: 0 0 200px;
+  }
+}
+
+@media (max-width: 300px) {
+  .product {
+    flex: 0 0 200px;
+  }
+} */
 </style>

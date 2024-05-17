@@ -46,7 +46,7 @@ export default {
 }
 
 nav {
-  padding: 30px;
+  padding: 10px;
   border-bottom: 1px solid black;
   display: flex;
   justify-content: space-between;
