@@ -20,6 +20,11 @@ public class JwtUtil {
     public String extractUsername(String token) {
         return extractClaim(token, Claims::getSubject);
     }
+    public Long extractUserId(String token) {
+        Claims claims = extractAllClaims(token);
+        Integer userId = claims.get("userId", Integer.class);
+        return userId.longValue();
+    }
 
     public Date extractExpiration(String token) {
         return extractClaim(token, Claims::getExpiration);
@@ -40,6 +45,7 @@ public class JwtUtil {
 
     public String generateToken(Users userDetails) {
         Map<String, Object> claims = new HashMap<>();
+        claims.put("userId", userDetails.getUserId()); // Add user ID to the claims
         return createToken(claims, userDetails.getUsername());
     }
 
@@ -53,4 +59,5 @@ public class JwtUtil {
         final String username = extractUsername(token);
         return (username.equals(userDetails.getUsername()) && !isTokenExpired(token));
     }
+
 }

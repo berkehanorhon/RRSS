@@ -22,7 +22,7 @@ public class ProductService {
 				.orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Product not found"));
 	}
 
-	public void addProduct(ProductRequest request) {
+	public void addProduct(ProductRequest request) { // TODO yetki kontrolü eklenecek
 		Product product = new Product();
 		product.setCategoryId(request.getCategoryId());
 		product.setDescription(request.getDescription());
@@ -33,7 +33,7 @@ public class ProductService {
 		repository.save(product);
 	}
 
-	public void updateProduct(Long productId, ProductRequest request) {
+	public void updateProduct(Long productId, ProductRequest request) { // TODO yetki kontrolü eklenecek
 		Optional<Product> existingProduct = repository.findById(productId);
 		if (existingProduct.isPresent()) {
 			Product product = existingProduct.get();
@@ -48,7 +48,7 @@ public class ProductService {
 		}
 	}
 
-	public void deleteProduct(Long productId) {
+	public void deleteProduct(Long productId) { // TODO yetki kontrolü eklenecek
 		if (repository.existsById(productId))
 			repository.deleteById(productId);
 		else
@@ -56,7 +56,7 @@ public class ProductService {
 
 	}
 
-	public List<Product> getAllProducts(Long categoryId) {
+	public List<Product> getAllProducts(Long categoryId) { // TODO yetki kontrolü eklenecek
 		if (categoryId == -1)
 			return repository.findAllMax50();
 		else {

@@ -22,18 +22,18 @@ public class CategoryService {
 		return response.get();
 	}
 
-	public Category addCategory(Category category) {
+	public Category addCategory(Category category) { // TODO yetki kontrolü eklenecek
 		return repository.save(category);
 	}
 
-	public Category updateCategory(Long categoryId, Category categoryDetails) {
+	public Category updateCategory(Long categoryId, Category categoryDetails) { // TODO yetki kontrolü eklenecek
 		Category category = getCategory(categoryId);
 		category.setCategoryName(categoryDetails.getCategoryName());
 		category.setDescription(categoryDetails.getDescription());
 		return repository.save(category);
 	}
 
-	public void deleteCategory(Long categoryId) {
+	public void deleteCategory(Long categoryId) { // TODO yetki kontrolü eklenecek
 		if (repository.existsById(categoryId)) {
 			repository.deleteById(categoryId);
 		} else {

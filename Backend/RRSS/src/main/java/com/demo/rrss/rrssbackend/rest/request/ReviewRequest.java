@@ -10,7 +10,6 @@ import lombok.Setter;
 public class ReviewRequest {
 	private Long reviewId;
 	private Long productId;
-	private Long userId;
 	private String reviewData;
 
 }

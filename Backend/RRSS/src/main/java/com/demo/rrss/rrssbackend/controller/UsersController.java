@@ -38,7 +38,7 @@ public class UsersController {
 
 		if (existingUser != null && existingUser.getPassword().equals(request.getPassword())) {
 			Map<String, String> token = new HashMap<>();
-			token.put("token", (String)jwtUtil.generateToken(existingUser));
+			token.put("token", jwtUtil.generateToken(existingUser));
 			return new ResponseEntity<>(token, HttpStatus.OK);
 		} else {
 			throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Incorrect username or password");

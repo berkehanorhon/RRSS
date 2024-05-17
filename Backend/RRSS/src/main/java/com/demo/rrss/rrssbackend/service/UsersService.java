@@ -66,7 +66,7 @@ public class UsersService {
 		repository.save(user);
 	}
 
-	public Users updateUser(Long userId, Users userDetails) {
+	public Users updateUser(Long userId, Users userDetails) {  // TODO yetki kontrolü eklenecek
 		Users user = getUser(userId);
 		user.setUsername(userDetails.getUsername());
 		user.setPassword(userDetails.getPassword());
@@ -83,7 +83,7 @@ public class UsersService {
 		return repository.save(user);
 	}
 
-	public void deleteUser(Long userId) {
+	public void deleteUser(Long userId) { // TODO yetki kontrolü eklenecek
 		if (repository.existsById(userId)) {
 			repository.deleteById(userId);
 		} else {
