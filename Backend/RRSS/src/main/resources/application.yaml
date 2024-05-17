@@ -1,0 +1,11 @@
+spring:
+  datasource:
+    url: jdbc:postgresql://ep-odd-leaf-a2wkvvh7-pooler.eu-central-1.aws.neon.tech:5432/RRSS
+    username: RRSS_owner
+    password: gz0Lb6BKqQAV
+  jpa:
+    hibernate:
+      ddl-auto: update
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
