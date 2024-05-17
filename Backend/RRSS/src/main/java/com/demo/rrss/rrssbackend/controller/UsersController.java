@@ -14,11 +14,15 @@ import org.springframework.web.server.ResponseStatusException;
 
 import com.demo.rrss.rrssbackend.entity.Users;
 import com.demo.rrss.rrssbackend.rest.request.UsersRequest;
+import com.demo.rrss.rrssbackend.service.JwtUtil;
 import com.demo.rrss.rrssbackend.service.UsersService;
 
 @RestController
 @RequestMapping("/auth")
 public class UsersController {
+    @Autowired
+    private JwtUtil jwtUtil;
+
 	@Autowired
 	private UsersService usersService;
 
@@ -29,12 +33,12 @@ public class UsersController {
 	}
 
 	@PostMapping("/login")
-	public ResponseEntity<Map<String, Long>> loginUser(@RequestBody UsersRequest request) {
+	public ResponseEntity<Map<String, String>> loginUser(@RequestBody UsersRequest request) {
 		Users existingUser = usersService.getUserByUsername(request.getUsername());
 
 		if (existingUser != null && existingUser.getPassword().equals(request.getPassword())) {
-			Map<String, Long> token = new HashMap<>();
-			token.put("token", existingUser.getUserId());
+			Map<String, String> token = new HashMap<>();
+			token.put("token", (String)jwtUtil.generateToken(existingUser));
 			return new ResponseEntity<>(token, HttpStatus.OK);
 		} else {
 			throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Incorrect username or password");
