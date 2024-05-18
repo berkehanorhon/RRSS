@@ -3,6 +3,7 @@ package com.demo.rrss.rrssbackend.service;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 
+import org.mindrot.jbcrypt.BCrypt;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
@@ -39,7 +40,7 @@ public class UsersService {
 
 		Users user = new Users();
 		user.setUsername(request.getUsername());
-		user.setPassword(request.getPassword());
+		user.setPassword(BCrypt.hashpw(request.getPassword(), BCrypt.gensalt()));
 		user.setFirstName(request.getFirstName());
 		user.setLastName(request.getLastName());
 		user.setIsAdmin(false);
