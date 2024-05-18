@@ -5,12 +5,14 @@ import java.time.LocalDateTime;
 import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
+import jakarta.annotation.Nullable;
 
 @Getter
 @Setter
 @Data
 public class MessageRequest {
     
+    @Nullable
     private Long messageId;
 
     private Long senderId;
@@ -19,5 +21,6 @@ public class MessageRequest {
 
     private String message;
 
-    private LocalDateTime sendTime;
+    @Nullable
+    private LocalDateTime sendTime = LocalDateTime.now();
 }
