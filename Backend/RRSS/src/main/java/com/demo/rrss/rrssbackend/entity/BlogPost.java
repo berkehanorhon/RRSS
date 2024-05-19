@@ -9,28 +9,25 @@ import java.sql.Timestamp;
 @Setter
 @Getter
 @Entity
-public class Product {
+public class BlogPost {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "product_id")
-    private Long productId;
+    @Column(name = "blog_post_id")
+    private Long blogPostId;
 
-    @Column(name = "user_id", nullable = false)
+    @Column(name = "user_id")
     private Long userId;
 
-    @Column(name = "category_id", nullable = false)
-    private Long categoryId;
+    @Column(name = "post_name", nullable = false)
+    private String postName;
+
+    @Column(name = "post_data", nullable = false)
+    private String postData;
 
     @CreationTimestamp
     @Column(name = "publish_date", updatable = false)
     private Timestamp publishDate;
-
-    @Column(name = "title", nullable = false)
-    private String title;
-
-    @Column(name = "description")
-    private String description;
 
     @Column(name = "image_path")
     private String imagePath;
@@ -38,8 +35,4 @@ public class Product {
     @ManyToOne
     @JoinColumn(name = "user_id", referencedColumnName = "user_id", insertable = false, updatable = false)
     private Users user;
-
-    @ManyToOne
-    @JoinColumn(name = "category_id", referencedColumnName = "category_id", insertable = false, updatable = false)
-    private Category category;
 }

@@ -1,37 +1,39 @@
 package com.demo.rrss.rrssbackend.entity;
 
-import java.time.LocalDateTime;
-
-import org.hibernate.annotations.CreationTimestamp;
-
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
+import org.hibernate.annotations.CreationTimestamp;
+import java.sql.Timestamp;
 
-@Entity
-@Getter
 @Setter
-
+@Getter
+@Entity
 public class Message {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "message_id")
     private Long messageId;
 
-    @Column(name = "sender_id")
+    @Column(name = "sender_id", nullable = false)
     private Long senderId;
 
-    @Column(name = "receiver_id")
+    @Column(name = "receiver_id", nullable = false)
     private Long receiverId;
 
-    @Column(name = "message")
-    private String message;
-    
-    @Column(name = "sent_date")
     @CreationTimestamp
-    private LocalDateTime sendTime;
+    @Column(name = "sent_date", updatable = false)
+    private Timestamp sentDate;
+
+    @Column(name = "message", nullable = false)
+    private String message;
+
+    @ManyToOne
+    @JoinColumn(name = "sender_id", referencedColumnName = "user_id", insertable = false, updatable = false)
+    private Users sender;
+
+    @ManyToOne
+    @JoinColumn(name = "receiver_id", referencedColumnName = "user_id", insertable = false, updatable = false)
+    private Users receiver;
 }

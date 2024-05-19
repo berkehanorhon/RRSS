@@ -60,14 +60,14 @@ public void saveMessage(MessageRequest messageDTO, Model model) {
                     MessageBoxRequest messageBox = new MessageBoxRequest();
                     messageBox.setReceiverUserId(messages.getKey());
                     messageBox.setMessages(messages.getValue().stream()
-                            .sorted(Comparator.comparing(Message::getSendTime))
+                            .sorted(Comparator.comparing(Message::getSentDate))
                             .map(message -> {
                                 Message messageDTO = new Message();
                                 messageDTO.setMessageId(message.getMessageId());
                                 messageDTO.setSenderId(message.getSenderId());
                                 messageDTO.setReceiverId(message.getReceiverId());
                                 messageDTO.setMessage(message.getMessage());
-                                messageDTO.setSendTime(message.getSendTime());
+                                messageDTO.setSentDate(message.getSentDate());
                                 return messageDTO;
                             })
                             .collect(Collectors.toList()));

@@ -9,31 +9,28 @@ import java.sql.Timestamp;
 @Setter
 @Getter
 @Entity
-public class Review {
+public class Bookmark {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "review_id")
-    private Long reviewId;
+    @Column(name = "bookmark_id")
+    private Long bookmarkId;
 
     @Column(name = "product_id", nullable = false)
     private Long productId;
 
-    @Column(name = "user_id", nullable = false)
-    private Long userId;
+    @Column(name = "bookmark_list_id", nullable = false)
+    private Long bookmarkListId;
 
     @CreationTimestamp
-    @Column(name = "publish_date", updatable = false)
-    private Timestamp publishDate;
-
-    @Column(name = "review_data", nullable = false)
-    private String reviewData;
+    @Column(name = "creation_date", updatable = false)
+    private Timestamp creationDate;
 
     @ManyToOne
     @JoinColumn(name = "product_id", referencedColumnName = "product_id", insertable = false, updatable = false)
     private Product product;
 
     @ManyToOne
-    @JoinColumn(name = "user_id", referencedColumnName = "user_id", insertable = false, updatable = false)
-    private Users user;
+    @JoinColumn(name = "bookmark_list_id", referencedColumnName = "bookmark_list_id", insertable = false, updatable = false)
+    private BookmarkList bookmarkList;
 }
