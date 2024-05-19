@@ -35,7 +35,7 @@ public class Users {
 	@Column(name = "birthdate", nullable = false)
 	private Date birthDate;
 
-	@Column(name = "registration_date", nullable = false)
+	@Column(name = "registration_date", nullable = false) // Timestamplerde @CreationTimestamp eklenecek
 	private java.sql.Timestamp registrationDate;
 
 	@Column(name = "is_admin", nullable = false)

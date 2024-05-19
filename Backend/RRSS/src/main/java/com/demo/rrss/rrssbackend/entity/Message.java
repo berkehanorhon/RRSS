@@ -2,6 +2,8 @@ package com.demo.rrss.rrssbackend.entity;
 
 import java.time.LocalDateTime;
 
+import org.hibernate.annotations.CreationTimestamp;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -30,5 +32,6 @@ public class Message {
     private String message;
     
     @Column(name = "sent_date")
+    @CreationTimestamp
     private LocalDateTime sendTime;
 }
