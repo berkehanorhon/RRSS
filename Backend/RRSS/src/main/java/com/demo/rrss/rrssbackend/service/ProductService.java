@@ -65,4 +65,8 @@ public class ProductService {
 			return products;
 		}
 	}
+
+    public List<Product> getUsersAllProducts(Long userId) {
+		return repository.findByUserId(userId);
+	}
 }

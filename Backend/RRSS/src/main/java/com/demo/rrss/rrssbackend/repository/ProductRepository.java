@@ -16,4 +16,6 @@ public interface ProductRepository extends CrudRepository<Product, Long> {
 
 	@Query(nativeQuery = true, value = "SELECT * FROM Product p ORDER BY p.publish_date DESC LIMIT 50")
 	List<Product> findAllMax50();
+
+	List<Product> findByUserId(Long userId);
 }

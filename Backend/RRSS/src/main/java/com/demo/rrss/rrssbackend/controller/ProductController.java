@@ -43,6 +43,13 @@ public class ProductController {
 		return service.getProduct(productId);
 	}
 
+	@GetMapping("/get-users-products")
+	@ResponseStatus(HttpStatus.OK)
+	public List<Product> getUsersAllProducts(@RequestParam Long userId) {
+		List<Product> products = service.getUsersAllProducts(userId);
+		return products;
+	}
+
 	@GetMapping("/get-all-products")
 	@ResponseStatus(HttpStatus.OK)
 	public List<Product> getAllProducts(@RequestParam Long categoryId) {

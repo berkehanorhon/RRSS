@@ -52,6 +52,13 @@ public class ReviewController {
 		return reviews.stream().limit(10).collect(Collectors.toList());
 	}
 
+	@GetMapping("/get-users-reviews")
+	@ResponseStatus(HttpStatus.OK)
+	public List<Review> getUsersAllReviews(@RequestParam Long userId) {
+		List<Review> reviews = service.getUsersAllReviews(userId);
+		return reviews;
+	}
+
 	@PostMapping(value = "/add-review", consumes = MediaType.APPLICATION_JSON_VALUE)
 	@ResponseStatus(HttpStatus.OK)
 	public void addReview(@RequestBody ReviewRequest review, Model model) {
