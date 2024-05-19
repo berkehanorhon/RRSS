@@ -9,6 +9,7 @@ import java.sql.Timestamp;
 @Setter
 @Getter
 @Entity
+@Table(name = "Message")
 public class Message {
 
     @Id
@@ -29,11 +30,4 @@ public class Message {
     @Column(name = "message", nullable = false)
     private String message;
 
-    @ManyToOne
-    @JoinColumn(name = "sender_id", referencedColumnName = "user_id", insertable = false, updatable = false)
-    private Users sender;
-
-    @ManyToOne
-    @JoinColumn(name = "receiver_id", referencedColumnName = "user_id", insertable = false, updatable = false)
-    private Users receiver;
 }

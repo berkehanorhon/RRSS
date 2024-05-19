@@ -12,6 +12,7 @@ import java.sql.Timestamp;
 @Setter
 @Getter
 @Entity
+@Table(name = "BlogPostLike")
 @IdClass(BlogPostLikeId.class)
 public class BlogPostLike {
 
@@ -27,11 +28,5 @@ public class BlogPostLike {
     @Column(name = "like_date", updatable = false)
     private Timestamp likeDate;
 
-    @ManyToOne
-    @JoinColumn(name = "user_id", referencedColumnName = "user_id", insertable = false, updatable = false)
-    private Users user;
 
-    @ManyToOne
-    @JoinColumn(name = "blog_post_id", referencedColumnName = "blog_post_id", insertable = false, updatable = false)
-    private BlogPost blogPost;
 }

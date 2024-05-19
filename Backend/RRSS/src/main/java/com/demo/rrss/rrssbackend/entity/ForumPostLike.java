@@ -13,6 +13,7 @@ import java.sql.Timestamp;
 @Getter
 @Entity
 @IdClass(ForumPostLikeId.class)
+@Table(name = "ForumPostLike")
 public class ForumPostLike {
 
     @Id
@@ -27,11 +28,5 @@ public class ForumPostLike {
     @Column(name = "like_date", updatable = false)
     private Timestamp likeDate;
 
-    @ManyToOne
-    @JoinColumn(name = "user_id", referencedColumnName = "user_id", insertable = false, updatable = false)
-    private Users user;
 
-    @ManyToOne
-    @JoinColumn(name = "forum_post_id", referencedColumnName = "forum_post_id", insertable = false, updatable = false)
-    private ForumPost forumPost;
 }

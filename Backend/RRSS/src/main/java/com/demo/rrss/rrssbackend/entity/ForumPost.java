@@ -9,6 +9,7 @@ import java.sql.Timestamp;
 @Setter
 @Getter
 @Entity
+@Table(name = "ForumPost")
 public class ForumPost {
 
     @Id
@@ -32,11 +33,5 @@ public class ForumPost {
     @Column(name = "creation_date", updatable = false)
     private Timestamp creationDate;
 
-    @ManyToOne
-    @JoinColumn(name = "user_id", referencedColumnName = "user_id", insertable = false, updatable = false)
-    private Users user;
 
-    @ManyToOne
-    @JoinColumn(name = "forum_id", referencedColumnName = "forum_id", insertable = false, updatable = false)
-    private Forum forum;
 }

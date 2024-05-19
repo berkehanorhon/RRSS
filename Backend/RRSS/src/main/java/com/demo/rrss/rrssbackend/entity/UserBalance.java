@@ -8,6 +8,7 @@ import java.math.BigDecimal;
 @Setter
 @Getter
 @Entity
+@Table(name = "UserBalance")
 public class UserBalance {
 
     @Id
@@ -17,7 +18,4 @@ public class UserBalance {
     @Column(name = "balance", nullable = false)
     private BigDecimal balance;
 
-    @OneToOne
-    @JoinColumn(name = "user_id", referencedColumnName = "user_id", insertable = false, updatable = false)
-    private Users user;
 }

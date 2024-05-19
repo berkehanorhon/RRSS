@@ -12,6 +12,7 @@ import java.sql.Timestamp;
 @Setter
 @Getter
 @Entity
+@Table(name = "ReviewRating")
 @IdClass(ReviewRatingId.class)
 public class ReviewRating {
 
@@ -30,11 +31,4 @@ public class ReviewRating {
     @Column(name = "star_rating", nullable = false)
     private Short starRating;
 
-    @ManyToOne
-    @JoinColumn(name = "user_id", referencedColumnName = "user_id", insertable = false, updatable = false)
-    private Users user;
-
-    @ManyToOne
-    @JoinColumn(name = "review_id", referencedColumnName = "review_id", insertable = false, updatable = false)
-    private Review review;
 }

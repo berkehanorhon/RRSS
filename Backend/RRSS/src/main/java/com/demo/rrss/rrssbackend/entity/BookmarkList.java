@@ -9,6 +9,7 @@ import java.sql.Timestamp;
 @Setter
 @Getter
 @Entity
+@Table(name = "BookmarkList")
 public class BookmarkList {
 
     @Id
@@ -23,7 +24,4 @@ public class BookmarkList {
     @Column(name = "creation_date", updatable = false)
     private Timestamp creationDate;
 
-    @ManyToOne
-    @JoinColumn(name = "user_id", referencedColumnName = "user_id", insertable = false, updatable = false)
-    private Users user;
 }

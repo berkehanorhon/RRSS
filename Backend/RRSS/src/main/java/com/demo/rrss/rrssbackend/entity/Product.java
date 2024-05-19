@@ -9,6 +9,7 @@ import java.sql.Timestamp;
 @Setter
 @Getter
 @Entity
+@Table(name = "Product")
 public class Product {
 
     @Id
@@ -35,11 +36,4 @@ public class Product {
     @Column(name = "image_path")
     private String imagePath;
 
-    @ManyToOne
-    @JoinColumn(name = "user_id", referencedColumnName = "user_id", insertable = false, updatable = false)
-    private Users user;
-
-    @ManyToOne
-    @JoinColumn(name = "category_id", referencedColumnName = "category_id", insertable = false, updatable = false)
-    private Category category;
 }
