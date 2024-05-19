@@ -11,16 +11,8 @@ import jakarta.annotation.Nullable;
 @Setter
 @Data
 public class MessageRequest {
-    
-    @Nullable
-    private Long messageId;
-
-    private Long senderId;
 
     private Long receiverId;
 
     private String message;
-
-    @Nullable
-    private LocalDateTime sendTime = LocalDateTime.now();
 }

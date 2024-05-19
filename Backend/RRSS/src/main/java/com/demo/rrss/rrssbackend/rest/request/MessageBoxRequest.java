@@ -2,6 +2,8 @@ package com.demo.rrss.rrssbackend.rest.request;
 
 import java.util.List;
 
+import com.demo.rrss.rrssbackend.entity.Message;
+
 import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
@@ -12,5 +14,5 @@ import lombok.Setter;
 
 public class MessageBoxRequest {
     private Long receiverUserId;
-    private List<MessageRequest> messages;
+    private List<Message> messages;
 }
