@@ -8,4 +8,5 @@ import java.util.List;
 
 public interface BookmarkRepository extends CrudRepository<Bookmark, Long> {
     List<Bookmark> findByBookmarkListId(Long bookmarkListId);
+    Bookmark findByBookmarkListIdAndProductId(Long bookmarkListId, Long productId);
 }
