@@ -1,5 +1,7 @@
 import FromComponentTest from '@/views/FromComponentTest.vue'
 import { createRouter, createWebHistory } from 'vue-router'
+import BlogPost from '../components/BlogPost.vue'
+import BlogPosts from '../components/BlogPosts.vue'
 import HomeView from '../views/HomeView.vue'
 import LoginView from '../views/LoginView.vue'
 import MerchantPanel from '../views/MerchantPanel.vue'
@@ -49,7 +51,18 @@ const routes = [
     path: '/merchantpanel',
     name: 'MerchantPanel',
     component: MerchantPanel
-  }
+  },
+  {
+    path: '/blogs',
+    name: 'BlogPosts',
+    component: BlogPosts
+  },
+  {
+    path: '/blogs/:blogId',
+    name: 'BlogPost',
+    component: BlogPost,
+    props: true
+  },
 ]
 
 const router = createRouter({

@@ -1,13 +1,13 @@
 <template>
-  <div class="product-timeline">
-    <div class="product-container">
-      <div class="product-row" v-for="(row, index) in chunkedData" :key="index">
-        <div v-for="product in row" :key="product.productId" class="product">
-          <router-link :to="`/products/${product.productId}`">
-            <h4>{{ product.title }}</h4>
-            <img :src="getImage(product)" alt="Product Image" class="product-image" />
+  <div class="blog-timeline">
+    <div class="blog-container">
+      <div class="blog-row" v-for="(row, index) in chunkedData" :key="index">
+        <div v-for="blog in row" :key="blog.id" class="blog">
+          <router-link :to="`/blogs/${blog.id}`">
+            <h4>{{ blog.postName }}</h4>
+            <img :src="getImage(blog)" alt="Blog Image" class="blog-image" />
           </router-link>
-          <p>{{ product.description }}</p>
+          <p>{{ blog.postData }}</p>
         </div>
       </div>
     </div>
@@ -15,20 +15,18 @@
       <button class="page-button" @click="previousPage" :disabled="currentPage === 1">Previous</button>
       <span class="page-text">{{ currentPage }} / {{ totalPages }}</span>
       <button class="page-button" @click="nextPage" :disabled="currentPage === totalPages">Next</button>
-      
-
     </div>
   </div>
 </template>
 
 <script>
-import axios from 'axios';
+import blogsData from '../mocks/Blogs.json'; // Import the JSON file
 
 export default {
-  name: 'ProductTimeline',
+  name: 'BlogTimeline',
   data() {
     return {
-      products: [],
+      blogs: [],
       defaultImage: require('@/assets/logo.png'),
       currentPage: 1,
       itemsPerPage: 18,
@@ -41,8 +39,7 @@ export default {
         return 6;
       } else if (this.windowWidth > 800) {
         return 4;
-      }
-        else if (this.windowWidth > 600) {
+      } else if (this.windowWidth > 600) {
         return 2;
       } else {
         return 1;
@@ -51,17 +48,17 @@ export default {
     paginatedData() {
       const start = (this.currentPage - 1) * this.itemsPerPage;
       const end = start + this.itemsPerPage;
-      return this.products.slice(start, end);
+      return this.blogs.slice(start, end);
     },
     chunkedData() {
       return Array(Math.ceil(this.paginatedData.length / this.chunkSize)).fill().map((_, index) => index * this.chunkSize).map(begin => this.paginatedData.slice(begin, begin + this.chunkSize));
     },
     totalPages() {
-      return Math.ceil(this.products.length / this.itemsPerPage);
+      return Math.ceil(this.blogs.length / this.itemsPerPage);
     }
   },
   mounted() {
-    this.fetchProducts();
+    this.fetchBlogs();
     this.windowWidth = window.innerWidth;
     window.addEventListener('resize', () => {
       this.windowWidth = window.innerWidth;
@@ -72,56 +69,49 @@ export default {
       this.windowWidth = window.innerWidth;
     });
   },
-  methods: {
-  fetchProducts() {
-    this.products = [
-      {
-        productId: 1,
-        title: 'Product 1',
-        description: 'This is product 1',
-        image: require('@/assets/logo.png')
-      },
-      {
-        productId: 2,
-        title: 'Product 2',
-        description: 'This is product 2',
-        image: require('@/assets/logo.png')
-      },
-      // Daha fazla ürün ekleyebilirsiniz...
-    ];
-  },
-  getImage(product) {
-    return product.image || this.defaultImage;
-  },
-  nextPage() {
-    if (this.currentPage < this.totalPages) {
-      this.currentPage++;
-    }
-  },
-  previousPage() {
-    if (this.currentPage > 1) {
-      this.currentPage--;
-    }
-  }
+ methods: {
+    fetchBlogs() {
+  this.blogs = Object.entries(blogsData).map(([blogId, blog]) => ({
+    id: blogId,
+    postName: blog.postName,
+    postData: blog.postData,
+    ...blog,
+    image: this.defaultImage
+  }));
 },
-watch: {
-  selectedCategories() {
-    this.fetchProducts();
+    getImage(blog) {
+      return blog.imagePath || this.defaultImage;
+    },
+    nextPage() {
+      if (this.currentPage < this.totalPages) {
+        this.currentPage++;
+      }
+    },
+    previousPage() {
+      if (this.currentPage > 1) {
+        this.currentPage--;
+      }
+    }
+  },
+  watch: {
+    selectedCategories() {
+      this.fetchBlogs();
+    }
   }
 };
 </script>
 
 <style scoped>
-.product-timeline {
+.blog-timeline {
   display: flex;
   justify-content: center;
   align-items: center;
-  height: auto; /* Reduced from 100vh */
-  background-color: #fcfcfc; /* Light yellow */
+  height: auto;
+  background-color: #fcfcfc;
   padding: 20px;
 }
 
-.product-container {
+.blog-container {
   width: 92%;
   max-width: 1500px;
   margin: auto;
@@ -129,30 +119,30 @@ watch: {
   border: 1px solid #ccc;
   border-radius: 10px;
   background-color: #fff;
-  height: auto; /* Changed from 1000px */
+  height: auto;
   overflow: auto;
 }
 
-.product-row {
+.blog-row {
   display: flex;
   justify-content: space-between;
   margin-bottom: 20px;
 }
 
-.product {
-  flex: 0 0 200px; /* Sabit genişlik */
+.blog {
+  flex: 0 0 200px;
   box-sizing: border-box;
   background-color: #fff;
   padding: 20px;
-  margin: 10px; /* Added margin */
+  margin: 10px;
   border: 1px solid #ccc;
   border-radius: 10px;
 }
 
-.product-image {
-  width: 173.5; /* Added this line */
-  max-height: 173.5px; /* Added this line */
-  object-fit: cover; /* Added this line */
+.blog-image {
+  width: 173.5;
+  max-height: 173.5px;
+  object-fit: cover;
 }
 
 .pagination {
@@ -169,29 +159,11 @@ watch: {
 
 .page-button {
   padding: 10px 20px;
-  margin-top: 10px; /* Add margin top to create space */
+  margin-top: 10px;
   border: none;
   border-radius: 5px;
   background-color: #007BFF;
   color: #fff;
   cursor: pointer;
 }
-/* Not necessary at the moment, could be necessary in the future */
-/* @media (max-width: 1600px) {
-  .product {
-    flex: 0 0 200px;
-  }
-}
-
-@media (max-width: 600px) {
-  .product {
-    flex: 0 0 200px;
-  }
-}
-
-@media (max-width: 300px) {
-  .product {
-    flex: 0 0 200px;
-  }
-} */
 </style>
