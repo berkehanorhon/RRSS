@@ -38,9 +38,10 @@ public class AuthenticationController {
 		Users existingUser = usersService.getUserByUsername(request.getUsername());
 
 		if (existingUser != null && BCrypt.checkpw(request.getPassword(), existingUser.getPassword())) {
-			Map<String, String> token = new HashMap<>();
-			token.put("token", jwtUtil.generateToken(existingUser));
-			return new ResponseEntity<>(token, HttpStatus.OK);
+			Map<String, String> response = new HashMap<>();
+			response.put("token", jwtUtil.generateToken(existingUser));
+			response.put("userId", existingUser.getUserId().toString());
+			return new ResponseEntity<>(response, HttpStatus.OK);
 		} else {
 			throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Incorrect username or password");
 		}
