@@ -1,14 +1,12 @@
 <template>
   <div class="profile-header">
-    <div class="actions">
-      <button @click="sendMessage" class="action-button">Send Message</button>
-      <router-link to="/edit-profile" class="action-button">Edit Profile</router-link>
-    </div>
     <div class="user-info">
       <img :src="user.photo" alt="User Photo" class="user-photo" />
       <div class="user-details">
         <h2>{{ user.username }}</h2>
         <p>{{ user.about }}</p>
+        <button @click="sendMessage" class="action-button">Send Message</button>
+        <router-link to="/edit-profile" class="action-button">Edit Profile</router-link>
       </div>
     </div>
   </div>
@@ -45,7 +43,7 @@ export default {
 .user-info {
   display: flex;
   align-items: center;
-  margin-left: 20px; /* Butonlar ile user info arasına boşluk ekler */
+  margin-left: 20px;
 }
 
 .user-photo {

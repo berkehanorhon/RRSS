@@ -113,7 +113,7 @@ export default {
   justify-content: center;
   align-items: center;
   height: auto; /* Reduced from 100vh */
-  background-color: #ffffcc; /* Light yellow */
+  background-color: #fdfdfd; /* Light yellow */
   padding: 20px;
 }
 

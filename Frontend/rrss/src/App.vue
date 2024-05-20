@@ -25,7 +25,7 @@ export default {
         this.$router.push('/');
       } else {
         //this.$router.push('/login');
-        this.$router.push('/merchantpanel');
+        this.$router.push('/profile');
       }
     },
     logout(event) {

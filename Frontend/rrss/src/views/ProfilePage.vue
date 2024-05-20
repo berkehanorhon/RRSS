@@ -32,7 +32,7 @@ export default {
     return {
       user: {
         username: 'john_doe',
-        photo: 'https://via.placeholder.com/150',
+        photo: require('@/assets/logo.png'),
         about: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.',
       },
       blogPosts: [

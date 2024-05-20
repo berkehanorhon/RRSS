@@ -73,36 +73,40 @@ export default {
     });
   },
   methods: {
-    fetchProducts() {
-      axios.get('http://127.0.0.1:8080/get-all-products?categoryId=-1')
-      .then(response => {
-        this.products = response.data.map(product => ({
-          ...product,
-          image: require('@/assets/logo.png')
-        }));
-      })
-      .catch(error => {
-        console.error("There was an error fetching the products:", error);
-      });
-    },
-    getImage(product) {
-      return product.image || this.defaultImage;
-    },
-    nextPage() {
-      if (this.currentPage < this.totalPages) {
-        this.currentPage++;
-      }
-    },
-    previousPage() {
-      if (this.currentPage > 1) {
-        this.currentPage--;
-      }
+  fetchProducts() {
+    this.products = [
+      {
+        productId: 1,
+        title: 'Product 1',
+        description: 'This is product 1',
+        image: require('@/assets/logo.png')
+      },
+      {
+        productId: 2,
+        title: 'Product 2',
+        description: 'This is product 2',
+        image: require('@/assets/logo.png')
+      },
+      // Daha fazla ürün ekleyebilirsiniz...
+    ];
+  },
+  getImage(product) {
+    return product.image || this.defaultImage;
+  },
+  nextPage() {
+    if (this.currentPage < this.totalPages) {
+      this.currentPage++;
     }
   },
-  watch: {
-    selectedCategories() {
-      this.fetchProducts();
+  previousPage() {
+    if (this.currentPage > 1) {
+      this.currentPage--;
     }
+  }
+},
+watch: {
+  selectedCategories() {
+    this.fetchProducts();
   }
 };
 </script>
@@ -113,7 +117,7 @@ export default {
   justify-content: center;
   align-items: center;
   height: auto; /* Reduced from 100vh */
-  background-color: #ffffcc; /* Light yellow */
+  background-color: #fcfcfc; /* Light yellow */
   padding: 20px;
 }
 
