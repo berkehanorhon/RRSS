@@ -1,6 +1,9 @@
 <template>
   <div class="bookmarkList-timeline">
     <div class="bookmarkList-container">
+      <div v-if="bookmarkLists.length === 0" class="no-reviews">
+        No bookmark list has been created yet!
+      </div>
       <div class="bookmarkList-row" v-for="(row, index) in chunkedData" :key="index">
         <div v-for="bookmarkList in row" :key="bookmarkList.bookmarkListId" class="bookmarkList">
           <router-link :to="`/bookmarklists/${bookmarkList.bookmarkListId}`">
@@ -24,27 +27,10 @@ import axios from 'axios';
 
 export default {
   name: 'BookmarkListTimeline',
+  props: ['userId'],
   data() {
     return {
       bookmarkLists: [
-        {
-          "bookmarkListId": 1,
-          "userId": 1,
-          "title": "My First Bookmark List",
-          "creationDate": "2019-01-01T00:00:00.000Z"
-        },
-        {
-          "bookmarkListId": 2,
-          "userId": 1,
-          "title": "My Second Bookmark List",
-          "creationDate": "2019-01-02T00:00:00.000Z"
-        },
-        {
-          "bookmarkListId": 3,
-          "userId": 1,
-          "title": "My Third Bookmark List",
-          "creationDate": "2019-01-03T00:00:00.000Z"
-        }
       ],
       defaultImage: require('@/assets/logo.png'),
       currentPage: 1,
@@ -78,7 +64,7 @@ export default {
     }
   },
   mounted() {
-    //this.fetchBookmarkLists();
+    this.fetchBookmarkLists();
     this.windowWidth = window.innerWidth;
     window.addEventListener('resize', () => {
       this.windowWidth = window.innerWidth;
@@ -91,7 +77,7 @@ export default {
   },
   methods: {
     fetchBookmarkLists() {
-      axios.get('http://127.0.0.1:8080/get-all-bookmarkLists?categoryId=-1')
+      axios.get(`http://127.0.0.1:8080/bookmark/get-users-lists?userId=${this.userId}`)
       .then(response => {
         this.bookmarkLists = response.data.map(bookmarkList => ({
           ...bookmarkList,

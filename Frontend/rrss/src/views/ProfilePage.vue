@@ -4,7 +4,7 @@
     <div class="blogs-reviews-bookmarks-container">
       <div class="column">
         <h2>Blog Posts</h2>
-        <BlogPosts :posts="blogPosts" />
+        <BlogPosts :userId="userId" />
       </div>
       <div class="column">
         <h2>Reviews</h2>
@@ -12,7 +12,7 @@
       </div>
       <div class="column">
         <h2>Bookmarked</h2>
-        <BookmarkedProducts :products="bookmarkedProducts" />
+        <BookmarkedProducts :userId="userId" />
       </div>
     </div>
   </div>
