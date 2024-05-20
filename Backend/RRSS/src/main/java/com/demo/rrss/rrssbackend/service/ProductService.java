@@ -7,7 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
-
+import org.springframework.ui.Model;
 import com.demo.rrss.rrssbackend.entity.Product;
 import com.demo.rrss.rrssbackend.repository.ProductRepository;
 import com.demo.rrss.rrssbackend.rest.request.ProductRequest;
@@ -22,14 +22,15 @@ public class ProductService {
 				.orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Product not found"));
 	}
 
-	public void addProduct(ProductRequest request) { // TODO yetki kontrolü eklenecek
+	public void addProduct(ProductRequest request, Model model) { // TODO yetki kontrolü eklenecek
+		Long userId = (Long) model.getAttribute("userId"); 
 		Product product = new Product();
 		product.setCategoryId(request.getCategoryId());
 		product.setDescription(request.getDescription());
 		product.setPublishDate(new java.sql.Timestamp(new java.util.Date().getTime()));
 
 		product.setTitle(request.getTitle());
-		product.setUserId(request.getUserId());
+		product.setUserId(userId);
 		repository.save(product);
 	}
 
@@ -63,5 +64,9 @@ public class ProductService {
 			List<Product> products = repository.findProductsByCategoryId(categoryId);
 			return products;
 		}
+	}
+
+    public List<Product> getUsersAllProducts(Long userId) {
+		return repository.findByUserId(userId);
 	}
 }

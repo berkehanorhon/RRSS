@@ -4,21 +4,20 @@ import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.sql.Date;
+
 @Setter
 @Getter
 @Data
 public class UsersRequest {
-
-	private String username;
-
-	private String password;
-
-	private String firstName;
-
-	private String lastName;
-
-	private String birthDate;
-
-	private String email;
-
+    private String username;
+    private String email;
+    private String firstName;
+    private String lastName;
+    private Date birthdate;
+    private Boolean isAdmin;
+    private Boolean isModerator;
+    private Boolean isMerchant;
+    private String avatarImagePath;
+    private Integer reputation;
 }

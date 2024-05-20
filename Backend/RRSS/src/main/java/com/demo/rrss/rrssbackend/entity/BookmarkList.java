@@ -9,26 +9,24 @@ import java.sql.Timestamp;
 @Setter
 @Getter
 @Entity
-@Table(name = "Review")
-public class Review {
+@Table(name = "BookmarkList")
+public class BookmarkList {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "review_id")
-    private Long reviewId;
-
-    @Column(name = "product_id", nullable = false)
-    private Long productId;
+    @Column(name = "bookmark_list_id")
+    private Long bookmarkListId;
 
     @Column(name = "user_id", nullable = false)
     private Long userId;
 
-    @CreationTimestamp
-    @Column(name = "publish_date", updatable = false)
-    private Timestamp publishDate;
+    @Column(name = "title", nullable = false)
+    private String title;
 
-    @Column(name = "review_data", nullable = false)
-    private String reviewData;
+    @CreationTimestamp
+    @Column(name = "creation_date", updatable = false)
+    private Timestamp creationDate;
+
 
 
 }

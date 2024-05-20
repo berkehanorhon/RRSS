@@ -1,36 +1,39 @@
 package com.demo.rrss.rrssbackend.entity;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
+import org.hibernate.annotations.CreationTimestamp;
+import java.sql.Timestamp;
 
-@Entity
 @Setter
 @Getter
+@Entity
+@Table(name = "Product")
 public class Product {
 
-	@Column(name = "CATEGORY_ID")
-	private Long categoryId;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "product_id")
+    private Long productId;
 
-	@Column(name = "DESCRIPTION")
-	private String description;
+    @Column(name = "user_id", nullable = false)
+    private Long userId;
 
-	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	@Column(name = "PRODUCT_ID")
-	private Long productId;
+    @Column(name = "category_id", nullable = false)
+    private Long categoryId;
 
-	@Column(name = "PUBLISH_DATE")
-	private java.sql.Timestamp publishDate;
+    @CreationTimestamp
+    @Column(name = "publish_date", updatable = false)
+    private Timestamp publishDate;
 
-	@Column(name = "TITLE")
-	private String title;
+    @Column(name = "title", nullable = false)
+    private String title;
 
-	@Column(name = "USER_ID")
-	private Long userId;
+    @Column(name = "description")
+    private String description;
+
+    @Column(name = "image_path")
+    private String imagePath;
 
 }
