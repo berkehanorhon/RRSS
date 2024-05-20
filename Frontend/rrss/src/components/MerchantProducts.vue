@@ -23,6 +23,7 @@
 
 <script>
 import axios from 'axios';
+
 export default {
   name: 'ProductTimeline',
   data() {

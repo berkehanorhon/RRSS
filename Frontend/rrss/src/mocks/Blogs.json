@@ -1,0 +1,26 @@
+{
+    "1": {
+        "postData": "test description1",
+        "postName": "test title1",
+        "imagePath": null,
+        "publishDate": "01.05.2024"
+    },
+    "2": {
+        "postData": "test description2",
+        "postName": "test title2",
+        "imagePath": null,
+        "publishDate": "02.05.2024"
+    },
+    "3": {
+        "postData": "test description3",
+        "postName": "test title3",
+        "imagePath": null,
+        "publishDate": "03.05.2024"
+    },
+    "4": {
+        "postData": "test description4",
+        "postName": "test title4",
+        "imagePath": null,
+        "publishDate": "04.05.2024"
+    }
+}

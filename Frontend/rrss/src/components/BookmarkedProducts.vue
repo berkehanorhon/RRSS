@@ -1,13 +1,13 @@
 <template>
-  <div class="product-timeline">
-    <div class="product-container">
-      <div class="product-row" v-for="(row, index) in chunkedData" :key="index">
-        <div v-for="product in row" :key="product.productId" class="product">
-          <router-link :to="`/products/${product.productId}`">
-            <h4>{{ product.title }}</h4>
-            <img :src="getImage(product)" alt="Product Image" class="product-image" />
+  <div class="bookmarkList-timeline">
+    <div class="bookmarkList-container">
+      <div class="bookmarkList-row" v-for="(row, index) in chunkedData" :key="index">
+        <div v-for="bookmarkList in row" :key="bookmarkList.bookmarkListId" class="bookmarkList">
+          <router-link :to="`/bookmarklists/${bookmarkList.bookmarkListId}`">
+            <h4>{{ bookmarkList.title }}</h4>
+            <img :src="getImage(bookmarkList)" alt="BookmarkList Image" class="bookmarkList-image" />
           </router-link>
-          <p>{{ product.description }}</p>
+          <p>Publish Date: {{ formatDate(bookmarkList.creationDate) }}</p>
         </div>
       </div>
     </div>
@@ -15,19 +15,37 @@
       <button class="page-button" @click="previousPage" :disabled="currentPage === 1">Previous</button>
       <span class="page-text">{{ currentPage }} / {{ totalPages }}</span>
       <button class="page-button" @click="nextPage" :disabled="currentPage === totalPages">Next</button>
-      
-
     </div>
   </div>
 </template>
 
 <script>
 import axios from 'axios';
+
 export default {
-  name: 'ProductTimeline',
+  name: 'BookmarkListTimeline',
   data() {
     return {
-      products: [],
+      bookmarkLists: [
+        {
+          "bookmarkListId": 1,
+          "userId": 1,
+          "title": "My First Bookmark List",
+          "creationDate": "2019-01-01T00:00:00.000Z"
+        },
+        {
+          "bookmarkListId": 2,
+          "userId": 1,
+          "title": "My Second Bookmark List",
+          "creationDate": "2019-01-02T00:00:00.000Z"
+        },
+        {
+          "bookmarkListId": 3,
+          "userId": 1,
+          "title": "My Third Bookmark List",
+          "creationDate": "2019-01-03T00:00:00.000Z"
+        }
+      ],
       defaultImage: require('@/assets/logo.png'),
       currentPage: 1,
       itemsPerPage: 18,
@@ -50,17 +68,17 @@ export default {
     paginatedData() {
       const start = (this.currentPage - 1) * this.itemsPerPage;
       const end = start + this.itemsPerPage;
-      return this.products.slice(start, end);
+      return this.bookmarkLists.slice(start, end);
     },
     chunkedData() {
       return Array(Math.ceil(this.paginatedData.length / this.chunkSize)).fill().map((_, index) => index * this.chunkSize).map(begin => this.paginatedData.slice(begin, begin + this.chunkSize));
     },
     totalPages() {
-      return Math.ceil(this.products.length / this.itemsPerPage);
+      return Math.ceil(this.bookmarkLists.length / this.itemsPerPage);
     }
   },
   mounted() {
-    this.fetchProducts();
+    //this.fetchBookmarkLists();
     this.windowWidth = window.innerWidth;
     window.addEventListener('resize', () => {
       this.windowWidth = window.innerWidth;
@@ -72,20 +90,20 @@ export default {
     });
   },
   methods: {
-    fetchProducts() {
-      axios.get('http://127.0.0.1:8080/get-all-products?categoryId=-1')
+    fetchBookmarkLists() {
+      axios.get('http://127.0.0.1:8080/get-all-bookmarkLists?categoryId=-1')
       .then(response => {
-        this.products = response.data.map(product => ({
-          ...product,
+        this.bookmarkLists = response.data.map(bookmarkList => ({
+          ...bookmarkList,
           image: require('@/assets/logo.png')
         }));
       })
       .catch(error => {
-        console.error("There was an error fetching the products:", error);
+        console.error("There was an error fetching the bookmarkLists:", error);
       });
     },
-    getImage(product) {
-      return product.image || this.defaultImage;
+    getImage(bookmarkList) {
+      return bookmarkList.image || this.defaultImage;
     },
     nextPage() {
       if (this.currentPage < this.totalPages) {
@@ -96,27 +114,31 @@ export default {
       if (this.currentPage > 1) {
         this.currentPage--;
       }
+    },
+    formatDate(date) {
+      const options = { year: 'numeric', month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit' };
+      return new Date(date).toLocaleDateString('tr-TR', options).replace('.', '/').replace('.', '/');
     }
   },
   watch: {
     selectedCategories() {
-      this.fetchProducts();
+      this.fetchBookmarkLists();
     }
   }
 };
 </script>
 
 <style scoped>
-.product-timeline {
+.bookmarkList-timeline {
   display: flex;
   justify-content: center;
   align-items: center;
-  height: auto; /* Reduced from 100vh */
-  background-color: #ffffcc; /* Light yellow */
+  height: auto;
+  background-color: #fdfdfd;
   padding: 20px;
 }
 
-.product-container {
+.bookmarkList-container {
   width: 92%;
   max-width: 1500px;
   margin: auto;
@@ -124,30 +146,30 @@ export default {
   border: 1px solid #ccc;
   border-radius: 10px;
   background-color: #fff;
-  height: auto; /* Changed from 1000px */
+  height: auto;
   overflow: auto;
 }
 
-.product-row {
+.bookmarkList-row {
   display: flex;
   justify-content: space-between;
   margin-bottom: 20px;
 }
 
-.product {
-  flex: 0 0 200px; /* Sabit genişlik */
+.bookmarkList {
+  flex: 0 0 200px;
   box-sizing: border-box;
   background-color: #fff;
   padding: 20px;
-  margin: 10px; /* Added margin */
+  margin: 10px;
   border: 1px solid #ccc;
   border-radius: 10px;
 }
 
-.product-image {
-  width: 173.5; /* Added this line */
-  max-height: 173.5px; /* Added this line */
-  object-fit: cover; /* Added this line */
+.bookmarkList-image {
+  width: 173.5;
+  max-height: 173.5px;
+  object-fit: cover;
 }
 
 .pagination {
@@ -164,29 +186,11 @@ export default {
 
 .page-button {
   padding: 10px 20px;
-  margin-top: 10px; /* Add margin top to create space */
+  margin-top: 10px;
   border: none;
   border-radius: 5px;
   background-color: #007BFF;
   color: #fff;
   cursor: pointer;
 }
-/* Not necessary at the moment, could be necessary in the future */
-/* @media (max-width: 1600px) {
-  .product {
-    flex: 0 0 200px;
-  }
-}
-
-@media (max-width: 600px) {
-  .product {
-    flex: 0 0 200px;
-  }
-}
-
-@media (max-width: 300px) {
-  .product {
-    flex: 0 0 200px;
-  }
-} */
 </style>
