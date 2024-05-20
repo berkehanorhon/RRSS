@@ -22,8 +22,7 @@
 </template>
 
 <script>
-//import axios from 'axios';
-import productsData from '../mocks/Products.json'; // Import the JSON file
+import axios from 'axios';
 export default {
   name: 'ProductTimeline',
   data() {
@@ -73,25 +72,18 @@ export default {
     });
   },
   methods: {
-    // fetchProducts() {
-    //   axios.get('http://127.0.0.1:8080/get-all-products?categoryId=-1')
-    //   .then(response => {
-    //     this.products = response.data.map(product => ({
-    //       ...product,
-    //       image: require('@/assets/logo.png')
-    //     }));
-    //   })
-    //   .catch(error => {
-    //     console.error("There was an error fetching the products:", error);
-    //   });
-    // },
-      fetchProducts() {
-        // Replace axios call with local JSON data
-        this.products = productsData.map(product => ({
+    fetchProducts() {
+      axios.get('http://127.0.0.1:8080/get-all-products?categoryId=-1')
+      .then(response => {
+        this.products = response.data.map(product => ({
           ...product,
           image: require('@/assets/logo.png')
         }));
-      },
+      })
+      .catch(error => {
+        console.error("There was an error fetching the products:", error);
+      });
+    },
     getImage(product) {
       return product.image || this.defaultImage;
     },
