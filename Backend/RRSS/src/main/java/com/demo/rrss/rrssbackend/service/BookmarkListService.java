@@ -33,9 +33,10 @@ public class BookmarkListService {
      * Adds a bookmark list to a user.
      * @param token - JWT token of the user.
      */
-    public void addBookmarkList(String token) {
+    public void addBookmarkList(BookmarkListRequest request, String token) {
         Long userId = jwtUtil.extractUserId(token);
         BookmarkList bookmarkList = new BookmarkList();
+        bookmarkList.setTitle(request.getTitle());
         bookmarkList.setUserId(userId);
         bookmarkListRepository.save(bookmarkList);
     }

@@ -16,9 +16,14 @@ public class BookmarkController {
         this.bookmarkListService = bookmarkListService;
     }
 
+    @GetMapping("/get-users-lists")
+    public ResponseEntity<?> getBookmarkListFromUser(@RequestParam Long userId){
+        return new ResponseEntity<>(bookmarkListService.getUsersAllBookmarkLists(userId), HttpStatus.OK);
+    }
+
     @PostMapping("/create")
-    public ResponseEntity<Void> createBookmarkList(@RequestHeader("Authorization") String token){
-        bookmarkListService.addBookmarkList(token);
+    public ResponseEntity<Void> createBookmarkList(@RequestBody BookmarkListRequest request, @RequestHeader("Authorization") String token){
+        bookmarkListService.addBookmarkList(request, token);
         return new ResponseEntity<>(HttpStatus.CREATED);
     }
 

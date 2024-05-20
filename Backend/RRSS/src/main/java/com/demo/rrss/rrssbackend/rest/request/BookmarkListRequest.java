@@ -10,6 +10,7 @@ import lombok.Setter;
 public class BookmarkListRequest {
     private Long bookmarkListId;
     private Long userId;
+    private String title;
     private String creationDate;
 
 }
