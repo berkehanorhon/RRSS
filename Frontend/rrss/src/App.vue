@@ -22,8 +22,13 @@ export default {
   methods: {
     navigateUser() {
       if (this.isLoggedIn) {
-        this.$router.push('/');
+      let userId = localStorage.getItem('userId');
+      if (userId) {
+        this.$router.push(`/profile/${userId}`);
       } else {
+        this.$router.push('/');
+      }
+    } else {
         //this.$router.push('/login');
         this.$router.push('/profile');
       }

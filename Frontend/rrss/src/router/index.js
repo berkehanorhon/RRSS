@@ -43,7 +43,7 @@ const routes = [
     component: FromComponentTest
   },
   {
-    path: '/profile',
+    path: '/profile/:userId',
     name: 'ProfilePage',
     component: ProfilePage
   },

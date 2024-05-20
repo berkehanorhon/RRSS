@@ -2,17 +2,15 @@
   <div class="profile-page">
     <ProfileHeader :user="user" />
     <div class="blogs-reviews-bookmarks-container">
-      <div class="left-column">
+      <div class="column">
         <h2>Blog Posts</h2>
         <BlogPosts :posts="blogPosts" />
       </div>
-      <div class="spacer"></div> <!-- Boşluk için bir div -->
-      <div class="middle-column">
+      <div class="column">
         <h2>Reviews</h2>
-        <ReviewsTime :reviews="reviews" />
+        <ReviewsTime :userId="userId" />
       </div>
-      <div class="spacer"></div> <!-- Boşluk için bir div -->
-      <div class="right-column">
+      <div class="column">
         <h2>Bookmarked</h2>
         <BookmarkedProducts :products="bookmarkedProducts" />
       </div>
@@ -25,31 +23,20 @@ import ProfileHeader from '../components/ProfileHeader.vue';
 import BlogPosts from '../components/BlogPosts.vue';
 import ReviewsTime from '../components/ReviewsTime.vue';
 import BookmarkedProducts from '../components/BookmarkedProducts.vue';
+import axios from 'axios';
 
 export default {
   name: 'ProfilePage',
   data() {
     return {
       user: {
-        username: 'john_doe',
+        username: '',
+        email: '',
+        firstName: '',
+        lastName: '',
         photo: require('@/assets/logo.png'),
-        about: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.',
       },
-      blogPosts: [
-        { title: 'Post 1', content: 'Content of post 1' },
-        { title: 'Post 2', content: 'Content of post 2' },
-        // Add more posts as needed
-      ],
-      reviews: [
-        { title: 'Review 1', content: 'Content of review 1' },
-        { title: 'Review 2', content: 'Content of review 2' },
-        // Add more reviews as needed
-      ],
-      bookmarkedProducts: [
-        { name: 'Product 1', description: 'Description of product 1' },
-        { name: 'Product 2', description: 'Description of product 2' },
-        // Add more products as needed
-      ],
+      userId: this.$route.params.userId
     };
   },
   components: {
@@ -57,6 +44,24 @@ export default {
     BlogPosts,
     ReviewsTime,
     BookmarkedProducts,
+  },
+  created() {
+    this.fetchUserData();
+  },
+  methods: {
+    fetchUserData() {
+      axios.get(`http://127.0.0.1:8080/get-user?userId=${this.userId}`)
+        .then(response => {
+          this.user.username = response.data.username;
+          this.user.email = response.data.email;
+          this.user.firstName = response.data.firstName;
+          this.user.lastName = response.data.lastName;
+          this.user.photo = response.data.avatarImagePath || this.user.photo;
+        })
+        .catch(error => {
+          console.error("There was an error fetching the user data:", error);
+        });
+    },
   },
 };
 </script>
@@ -81,17 +86,12 @@ export default {
 
 .blogs-reviews-bookmarks-container {
   display: flex;
+  flex-direction: column;
   margin-top: 20px;
 }
 
-.left-column,
-.middle-column,
-.right-column {
-  flex: 1;
-}
-
-.spacer {
-  flex: 0 0 20px; /* Boşluğun genişliğini buradan ayarlayabilirsiniz */
+.column {
+  width: 100%;
 }
 
 </style>
