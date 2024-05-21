@@ -36,6 +36,7 @@ export default {
     logout(event) {
       event.preventDefault();
       localStorage.removeItem('token');
+      localStorage.removeItem('userId');
       window.location.href = '/';
     }
   }
