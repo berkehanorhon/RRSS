@@ -1,6 +1,9 @@
 <template>
   <div class="blog-timeline">
     <div class="blog-container">
+      <div v-if="blogs.length === 0" class="no-reviews">
+        No bookmark list has been created yet!
+      </div>
       <div class="blog-row" v-for="(row, index) in chunkedData" :key="index">
         <div v-for="blog in row" :key="blog.id" class="blog">
           <router-link :to="`/blogs/${blog.id}`">
