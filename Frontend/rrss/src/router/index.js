@@ -3,6 +3,8 @@ import HomeView from '../views/HomeView.vue'
 import LoginView from '../views/LoginView.vue'
 import RegisterView from '../views/RegisterView.vue'
 import FromComponentTest from '@/views/FromComponentTest.vue'
+import MessageView from '@/views/MessageView.vue'
+import ForumView from '@/views/ForumView.vue';
 
 const routes = [
   {
@@ -37,6 +39,16 @@ const routes = [
     path: '/test/',
     name: 'FormTest',
     component: FromComponentTest
+  },
+  {
+    path: '/messenger/',
+    name: 'Messenger',
+    component: MessageView
+  },
+  {
+    path: '/forum',
+    name: 'Forum',
+    component: ForumView
   }
 ]
 
