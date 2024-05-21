@@ -56,5 +56,5 @@ public class Users {
     private Integer reputation;
 
     @Column(name = "token_exp")
-    private Integer tokenExp;
+    private Timestamp tokenExp;
 }

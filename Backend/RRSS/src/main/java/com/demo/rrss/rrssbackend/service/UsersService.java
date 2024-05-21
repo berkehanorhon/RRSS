@@ -1,12 +1,14 @@
 package com.demo.rrss.rrssbackend.service;
 
 import com.demo.rrss.rrssbackend.entity.Users;
+import com.demo.rrss.rrssbackend.repository.UserBalanceRepository;
 import com.demo.rrss.rrssbackend.repository.UsersRepository;
 import com.demo.rrss.rrssbackend.rest.request.UsersProfileRequest;
 import com.demo.rrss.rrssbackend.rest.request.UsersRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.ui.Model;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
@@ -29,6 +31,9 @@ public class UsersService {
 
     @Autowired
     BookmarkListService blservice;
+
+    @Autowired
+    UserBalanceRepository balanceRepository;
 
     public UsersRequest getUser(Long userId) {
         Optional<Users> response = repository.findById(userId);
@@ -62,9 +67,10 @@ public class UsersService {
         return userProfileRequest;
     }
 
-    public void updateUser(String userName, UsersRequest user) {
+    @SuppressWarnings("null")
+    public void updateUser(String userName, UsersRequest user, Model model) {
         Optional<Users> existingUser = repository.findByUsername(userName);
-        if (existingUser.isPresent()){
+        if (existingUser.isPresent() && model.getAttribute("userId").equals(existingUser.get().getUserId())){
             Users updatedUser = existingUser.get();
             updatedUser.setUsername(user.getUsername());
             updatedUser.setEmail(user.getEmail());
@@ -75,14 +81,21 @@ public class UsersService {
             updatedUser.setReputation(user.getReputation());
             repository.save(updatedUser);
         } else {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found");
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found or you are not authorized to update this user");
         }
     }
 
-    public void deleteUser(Long userId) {
-        if (repository.existsById(userId))
+    @SuppressWarnings("null")
+    public void deleteUser(Long userId, Model model) {
+        if (repository.existsById(userId) && model.getAttribute("userId").equals(userId))
             repository.deleteById(userId);
         else
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found");
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found or you are not authorized to delete this user");
+    }
+
+    @SuppressWarnings("null")
+    public String getBalance(Model model) {
+        Long userId = (Long) model.getAttribute("userId");
+        return balanceRepository.findById(userId).get().getBalance().toString();
     }
 }
