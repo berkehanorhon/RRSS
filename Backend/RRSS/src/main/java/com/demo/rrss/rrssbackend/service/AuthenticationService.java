@@ -1,5 +1,6 @@
 package com.demo.rrss.rrssbackend.service;
 
+import java.math.BigDecimal;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 
@@ -9,7 +10,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
+import com.demo.rrss.rrssbackend.entity.UserBalance;
 import com.demo.rrss.rrssbackend.entity.Users;
+import com.demo.rrss.rrssbackend.repository.UserBalanceRepository;
 import com.demo.rrss.rrssbackend.repository.UsersRepository;
 import com.demo.rrss.rrssbackend.rest.request.AuthenticationRequest;
 
@@ -17,6 +20,9 @@ import com.demo.rrss.rrssbackend.rest.request.AuthenticationRequest;
 public class AuthenticationService {
 	@Autowired
 	UsersRepository repository;
+
+	@Autowired
+	UserBalanceRepository balanceRepository;
 
 	public Users getUser(Long userId) {
 		return repository.findById(userId)
@@ -61,8 +67,11 @@ public class AuthenticationService {
 		} catch (ParseException e) {
 			e.printStackTrace();
 		}
-
 		repository.save(user);
+		UserBalance balance = new UserBalance();
+		balance.setBalance(new BigDecimal(0));
+		balance.setUserId(getUserByUsername(request.getUsername()).getUserId());
+		balanceRepository.save(balance);
 	}
 
 	public Users updateUser(Long userId, Users userDetails) {  // TODO yetki kontrolü eklenecek
