@@ -1,8 +1,5 @@
 package com.demo.rrss.rrssbackend.service;
 
-import java.util.List;
-import java.util.Optional;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
@@ -12,7 +9,6 @@ import org.springframework.web.server.ResponseStatusException;
 import com.demo.rrss.rrssbackend.entity.BlogPostLike;
 import com.demo.rrss.rrssbackend.repository.BlogPostLikeRepository;
 import com.demo.rrss.rrssbackend.rest.request.BlogPostLikeRequest;
-import com.demo.rrss.rrssbackend.rest.request.ForumPostLikeRequest;
 import com.demo.rrss.rrssbackend.repository.BlogPostRepository;
 
 @Service
@@ -42,10 +38,10 @@ public class BlogPostLikeService {
 	}
 
 
-	public void deleteBlogPostLike(Long blogPostLikeId, Model model) {
+	public void deleteBlogPostLike(Long blogPostId, Model model) {
 		Long userId = (Long) model.getAttribute("userId");
-		if (repository.existsById(blogPostLikeId) && repository.findById(blogPostLikeId).get().getUserId() == userId)
-			repository.deleteById(blogPostLikeId);
+		if (repository.existsByBlogPostId(blogPostId) && repository.findByBlogPostId(blogPostId).getUserId() == userId)
+			repository.deleteByBlogPostId(blogPostId);
 		else
 			throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Blog post like not found or you do not have permission to delete it.");
 	}

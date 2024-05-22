@@ -12,10 +12,6 @@ import org.springframework.web.server.ResponseStatusException;
 import com.demo.rrss.rrssbackend.entity.BlogPost;
 import com.demo.rrss.rrssbackend.repository.BlogPostRepository;
 import com.demo.rrss.rrssbackend.rest.request.BlogPostRequest;
-import org.springframework.web.server.ResponseStatusException;
-import org.springframework.ui.Model;
-import com.demo.rrss.rrssbackend.entity.BlogPost;
-import com.demo.rrss.rrssbackend.repository.BlogPostRepository;
 
 
 @Service

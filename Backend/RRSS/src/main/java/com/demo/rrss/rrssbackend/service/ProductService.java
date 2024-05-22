@@ -9,7 +9,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 import org.springframework.ui.Model;
 
-import com.demo.rrss.rrssbackend.controller.UsersController;
 import com.demo.rrss.rrssbackend.entity.Product;
 import com.demo.rrss.rrssbackend.entity.Users;
 import com.demo.rrss.rrssbackend.repository.ProductRepository;
