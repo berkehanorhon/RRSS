@@ -12,6 +12,10 @@
             <img :src="getImage(product)" alt="Product Image" class="product-image" />
           </router-link>
           <p>{{ product.description }}</p>
+          <div class="rating">
+            <span>({{ product.ratingCount }})</span>
+            <star-rating v-for="n in 5" :key="n" :filled="n <= product.averageRating+0.5" />
+          </div>
         </div>
       </div>
     </div>
@@ -28,9 +32,13 @@
 <script>
 import axios from 'axios';
 import searchIcon from '@/assets/search-icon.png';
+import StarRating from './StarRating.vue';
 
 export default {
   name: 'ProductTimeline',
+  components: {
+    StarRating,
+  },
   props: {
     fetchProducts: {
       type: Function,
@@ -212,6 +220,7 @@ export default {
   padding: 10px;
   font-size: 16px;
 }
+
 
 /* Not necessary at the moment, could be necessary in the future */
 /* @media (max-width: 1600px) {

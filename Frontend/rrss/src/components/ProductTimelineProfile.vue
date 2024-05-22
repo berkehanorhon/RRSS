@@ -15,8 +15,6 @@
       <button class="page-button" @click="previousPage" :disabled="currentPage === 1">Previous</button>
       <span class="page-text">{{ currentPage }} / {{ totalPages }}</span>
       <button class="page-button" @click="nextPage" :disabled="currentPage === totalPages">Next</button>
-      
-
     </div>
   </div>
 </template>
