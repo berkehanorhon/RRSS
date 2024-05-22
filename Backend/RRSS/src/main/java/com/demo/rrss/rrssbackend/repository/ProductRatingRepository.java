@@ -14,4 +14,6 @@ public interface ProductRatingRepository extends JpaRepository<ProductRating, Lo
 
     @Query("SELECT r.productId, AVG(r.starRating) FROM ProductRating r WHERE r.productId IN :productIds GROUP BY r.productId")
     List<Object[]> findAverageRatingsByProductIds(@Param("productIds") List<Long> productIds);
+
+    Float findAvarageRatingByProductId(Long productId);
 }

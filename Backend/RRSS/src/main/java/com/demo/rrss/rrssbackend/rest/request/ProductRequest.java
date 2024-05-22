@@ -1,5 +1,7 @@
 package com.demo.rrss.rrssbackend.rest.request;
 
+import java.sql.Timestamp;
+
 import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
@@ -18,4 +20,10 @@ public class ProductRequest {
 	private String title;
 
 	private Long userId;
+
+	private Float star;
+
+	private Timestamp publishDate;
+
+	private String imagePath;
 }
