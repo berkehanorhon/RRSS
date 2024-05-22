@@ -1,6 +1,6 @@
 <template>
   <nav>
-    <router-link to="/blogtimeline">Home</router-link> |
+    <router-link to="/">Home</router-link> |
     <router-link to="/about">About</router-link> |
     <router-link v-if="!isLoggedIn" to="/login">Login</router-link>
     <router-link v-if="isLoggedIn" to="/login" @click="logout">Logout</router-link> |
