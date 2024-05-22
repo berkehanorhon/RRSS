@@ -3,7 +3,7 @@
       <h1>{{ title }}</h1>
       <div v-for="(input, index) in inputs" :key="index">
         <label v-if="input.type !== 'checkbox'" :for="input.id" :style="labelStyle">{{ input.label }}</label>
-        <input :type="input.type" :id="input.id" :style="input.type === 'checkbox' ? checkboxStyle : inputStyle" v-model="formData[input.id]" :required="input.type !== 'checkbox'">
+        <input :type="input.type" :id="input.id" :style="input.type === 'checkbox' ? checkboxStyle : inputStyle" v-model="formData[input.id]" :required="input.type !== 'checkbox'" :placeholder="input.type !== 'checkbox' ? input.text : ''">
         <label v-if="input.type === 'checkbox'" :for="input.id" :style="checkboxlabelStyle">{{ input.label }}</label>
       </div>
       <div>

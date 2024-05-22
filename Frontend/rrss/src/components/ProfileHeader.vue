@@ -8,7 +8,7 @@
         <p>First Name: {{ user.firstName }}</p>
         <p>Last Name: {{ user.lastName }}</p>
         <button @click="sendMessage" class="action-button">Send Message</button>
-        <router-link to="/edit-profile" class="action-button">Edit Profile</router-link>
+        <router-link :to="`/profile/${this.$route.params.userId}/edit`" class="action-button">Edit Profile</router-link>
       </div>
     </div>
   </div>

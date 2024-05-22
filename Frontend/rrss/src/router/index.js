@@ -7,6 +7,7 @@ import LoginView from '../views/LoginView.vue'
 import MerchantPanel from '../views/MerchantPanel.vue'
 import ProfilePage from '../views/ProfilePage.vue'
 import RegisterView from '../views/RegisterView.vue'
+import EditProfileView from '../views/EditProfileView.vue'
 
 const routes = [
   {
@@ -46,6 +47,11 @@ const routes = [
     path: '/profile/:userId',
     name: 'ProfilePage',
     component: ProfilePage
+  },
+  {
+    path: '/profile/:userId/edit',
+    name: 'EditProfileView',
+    component: EditProfileView
   },
   {
     path: '/merchantpanel',
