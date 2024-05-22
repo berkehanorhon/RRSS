@@ -55,8 +55,7 @@ public class ReviewController {
 	@GetMapping("/get-users-reviews")
 	@ResponseStatus(HttpStatus.OK)
 	public List<Review> getUsersAllReviews(@RequestParam Long userId) {
-		List<Review> reviews = service.getUsersAllReviews(userId);
-		return reviews;
+        return service.getUsersAllReviews(userId);
 	}
 
 	@GetMapping("/get-products-reviews")
