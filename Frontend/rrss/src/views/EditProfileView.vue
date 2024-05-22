@@ -49,7 +49,7 @@
             });
 
             if (response.status === 200) {
-                window.location.href = '/profile';
+                window.location.href = `/profile/${this.$route.params.userId}`;
             }
             } catch (error) {
             console.error(error);

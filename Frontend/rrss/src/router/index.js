@@ -8,6 +8,7 @@ import MerchantPanel from '../views/MerchantPanel.vue'
 import ProfilePage from '../views/ProfilePage.vue'
 import RegisterView from '../views/RegisterView.vue'
 import EditProfileView from '../views/EditProfileView.vue'
+import EditProductView from '../views/EditProductView.vue'
 
 const routes = [
   {
@@ -37,6 +38,11 @@ const routes = [
     path: '/products/:productId',
     name: 'ProductDetail',
     component: () => import('@/components/ProductDetail.vue')
+  },
+  {
+    path: '/products/:productId/edit',
+    name: 'EditProductView',
+    component: EditProductView
   },
   {
     path: '/test/',

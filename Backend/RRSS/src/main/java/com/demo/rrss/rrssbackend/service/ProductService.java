@@ -50,9 +50,8 @@ public class ProductService {
 			Product product = existingProduct.get();
 			product.setCategoryId(request.getCategoryId());
 			product.setDescription(request.getDescription());
-			product.setPublishDate(new java.sql.Timestamp(new java.util.Date().getTime()));
+			product.setPublishDate(new java.sql.Timestamp(new java.util.Date().getTime())); // TODO kalsın mı
 			product.setTitle(request.getTitle());
-			product.setUserId(request.getUserId());
 			repository.save(product);
 		} else {
 			throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Product not found");
