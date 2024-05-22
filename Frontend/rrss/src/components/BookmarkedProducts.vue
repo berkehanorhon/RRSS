@@ -11,6 +11,7 @@
             <img :src="getImage(bookmarkList)" alt="BookmarkList Image" class="bookmarkList-image" />
           </router-link>
           <p>Publish Date: {{ formatDate(bookmarkList.creationDate) }}</p>
+          <button class="delete-button" @click="deleteBookmarkList(bookmarkList.bookmarkListId)">Delete</button>
         </div>
       </div>
     </div>
@@ -76,6 +77,19 @@ export default {
     });
   },
   methods: {
+    deleteBookmarkList(bookmarkListId) {
+      axios.delete(`http://127.0.0.1:8080/bookmark/delete`, {
+        data: {
+          bookmarkListId: bookmarkListId
+        }
+      })
+      .then(() => {
+        this.fetchBookmarkLists();
+      })
+      .catch(error => {
+        console.error("There was an error deleting the bookmark list:", error);
+      });
+    },
     fetchBookmarkLists() {
       axios.get(`http://127.0.0.1:8080/bookmark/get-users-lists?userId=${this.userId}`)
       .then(response => {
@@ -176,6 +190,15 @@ export default {
   border: none;
   border-radius: 5px;
   background-color: #007BFF;
+  color: #fff;
+  cursor: pointer;
+}
+.delete-button {
+  padding: 10px;
+  margin-top: 10px;
+  border: none;
+  border-radius: 5px;
+  background-color: #FF0000;
   color: #fff;
   cursor: pointer;
 }

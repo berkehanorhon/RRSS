@@ -71,7 +71,7 @@ public class ProductService {
 			product.setTitle(request.getTitle());
 			repository.save(product);
 		} else {
-			throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Product not found");
+			throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Product not found or you do not have permission to update this product.");
 		}
 	}
 
@@ -80,7 +80,7 @@ public class ProductService {
 		if (repository.existsById(productId) && repository.findById(productId).get().getUserId() == userId)
 			repository.deleteById(productId);
 		else
-			throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Product not found");
+			throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Product not found or you do not have permission to delete this product.");
 
 	}
 

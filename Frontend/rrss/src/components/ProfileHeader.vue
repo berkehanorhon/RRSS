@@ -9,6 +9,7 @@
         <p>Last Name: {{ user.lastName }}</p>
         <button @click="sendMessage" class="action-button">Send Message</button>
         <router-link :to="`/profile/${this.$route.params.userId}/edit`" class="action-button">Edit Profile</router-link>
+        <router-link :to="`/createbookmarklist`" class="action-button">Create Bookmark List</router-link>
       </div>
     </div>
   </div>

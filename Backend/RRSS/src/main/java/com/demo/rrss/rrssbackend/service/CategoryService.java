@@ -10,6 +10,7 @@ import org.springframework.web.server.ResponseStatusException;
 
 import com.demo.rrss.rrssbackend.entity.Category;
 import com.demo.rrss.rrssbackend.repository.CategoryRepository;
+import com.demo.rrss.rrssbackend.rest.request.AddCategoryRequest;
 
 @Service
 public class CategoryService {
@@ -22,8 +23,11 @@ public class CategoryService {
 		return response.get();
 	}
 
-	public Category addCategory(Category category) { // TODO yetki kontrolü eklenecek
-		return repository.save(category);
+	public void addCategory(AddCategoryRequest category) {
+		Category newCategory = new Category();
+		newCategory.setCategoryName(category.getCategoryName());
+		newCategory.setDescription(category.getDescription());
+		repository.save(newCategory);
 	}
 
 	public Category updateCategory(Long categoryId, Category categoryDetails) { // TODO yetki kontrolü eklenecek

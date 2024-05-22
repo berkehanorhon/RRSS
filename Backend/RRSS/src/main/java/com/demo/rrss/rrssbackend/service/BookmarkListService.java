@@ -1,5 +1,6 @@
 package com.demo.rrss.rrssbackend.service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
@@ -8,6 +9,8 @@ import com.demo.rrss.rrssbackend.entity.Bookmark;
 import com.demo.rrss.rrssbackend.repository.BookmarkRepository;
 import com.demo.rrss.rrssbackend.repository.ProductRepository;
 import com.demo.rrss.rrssbackend.rest.request.BookmarkListRequest;
+import com.demo.rrss.rrssbackend.rest.request.BookmarkRequest;
+
 import org.springframework.ui.Model;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
@@ -88,7 +91,9 @@ public class BookmarkListService {
      * @param userId - ID of the user.
      * @return List of bookmark lists.
      */
-    public List<BookmarkList> getUsersAllBookmarkLists(Long userId) {
+    public List<BookmarkList> getUsersAllBookmarkLists(Long userId, Model model) {
+        if (userId == -1)
+            userId = (Long) model.getAttribute("userId");
         return bookmarkListRepository.findByUserId(userId);
     }
 
@@ -97,8 +102,19 @@ public class BookmarkListService {
      * @param bookmarkListId - ID of the bookmark list.
      * @return List of bookmarks.
      */
-    public List<Bookmark> getAllBookmarksFromList(Long bookmarkListId) {
-        return bookmarkRepository.findByBookmarkListId(bookmarkListId);
+    public List<BookmarkRequest> getAllBookmarksFromList(Long bookmarkListId) {
+        List<BookmarkRequest> bookmarks = new ArrayList<>();
+        for(Bookmark bookmark : bookmarkRepository.findByBookmarkListId(bookmarkListId))
+        {
+            BookmarkRequest bookmarkRequest = new BookmarkRequest();
+            bookmarkRequest.setBookmarkId(bookmark.getBookmarkId());
+            bookmarkRequest.setBookmarkListId(bookmark.getBookmarkListId());
+            bookmarkRequest.setProductId(bookmark.getProductId());
+            bookmarkRequest.setCreationDate(bookmark.getCreationDate());
+            bookmarkRequest.setProduct(productRepository.findById(bookmark.getProductId()).get());
+            bookmarks.add(bookmarkRequest);
+        }
+        return bookmarks;
     }
 
     /**
@@ -106,9 +122,11 @@ public class BookmarkListService {
      * @param bookmarkListId - ID of the bookmark list.
      * @param productId - ID of the product.
      */
-    public void addBookmarkToList(Long bookmarkListId, Long productId) {
+    public void addBookmarkToList(Long bookmarkListId, Long productId, Model model) {
         if (bookmarkListRepository.findById(bookmarkListId).isEmpty())
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Bookmark list not found");
+        if (bookmarkListRepository.findById(bookmarkListId).get().getUserId() != (Long) model.getAttribute("userId"))
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "You do not have permission to add a bookmark to this list");
         if (productRepository.findById(productId).isEmpty())
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Product not found");
         if (bookmarkRepository.findByBookmarkListIdAndProductId(bookmarkListId, productId) != null)

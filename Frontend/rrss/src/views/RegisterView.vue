@@ -6,6 +6,9 @@
       :inputs="inputs"
       :submitForm="handleSubmit"
     />
+    <p v-if="registrationSuccess" class="success-message">
+      Your registration is successful, redirecting to the login page...
+    </p>
   </div>
 </template>
 
@@ -18,6 +21,7 @@ export default {
   },
   data() {
     return {
+      registrationSuccess: false,
       inputs: [
         { id: 'username', label: 'Username', type: 'text' ,text: ''},
         { id: 'password', label: 'Password', type: 'password' ,text: ''},
@@ -46,11 +50,14 @@ export default {
                 });
 
                 if (response.status === 201) {
+                  this.registrationSuccess = true;
+                  setTimeout(() => {
                     window.location.href = '/login';
+                  }, 3000);
                 }
-            } catch (error) {
+              } catch (error) {
                 console.error(error);
-            }
+              }
         }
   }
 };
@@ -75,7 +82,9 @@ export default {
   cursor: pointer;
   border-radius: 5px;
 }
-
+.success-message {
+  color: green;
+}
 .form-submit-button:hover {
   background-color: #696969;
 }

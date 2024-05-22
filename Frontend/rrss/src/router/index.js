@@ -14,7 +14,8 @@ import MerchantPanel from '../views/MerchantPanel.vue';
 import ProfilePage from '../views/ProfilePage.vue';
 import EditProfileView from '../views/EditProfileView.vue';
 import EditProductView from '../views/EditProductView.vue';
-
+import ProductTimelineBookmarks from '../components/ProductTimelineBookmarks.vue';
+import CreateBookmarkList from '../views/CreateBookmarkList.vue';
 const routes = [
   {
     path: '/',
@@ -98,6 +99,16 @@ const routes = [
     path: '/blogs',
     name: 'BlogPosts',
     component: BlogPosts
+  },
+  {
+    path: '/bookmarklists/:bookmarkListId',
+    name: 'BookmarkList',
+    component: ProductTimelineBookmarks
+  },
+  {
+    path: '/createbookmarklist',
+    name: 'CreateBookmarkList',
+    component: CreateBookmarkList
   },
   {
     path: '/blogs/:blogId',
