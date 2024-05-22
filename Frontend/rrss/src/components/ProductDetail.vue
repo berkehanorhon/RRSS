@@ -6,6 +6,10 @@
     <div v-else-if="product" class="product-detail">
       <h1>{{ product.title }}</h1>
       <img :src="getImage(product)" alt="Product Image" />
+      <div class="rating">
+            <span>({{ product.ratingCount }})</span>
+            <star-rating v-for="n in 5" :key="n" :filled="n <= product.averageRating+0.5" />
+          </div>
       <p>{{ product.description }}</p>
       <p>Category ID: {{ product.categoryId }}</p>
       <p>Product ID: {{ product.productId }}</p>
@@ -27,11 +31,13 @@
 <script>
 import axios from 'axios';
 import ReviewForm from './ReviewForm.vue';
+import StarRating from './StarRating.vue';
 
 export default {
   name: 'ProductDetail',
   components: {
     ReviewForm,
+    StarRating,
   },
   data() {
     return {
