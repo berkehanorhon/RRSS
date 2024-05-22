@@ -65,8 +65,8 @@ public class ReviewController {
 
 	@PostMapping(value = "/add-review", consumes = MediaType.APPLICATION_JSON_VALUE)
 	@ResponseStatus(HttpStatus.OK)
-	public void addReview(@RequestBody ReviewRequest review, Model model) {
-		service.addReview(review,model);
+	public void addReview(@RequestParam Short star, @RequestBody ReviewRequest review, Model model) {
+		service.addReview(review,model,star);
 	}
 
 	@PatchMapping(value = "/update-review")

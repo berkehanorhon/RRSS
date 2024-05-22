@@ -4,9 +4,13 @@ import java.math.BigDecimal;
 import java.util.*;
 
 import com.demo.rrss.rrssbackend.entity.Coupon;
+import com.demo.rrss.rrssbackend.entity.ProductRating;
 import com.demo.rrss.rrssbackend.repository.CouponRepository;
+import com.demo.rrss.rrssbackend.repository.ProductRatingRepository;
 import com.demo.rrss.rrssbackend.repository.ReviewRatingRepository;
 import com.demo.rrss.rrssbackend.repository.UserBalanceRepository;
+
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -14,6 +18,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.server.ResponseStatusException;
 
 import com.demo.rrss.rrssbackend.entity.Review;
+import com.demo.rrss.rrssbackend.entity.ReviewRating;
 import com.demo.rrss.rrssbackend.repository.ReviewRepository;
 import com.demo.rrss.rrssbackend.rest.request.ReviewRequest;
 
@@ -22,8 +27,10 @@ public class ReviewService {
 	private final ReviewRepository repository;
 	private final UserBalanceRepository balanceRepository;
 	private final CouponRepository couponRepository;
-		private final ReviewRatingRepository reviewRatingRepository;
-
+	private final ReviewRatingRepository reviewRatingRepository;
+  @Autowired
+	ProductRatingRepository ProductRatingRepo;
+  
 	public ReviewService(ReviewRepository repository, ReviewRatingRepository reviewRatingRepository,
 						 UserBalanceRepository balanceRepository, CouponRepository couponRepository) {
 		this.repository = repository;
@@ -52,9 +59,20 @@ public class ReviewService {
 	}
 
 	@Transactional
-	public void addReview(ReviewRequest request, Model model) {
+	public void addReview(ReviewRequest request, Model model, Short star) {
 		Long userId = (Long) model.getAttribute("userId");
+		ProductRating productRating = new ProductRating();
+		if (star < 1 || star > 5)
+			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Star rating must be between 1 and 5.");
+		Review existingReview = repository.findByUserIdAndProductId(userId, request.getProductId());
+		if (existingReview != null)
+			throw new ResponseStatusException(HttpStatus.FORBIDDEN, "You have already reviewed this product.");
 		saveReview(request, userId);
+		repository.findByUserIdAndProductId(userId, request.getProductId());
+		productRating.setUserId(userId);
+		productRating.setProductId(request.getProductId());
+		productRating.setStarRating(star);
+		ProductRatingRepo.save(productRating);
 		handleUserBalance(userId);
 	}
 
