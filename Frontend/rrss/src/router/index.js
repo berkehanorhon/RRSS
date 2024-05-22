@@ -1,14 +1,19 @@
-import FromComponentTest from '@/views/FromComponentTest.vue'
-import { createRouter, createWebHistory } from 'vue-router'
-import BlogPost from '../components/BlogPost.vue'
-import BlogPosts from '../components/BlogPosts.vue'
-import HomeView from '../views/HomeView.vue'
-import LoginView from '../views/LoginView.vue'
-import MerchantPanel from '../views/MerchantPanel.vue'
-import ProfilePage from '../views/ProfilePage.vue'
-import RegisterView from '../views/RegisterView.vue'
-import EditProfileView from '../views/EditProfileView.vue'
-import EditProductView from '../views/EditProductView.vue'
+import { createRouter, createWebHistory } from 'vue-router';
+import HomeView from '../views/HomeView.vue';
+import LoginView from '../views/LoginView.vue';
+import RegisterView from '../views/RegisterView.vue';
+import FromComponentTest from '@/views/FromComponentTest.vue';
+import MessageView from '@/views/MessageView.vue';
+import ForumView from '@/views/ForumView.vue';
+import ForumCategoryEntriesView from '@/views/ForumCategoryEntriesView.vue';
+import ForumCategoryView from '@/views/ForumCategoryView.vue';
+import ForumEntryView from '@/views/ForumEntryView.vue';
+import BlogPost from '../components/BlogPost.vue';
+import BlogPosts from '../components/BlogPosts.vue';
+import MerchantPanel from '../views/MerchantPanel.vue';
+import ProfilePage from '../views/ProfilePage.vue';
+import EditProfileView from '../views/EditProfileView.vue';
+import EditProductView from '../views/EditProductView.vue';
 
 const routes = [
   {
@@ -19,10 +24,7 @@ const routes = [
   {
     path: '/about',
     name: 'about',
-    // route level code-splitting
-    // this generates a separate chunk (about.[hash].js) for this route
-    // which is lazy-loaded when the route is visited.
-    component: () => import(/* webpackChunkName: "about" */ '../views/AboutView.vue')
+    component: () => import('../views/AboutView.vue')
   },
   {
     path: '/login',
@@ -50,6 +52,34 @@ const routes = [
     component: FromComponentTest
   },
   {
+    path: '/messenger/:userId',
+    name: 'Messenger',
+    component: MessageView,
+    props: true
+  },
+  {
+    path: '/forum',
+    name: 'Forum',
+    component: ForumView
+  },
+  {
+    path: '/forum/categories',
+    name: 'ForumCategories',
+    component: ForumCategoryView
+  },
+  {
+    path: '/forum/categories/:categoryId',
+    name: 'ForumCategoryEntries',
+    component: ForumCategoryEntriesView,
+    props: true
+  },
+  {
+    path: '/forum/categories/:categoryId/:entryId',
+    name: 'ForumEntry',
+    component: ForumEntryView,
+    props: true
+  },
+  {
     path: '/profile/:userId',
     name: 'ProfilePage',
     component: ProfilePage
@@ -75,12 +105,11 @@ const routes = [
     component: BlogPost,
     props: true
   },
-]
+];
 
 const router = createRouter({
   history: createWebHistory(),
-  //history: createWebHashHistory(),
   routes
-})
+});
 
-export default router
+export default router;
