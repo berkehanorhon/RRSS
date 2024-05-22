@@ -1,0 +1,26 @@
+{
+    "1": {
+        "forumData": "test description1",
+        "forumName": "test title1",
+        "imagePath": null,
+        "publishDate": "01.05.2024"
+    },
+    "2": {
+        "forumData": "test description2",
+        "forumName": "test title2",
+        "imagePath": null,
+        "publishDate": "02.05.2024"
+    },
+    "3": {
+        "forumData": "test description3",
+        "forumName": "test title3",
+        "imagePath": null,
+        "publishDate": "03.05.2024"
+    },
+    "4": {
+        "forumData": "test description4",
+        "forumName": "test title4",
+        "imagePath": null,
+        "publishDate": "04.05.2024"
+    }
+}

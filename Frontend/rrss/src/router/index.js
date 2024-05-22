@@ -2,6 +2,9 @@ import FromComponentTest from '@/views/FromComponentTest.vue'
 import { createRouter, createWebHistory } from 'vue-router'
 import BlogPost from '../components/BlogPost.vue'
 import BlogPosts from '../components/BlogPosts.vue'
+import BlogTimeline from '../components/BlogTimeline.vue'
+import AddForum from '../views/AddForum.vue'
+import AdminPanel from '../views/AdminPanel.vue'
 import HomeView from '../views/HomeView.vue'
 import LoginView from '../views/LoginView.vue'
 import MerchantPanel from '../views/MerchantPanel.vue'
@@ -33,6 +36,16 @@ const routes = [
     component: RegisterView
   },
   {
+    path: '/admin-panel',
+    name: 'AdminPanel',
+    component: AdminPanel
+  },
+  {
+    path: '/add-forum',
+    name: 'AddForum',
+    component: AddForum
+  },
+  {
     path: '/products/:productId',
     name: 'ProductDetail',
     component: () => import('@/components/ProductDetail.vue')
@@ -56,6 +69,11 @@ const routes = [
     path: '/blogs',
     name: 'BlogPosts',
     component: BlogPosts
+  },
+  {
+    path: '/blogtimeline',
+    name: 'BlogTimeline',
+    component: BlogTimeline
   },
   {
     path: '/blogs/:blogId',
