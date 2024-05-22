@@ -1,0 +1,20 @@
+[
+    {
+        "bookmarkListId": 1,
+        "userId": 1,
+        "title": "My First Bookmark List",
+        "creationDate": "2019-01-01T00:00:00.000Z"
+    },
+    {
+        "bookmarkListId": 2,
+        "userId": 1,
+        "title": "My Second Bookmark List",
+        "creationDate": "2019-01-02T00:00:00.000Z"
+    },
+    {
+        "bookmarkListId": 3,
+        "userId": 1,
+        "title": "My Third Bookmark List",
+        "creationDate": "2019-01-03T00:00:00.000Z"
+    }
+]

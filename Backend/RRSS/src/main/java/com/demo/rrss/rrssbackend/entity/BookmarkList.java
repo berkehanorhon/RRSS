@@ -20,8 +20,13 @@ public class BookmarkList {
     @Column(name = "user_id", nullable = false)
     private Long userId;
 
+    @Column(name = "title", nullable = false)
+    private String title;
+
     @CreationTimestamp
     @Column(name = "creation_date", updatable = false)
     private Timestamp creationDate;
+
+
 
 }

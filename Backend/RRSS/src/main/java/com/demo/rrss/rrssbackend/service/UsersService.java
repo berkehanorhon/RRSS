@@ -1,92 +1,100 @@
 package com.demo.rrss.rrssbackend.service;
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-
-import org.mindrot.jbcrypt.BCrypt;
+import com.demo.rrss.rrssbackend.entity.Users;
+import com.demo.rrss.rrssbackend.repository.UserBalanceRepository;
+import com.demo.rrss.rrssbackend.repository.UsersRepository;
+import com.demo.rrss.rrssbackend.rest.request.UsersProfileRequest;
+import com.demo.rrss.rrssbackend.rest.request.UsersRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.ui.Model;
 import org.springframework.web.server.ResponseStatusException;
 
-import com.demo.rrss.rrssbackend.entity.Users;
-import com.demo.rrss.rrssbackend.repository.UsersRepository;
-import com.demo.rrss.rrssbackend.rest.request.UsersRequest;
+import java.util.List;
+import java.util.Optional;
 
 @Service
 public class UsersService {
-	@Autowired
-	UsersRepository repository;
 
-	public Users getUser(Long userId) {
-		return repository.findById(userId)
-				.orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found"));
-	}
+    @Autowired
+    UsersRepository repository;
 
-	public Users getUserByUsername(String username) {
-		return repository.findByUsername(username)
-				.orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found"));
-	}
+    @Autowired
+    ProductService pservice;
 
-	public void addUser(UsersRequest request) {
-		try {
-			Users existingUser = getUserByUsername(request.getUsername());
-			throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Username already exists");
-		} catch (ResponseStatusException e) {
-			if (!e.getReason().equals("User not found")) {
-				throw e;
-			}
-		}
+    @Autowired
+    ReviewService rservice;
 
-		Users user = new Users();
-		user.setUsername(request.getUsername());
-		user.setPassword(BCrypt.hashpw(request.getPassword(), BCrypt.gensalt()));
-		user.setFirstName(request.getFirstName());
-		user.setLastName(request.getLastName());
-		user.setIsAdmin(false);
-		user.setIsModerator(false);
-		user.setIsMerchant(false);
-		user.setEmail(request.getEmail());
-		user.setReputation(0);
-		user.setTokenExp(-1);
-		user.setRegistrationDate(new java.sql.Timestamp(new java.util.Date().getTime()));
+    @Autowired
+    BlogPostService bpservice;
 
-		String birthDateString = request.getBirthDate();
-		SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
-		try {
-			java.util.Date birthDateUtil = format.parse(birthDateString);
-			java.sql.Date birthDateSql = new java.sql.Date(birthDateUtil.getTime());
-			user.setBirthDate(birthDateSql);
+    @Autowired
+    BookmarkListService blservice;
 
-		} catch (ParseException e) {
-			e.printStackTrace();
-		}
+    @Autowired
+    UserBalanceRepository balanceRepository;
 
-		repository.save(user);
-	}
+    public UsersRequest getUser(Long userId) {
+        Optional<Users> response = repository.findById(userId);
+        Users user = response.orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found"));
+    
+        UsersRequest userRequest = new UsersRequest();
+        userRequest.setUsername(user.getUsername());
+        userRequest.setEmail(user.getEmail());
+        userRequest.setFirstName(user.getFirstName());
+        userRequest.setLastName(user.getLastName());
+        userRequest.setBirthdate(user.getBirthDate());
+        userRequest.setIsAdmin(user.getIsAdmin());
+        userRequest.setIsModerator(user.getIsModerator());
+        userRequest.setIsMerchant(user.getIsMerchant());
+        userRequest.setAvatarImagePath(user.getAvatarImagePath());
+        userRequest.setReputation(user.getReputation());
+    
+        return userRequest;
+    }
 
-	public Users updateUser(Long userId, Users userDetails) {  // TODO yetki kontrolü eklenecek
-		Users user = getUser(userId);
-		user.setUsername(userDetails.getUsername());
-		user.setPassword(userDetails.getPassword());
-		user.setFirstName(userDetails.getFirstName());
-		user.setLastName(userDetails.getLastName());
-		user.setBirthDate(userDetails.getBirthDate());
-		user.setRegistrationDate(userDetails.getRegistrationDate());
-		user.setIsAdmin(userDetails.getIsAdmin());
-		user.setIsModerator(userDetails.getIsModerator());
-		user.setIsMerchant(userDetails.getIsMerchant());
-		user.setEmail(userDetails.getEmail());
-		user.setReputation(userDetails.getReputation());
-		user.setTokenExp(userDetails.getTokenExp());
-		return repository.save(user);
-	}
+    public UsersProfileRequest getUserProfile(Long userId) {
+        Optional<Users> response = repository.findById(userId);
+        Users user = response.orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found"));
+    
+        UsersProfileRequest userProfileRequest = new UsersProfileRequest();
+        userProfileRequest.setUser(getUser(userId));
+        userProfileRequest.setProducts(pservice.getUsersAllProducts(userId));
+        userProfileRequest.setBlogPosts(bpservice.getUsersAllBlogPosts(userId));
+        userProfileRequest.setReviews(rservice.getUsersAllReviews(userId));
+        userProfileRequest.setBookmarkLists(blservice.getUsersAllBookmarkLists(userId));
+        return userProfileRequest;
+    }
 
-	public void deleteUser(Long userId) { // TODO yetki kontrolü eklenecek
-		if (repository.existsById(userId)) {
-			repository.deleteById(userId);
-		} else {
-			throw new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found");
-		}
-	}
+    @SuppressWarnings("null")
+    public void updateUser(Long userId, Users user, Model model) {
+        Optional<Users> existingUser = repository.findById(userId);
+        if (existingUser.isPresent() && model.getAttribute("userId").equals(existingUser.get().getUserId())){
+            Users updatedUser = existingUser.get();
+            updatedUser.setUsername(user.getUsername());
+            updatedUser.setEmail(user.getEmail());
+            updatedUser.setFirstName(user.getFirstName());
+            updatedUser.setLastName(user.getLastName());
+            updatedUser.setBirthDate(user.getBirthDate());
+            // updatedUser.setAvatarImagePath(user.getAvatarImagePath()); # TODO EKLENECEK!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+            repository.save(updatedUser);
+        } else {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found or you are not authorized to update this user");
+        }
+    }
+
+    @SuppressWarnings("null")
+    public void deleteUser(Long userId, Model model) {
+        if (repository.existsById(userId) && model.getAttribute("userId").equals(userId))
+            repository.deleteById(userId);
+        else
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found or you are not authorized to delete this user");
+    }
+
+    @SuppressWarnings("null")
+    public String getBalance(Model model) {
+        Long userId = (Long) model.getAttribute("userId");
+        return balanceRepository.findById(userId).get().getBalance().toString();
+    }
 }

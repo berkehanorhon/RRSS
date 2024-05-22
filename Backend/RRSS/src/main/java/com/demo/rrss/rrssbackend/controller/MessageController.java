@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.demo.rrss.rrssbackend.entity.Message;
+import com.demo.rrss.rrssbackend.rest.request.ConversationRequest;
 import com.demo.rrss.rrssbackend.rest.request.MessageBoxRequest;
 import com.demo.rrss.rrssbackend.rest.request.MessageRequest;
 import com.demo.rrss.rrssbackend.service.MessageService;
@@ -53,6 +54,12 @@ public class MessageController {
     @ResponseStatus(HttpStatus.OK)
     public void sendMessage(@RequestBody MessageRequest messageRequest,Model model) {
         messageService.saveMessage(messageRequest,model);
+    }
+
+    @PostMapping("/get-conversation-with-user")
+    @ResponseStatus(HttpStatus.OK)
+    public ResponseEntity<ConversationRequest> getConversation(@RequestParam Long userId, Model model) {
+        return ResponseEntity.ok(messageService.getConversation(userId, model));
     }
 
     @GetMapping("/get-message")

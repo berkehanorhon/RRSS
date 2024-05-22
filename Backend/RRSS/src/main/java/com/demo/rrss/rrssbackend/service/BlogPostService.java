@@ -12,10 +12,15 @@ import org.springframework.web.server.ResponseStatusException;
 import com.demo.rrss.rrssbackend.entity.BlogPost;
 import com.demo.rrss.rrssbackend.repository.BlogPostRepository;
 import com.demo.rrss.rrssbackend.rest.request.BlogPostRequest;
+import org.springframework.web.server.ResponseStatusException;
+import org.springframework.ui.Model;
+import com.demo.rrss.rrssbackend.entity.BlogPost;
+import com.demo.rrss.rrssbackend.repository.BlogPostRepository;
+
 
 @Service
 public class BlogPostService {
-    @Autowired
+  @Autowired
 	BlogPostRepository repository;
 
 	public BlogPost getBlogPost(Long blogPostId) {
@@ -61,4 +66,9 @@ public class BlogPostService {
 	public List<BlogPost> getAllBlogPosts() {
 		return (List<BlogPost>) repository.findAll();
 	}
+
+    public List<BlogPost> getUsersAllBlogPosts(Long userId) {
+        return repository.findByUserId(userId);
+    }
 }
+

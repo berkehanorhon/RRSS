@@ -43,6 +43,13 @@ public class ProductController {
 		return service.getProduct(productId);
 	}
 
+	@GetMapping("/get-users-products")
+	@ResponseStatus(HttpStatus.OK)
+	public List<Product> getUsersAllProducts(@RequestParam Long userId) {
+		List<Product> products = service.getUsersAllProducts(userId);
+		return products;
+	}
+
 	@GetMapping("/get-all-products")
 	@ResponseStatus(HttpStatus.OK)
 	public List<Product> getAllProducts(@RequestParam Long categoryId) {
@@ -58,13 +65,13 @@ public class ProductController {
 
 	@PatchMapping(value = "/update-product")
 	@ResponseStatus(HttpStatus.OK)
-	public void ProductUpdateResponse(@RequestBody ProductRequest product) {
-		service.updateProduct(product.getProductId(), product);
+	public void ProductUpdateResponse(@RequestBody ProductRequest product, Model model) {
+		service.updateProduct(product.getProductId(), product, model);
 	}
 
 	@DeleteMapping(value = "/delete-product")
 	@ResponseStatus(HttpStatus.OK)
-	public void ProductDeleteResponse(@RequestParam Long productId) {
-		service.deleteProduct(productId);
+	public void ProductDeleteResponse(@RequestParam Long productId, Model model) {
+		service.deleteProduct(productId, model);
 	}
 }

@@ -19,9 +19,9 @@
     data() {
       return {
         inputs: [
-          { id: 'username', label: 'Username', type: 'text' },
-          { id: 'password', label: 'Password', type: 'password' },
-          { id: 'asd', label: 'Remember me', type: 'checkbox' }
+          { id: 'username', label: 'Username', type: 'text' , text: ''},
+          { id: 'password', label: 'Password', type: 'password' , text: ''},
+          { id: 'asd', label: 'Remember me', type: 'checkbox' , text: ''}
         ]
       };
     },
@@ -36,6 +36,7 @@
                 if (response.status === 200) {
                     console.log(response.data.token);
                     localStorage.setItem('token', response.data.token);
+                    localStorage.setItem('userId', response.data.userId);
                     window.location.href = '/';
 
                 }

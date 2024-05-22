@@ -1,5 +1,9 @@
 <template>
   <div class="product-timeline">
+    <div class="search-container">
+      <img :src="searchIcon" alt="Search Icon" class="search-icon" />
+      <input type="text" v-model="searchTerm" placeholder="Search products..." class="search-bar">
+    </div>
     <div class="product-container">
       <div class="product-row" v-for="(row, index) in chunkedData" :key="index">
         <div v-for="product in row" :key="product.productId" class="product">
@@ -23,19 +27,48 @@
 
 <script>
 import axios from 'axios';
+import searchIcon from '@/assets/search-icon.png';
 
 export default {
   name: 'ProductTimeline',
+  props: {
+    fetchProducts: {
+      type: Function,
+      default: function() {
+        return axios.get('http://127.0.0.1:8080/get-all-products?categoryId=-1')
+        .then(response => {
+          this.products = response.data.map(product => ({
+            ...product,
+            image: product.imagePath || require('@/assets/logo.png')
+          }));
+        })
+        .catch(error => {
+          console.error("There was an error fetching the products:", error);
+        });
+      }
+    }
+  },
   data() {
     return {
       products: [],
       defaultImage: require('@/assets/logo.png'),
       currentPage: 1,
       itemsPerPage: 18,
-      windowWidth: 0
+      windowWidth: 0,
+      searchTerm: '',
+      searchIcon,
     };
   },
   computed: {
+    filteredProducts() {
+      if (this.searchTerm) {
+        return this.products.filter(product =>
+          product.title.toLowerCase().includes(this.searchTerm.toLowerCase())
+        );
+      } else {
+        return this.products;
+      }
+    },
     chunkSize() {
       if (this.windowWidth > 1600) {
         return 6;
@@ -49,9 +82,9 @@ export default {
       }
     },
     paginatedData() {
-      const start = (this.currentPage - 1) * this.itemsPerPage;
-      const end = start + this.itemsPerPage;
-      return this.products.slice(start, end);
+    const start = (this.currentPage - 1) * this.itemsPerPage;
+    const end = start + this.itemsPerPage;
+    return this.filteredProducts.slice(start, end);
     },
     chunkedData() {
       return Array(Math.ceil(this.paginatedData.length / this.chunkSize)).fill().map((_, index) => index * this.chunkSize).map(begin => this.paginatedData.slice(begin, begin + this.chunkSize));
@@ -73,18 +106,6 @@ export default {
     });
   },
   methods: {
-    fetchProducts() {
-      axios.get('http://127.0.0.1:8080/get-all-products?categoryId=-1')
-      .then(response => {
-        this.products = response.data.map(product => ({
-          ...product,
-          image: require('@/assets/logo.png')
-        }));
-      })
-      .catch(error => {
-        console.error("There was an error fetching the products:", error);
-      });
-    },
     getImage(product) {
       return product.image || this.defaultImage;
     },
@@ -113,7 +134,7 @@ export default {
   justify-content: center;
   align-items: center;
   height: auto; /* Reduced from 100vh */
-  background-color: #ffffcc; /* Light yellow */
+  background-color: #ffffff; /* Light yellow */
   padding: 20px;
 }
 
@@ -172,6 +193,26 @@ export default {
   color: #fff;
   cursor: pointer;
 }
+
+.search-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 70%; /* Adjust this to change the width of the search bar */
+  margin: auto; /* Centers the search bar */
+}
+
+.search-icon {
+  height: 90%;
+  margin-right: 10px; /* Adds some space between the icon and the search bar */
+}
+
+.search-bar {
+  width: 100%;
+  padding: 10px;
+  font-size: 16px;
+}
+
 /* Not necessary at the moment, could be necessary in the future */
 /* @media (max-width: 1600px) {
   .product {

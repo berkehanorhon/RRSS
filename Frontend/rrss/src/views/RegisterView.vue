@@ -19,12 +19,12 @@ export default {
   data() {
     return {
       inputs: [
-        { id: 'username', label: 'Username', type: 'text' },
-        { id: 'password', label: 'Password', type: 'password' },
-        { id: 'email', label: 'Email', type: 'email' },
-        { id: 'firstName', label: 'First Name', type: 'text' },
-        { id: 'lastName', label: 'Last Name', type: 'text' },
-        { id: 'birthDate', label: 'Birth Date', type: 'date' }
+        { id: 'username', label: 'Username', type: 'text' ,text: ''},
+        { id: 'password', label: 'Password', type: 'password' ,text: ''},
+        { id: 'email', label: 'Email', type: 'email' ,text: ''},
+        { id: 'firstName', label: 'First Name', type: 'text' ,text: ''},
+        { id: 'lastName', label: 'Last Name', type: 'text' ,text: ''},
+        { id: 'birthDate', label: 'Birth Date', type: 'date' ,text: ''}
       ]
     };
   },

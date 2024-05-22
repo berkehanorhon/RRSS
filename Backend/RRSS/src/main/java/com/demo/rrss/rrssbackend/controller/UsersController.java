@@ -1,48 +1,59 @@
 package com.demo.rrss.rrssbackend.controller;
 
-import java.util.HashMap;
-import java.util.Map;
-
-import org.mindrot.jbcrypt.BCrypt;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.server.ResponseStatusException;
-
 import com.demo.rrss.rrssbackend.entity.Users;
+import com.demo.rrss.rrssbackend.rest.request.UsersProfileRequest;
 import com.demo.rrss.rrssbackend.rest.request.UsersRequest;
-import com.demo.rrss.rrssbackend.service.JwtUtil;
 import com.demo.rrss.rrssbackend.service.UsersService;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.*;
+import com.demo.rrss.rrssbackend.service.JwtUtil;
+
 @RestController
-@RequestMapping("/auth")
 public class UsersController {
+
     @Autowired
-    private JwtUtil jwtUtil;
+    UsersService service;
 
-	@Autowired
-	private UsersService usersService;
+    @Autowired
+    JwtUtil jwtUtil;
 
-	@PostMapping("/register")
-	public ResponseEntity<Void> registerUser(@RequestBody UsersRequest request) {
-		usersService.addUser(request);
-		return new ResponseEntity<>(HttpStatus.CREATED);
+    @ModelAttribute // TODO Herhangi bir hata durumunda 403 döndürülecek
+	public void addUserIdToModel(@RequestHeader(value="Authorization") String bearerToken, Model model) {
+		String token = bearerToken.substring(7);
+		Long userId = jwtUtil.extractUserId(token);
+		model.addAttribute("userId", userId);
 	}
 
-	@PostMapping("/login")
-	public ResponseEntity<Map<String, String>> loginUser(@RequestBody UsersRequest request) {
-		Users existingUser = usersService.getUserByUsername(request.getUsername());
+    @GetMapping("/get-user")
+    @ResponseStatus(HttpStatus.OK)
+    public UsersRequest getUser(@RequestParam Long userId) {
+        return service.getUser(userId);
+    }
 
-		if (existingUser != null && BCrypt.checkpw(request.getPassword(), existingUser.getPassword())) {
-			Map<String, String> token = new HashMap<>();
-			token.put("token", jwtUtil.generateToken(existingUser));
-			return new ResponseEntity<>(token, HttpStatus.OK);
-		} else {
-			throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Incorrect username or password");
-		}
-	}
+    @GetMapping("/get-user-profile")
+    @ResponseStatus(HttpStatus.OK)
+    public UsersProfileRequest getUserProfile(@RequestParam Long userId) {
+        return service.getUserProfile(userId);
+    }
+
+    @PatchMapping(value = "/update-user")
+    @ResponseStatus(HttpStatus.OK)
+    public void updateUser(@RequestBody Users user, Model model) {
+        service.updateUser(user.getUserId(), user, model);
+    }
+
+    @DeleteMapping(value = "/delete-user")
+    @ResponseStatus(HttpStatus.OK)
+    public void deleteUser(@RequestParam Long userId, Model model) {
+        service.deleteUser(userId, model);
+    }
+
+    @GetMapping(value = "/get-balance")
+    @ResponseStatus(HttpStatus.OK)
+    public String getBalance(Model model) {
+        return service.getBalance(model);
+    }
 }
