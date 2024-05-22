@@ -1,8 +1,11 @@
 package com.demo.rrss.rrssbackend.service;
 
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
 
+import org.aspectj.internal.lang.annotation.ajcDeclareAnnotation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
@@ -12,6 +15,7 @@ import org.springframework.ui.Model;
 import com.demo.rrss.rrssbackend.controller.UsersController;
 import com.demo.rrss.rrssbackend.entity.Product;
 import com.demo.rrss.rrssbackend.entity.Users;
+import com.demo.rrss.rrssbackend.repository.ProductRatingRepository;
 import com.demo.rrss.rrssbackend.repository.ProductRepository;
 import com.demo.rrss.rrssbackend.repository.UsersRepository;
 import com.demo.rrss.rrssbackend.rest.request.ProductRequest;
@@ -22,10 +26,23 @@ public class ProductService {
 	ProductRepository repository;
 	@Autowired
 	UsersRepository uRepository;
-
-	public Product getProduct(Long productId) {
-		return repository.findById(productId)
+	@Autowired
+	ProductRatingRepository prRepository;
+	public HashMap<String, Object> getProduct(Long productId) {
+		Product product = repository.findById(productId)
 				.orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Product not found"));
+	
+		HashMap<String, Object> productMap = new HashMap<>();
+		productMap.put("productId", product.getProductId());
+		productMap.put("title", product.getTitle());
+		productMap.put("description", product.getDescription());
+		productMap.put("publishDate", product.getPublishDate());
+		productMap.put("userId", product.getUserId());
+		productMap.put("categoryId", product.getCategoryId());
+		productMap.put("imagePath", product.getImagePath());
+		productMap.put("averageRating", prRepository.getAverageRatingOrZero(product.getProductId()));
+		productMap.put("ratingCount", prRepository.findRatingCountByProductId(product.getProductId()));
+		return productMap;
 	}
 
 	public void addProduct(ProductRequest request, Model model) {
@@ -67,16 +84,31 @@ public class ProductService {
 
 	}
 
-	public List<Product> getAllProducts(Long categoryId) {
-		if (categoryId == -1)
-			return repository.findAllMax50();
-		else {
-			List<Product> products = repository.findProductsByCategoryId(categoryId);
-			return products;
+	public HashSet getAllProducts(Long categoryId) {
+		List<Product> products;
+		HashSet response = new HashSet<>();
+		if (categoryId == -1) {
+			products = repository.findAllMax50();
+		} else {
+			products = repository.findProductsByCategoryId(categoryId);
 		}
+		for (Product product : products) {
+			HashMap<String, Object> productMap = new HashMap<>();
+			productMap.put("productId", product.getProductId());
+			productMap.put("title", product.getTitle());
+			productMap.put("description", product.getDescription());
+			productMap.put("publishDate", product.getPublishDate());
+			productMap.put("userId", product.getUserId());
+			productMap.put("categoryId", product.getCategoryId());
+			productMap.put("imagePath", product.getImagePath());
+			productMap.put("averageRating", prRepository.getAverageRatingOrZero(product.getProductId()));
+			productMap.put("ratingCount", prRepository.findRatingCountByProductId(product.getProductId()));
+			response.add(productMap);
+		}
+		return response;
 	}
 
-    public List<Product> getUsersAllProducts(Long userId) {
+	public List<Product> getUsersAllProducts(Long userId) {
 		return repository.findByUserId(userId);
 	}
 }
