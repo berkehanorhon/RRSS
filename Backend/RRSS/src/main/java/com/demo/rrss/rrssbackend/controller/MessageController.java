@@ -2,6 +2,7 @@ package com.demo.rrss.rrssbackend.controller;
 
 
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -45,9 +46,8 @@ public class MessageController {
 
     @GetMapping("/get-message-box")
     @ResponseStatus(HttpStatus.OK)
-    public ResponseEntity<List<MessageBoxRequest>> getMessageBox(Model model) {
-        List<MessageBoxRequest> msgBoxes = messageService.getDirectMessageBoxes(model);
-        return ResponseEntity.ok(msgBoxes);
+    public List<Map<Long, MessageBoxRequest>> getMessageBox(Model model) {
+        return messageService.getDirectMessageBoxes(model);
     }
 
     @PostMapping("/send-message")

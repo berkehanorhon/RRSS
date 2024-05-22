@@ -1,14 +1,9 @@
 package com.demo.rrss.rrssbackend.service;
 
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.autoconfigure.security.SecurityProperties.User;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.ui.Model;
@@ -32,14 +27,13 @@ public class MessageService {
     }
 
     public Message getMessage(Long messageId) {
-        Message message = messageRepository.findByMessageId(messageId);
-        return message;
+        return messageRepository.findByMessageId(messageId);
     }
 
 
 public void saveMessage(MessageRequest messageDTO, Model model) {
     Long userId = (Long) model.getAttribute("userId");
-    if (userId.equals(messageDTO.getReceiverId())) {
+    if (Objects.equals(userId, messageDTO.getReceiverId())) {
         throw new ResponseStatusException(HttpStatus.FORBIDDEN, "You can not send message to yourself.");
     }
     Message message = new Message();
@@ -53,35 +47,37 @@ public void saveMessage(MessageRequest messageDTO, Model model) {
         messageRepository.deleteById(messageId);
     }
 
-    public List<MessageBoxRequest> getDirectMessageBoxes(Model model) {
+    public List<Map<Long, MessageBoxRequest>> getDirectMessageBoxes(Model model) {
         Long userId = (Long) model.getAttribute("userId");
-        // Alıcı veya gönderici olarak kullanıcının olduğu tüm mesajları al.
         List<Message> allMessages = messageRepository.findBySenderIdOrReceiverId(userId, userId);
-
-        // Mesajları grupla (buradaki mantığın doğru olup olmadığını test etmemiz lazım)
         Map<Long, List<Message>> messageGroups = allMessages.stream()
                 .collect(Collectors.groupingBy(message ->
                         message.getSenderId().equals(userId) ? message.getReceiverId() : message.getSenderId()));
 
-        List<MessageBoxRequest> messageBoxes = messageGroups.entrySet().stream()
-                .map(messages -> {
-                    MessageBoxRequest messageBox = new MessageBoxRequest();
-                    messageBox.setReceiverUserId(messages.getKey());
-                    messageBox.setMessages(messages.getValue().stream()
-                            .sorted(Comparator.comparing(Message::getSentDate))
-                            .map(message -> {
-                                Message messageDTO = new Message();
-                                messageDTO.setMessageId(message.getMessageId());
-                                messageDTO.setSenderId(message.getSenderId());
-                                messageDTO.setReceiverId(message.getReceiverId());
-                                messageDTO.setMessage(message.getMessage());
-                                messageDTO.setSentDate(message.getSentDate());
-                                return messageDTO;
-                            })
-                            .collect(Collectors.toList()));
-                    return messageBox;
-                })
-                .collect(Collectors.toList());
+        List<Map<Long, MessageBoxRequest>> messageBoxes = new ArrayList<>();
+        for (Map.Entry<Long, List<Message>> entry : messageGroups.entrySet()) {
+            Long otherUserId = entry.getKey();
+            List<Message> messages = entry.getValue();
+
+            Message lastMessage = messages.stream()
+                    .max(Comparator.comparing(Message::getSentDate))
+                    .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "No messages found"));
+
+            MessageBoxRequest messageBox = new MessageBoxRequest();
+            messageBox.setUsername(userService.getUser(otherUserId).getUsername());
+            messageBox.setLastMessage(lastMessage.getMessage());
+            messageBox.setLastMessageTime(lastMessage.getSentDate().toString());
+
+            Map<Long, MessageBoxRequest> map = new HashMap<>();
+            map.put(otherUserId, messageBox);
+            messageBoxes.add(map);
+        }
+
+        messageBoxes.sort((box1, box2) -> {
+            MessageBoxRequest messageBox1 = box1.values().iterator().next();
+            MessageBoxRequest messageBox2 = box2.values().iterator().next();
+            return messageBox2.getLastMessageTime().compareTo(messageBox1.getLastMessageTime());
+        });
 
         return messageBoxes;
     }
