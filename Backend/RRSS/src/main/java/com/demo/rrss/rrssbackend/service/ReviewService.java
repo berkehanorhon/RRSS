@@ -10,7 +10,6 @@ import com.demo.rrss.rrssbackend.repository.ProductRatingRepository;
 import com.demo.rrss.rrssbackend.repository.ReviewRatingRepository;
 import com.demo.rrss.rrssbackend.repository.UserBalanceRepository;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -18,7 +17,6 @@ import org.springframework.ui.Model;
 import org.springframework.web.server.ResponseStatusException;
 
 import com.demo.rrss.rrssbackend.entity.Review;
-import com.demo.rrss.rrssbackend.entity.ReviewRating;
 import com.demo.rrss.rrssbackend.repository.ReviewRepository;
 import com.demo.rrss.rrssbackend.rest.request.ReviewRequest;
 
@@ -28,15 +26,16 @@ public class ReviewService {
 	private final UserBalanceRepository balanceRepository;
 	private final CouponRepository couponRepository;
 	private final ReviewRatingRepository reviewRatingRepository;
-  @Autowired
-	ProductRatingRepository ProductRatingRepo;
+	private final ProductRatingRepository ProductRatingRepo;
   
 	public ReviewService(ReviewRepository repository, ReviewRatingRepository reviewRatingRepository,
-						 UserBalanceRepository balanceRepository, CouponRepository couponRepository) {
+						 UserBalanceRepository balanceRepository, CouponRepository couponRepository,
+						 ProductRatingRepository ProductRatingRepo) {
 		this.repository = repository;
 		this.reviewRatingRepository = reviewRatingRepository;
 		this.balanceRepository = balanceRepository;
 		this.couponRepository = couponRepository;
+		this.ProductRatingRepo = ProductRatingRepo;
 	}
 
 	private HashMap<String, Object> addFieldsToReview(Review response) {
