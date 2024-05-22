@@ -4,10 +4,12 @@ import com.demo.rrss.rrssbackend.entity.Coupon;
 import com.demo.rrss.rrssbackend.repository.CouponRepository;
 import com.demo.rrss.rrssbackend.rest.request.CouponRequest;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.ui.Model;
 import org.springframework.web.server.ResponseStatusException;
 
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -21,6 +23,11 @@ public class CouponService {
     public Coupon getCoupon(Long couponId) {
         Optional<Coupon> coupon =  couponRepository.findById(couponId);
         return coupon.orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Coupon not found"));
+    }
+
+    public ResponseEntity<List<Coupon>> getCouponByUserId(Long userId) {
+        List<Coupon> coupon =  couponRepository.findCouponByUserId(userId);
+        return ResponseEntity.ok(coupon);
     }
 
     public Coupon addCoupon(CouponRequest request, Model model) {

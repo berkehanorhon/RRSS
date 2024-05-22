@@ -5,8 +5,11 @@ import com.demo.rrss.rrssbackend.rest.request.CouponRequest;
 import com.demo.rrss.rrssbackend.service.CouponService;
 import com.demo.rrss.rrssbackend.service.JwtUtil;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 public class CouponController {
@@ -29,6 +32,13 @@ public class CouponController {
     @ResponseStatus(HttpStatus.OK)
     public Coupon getCoupon(@RequestParam Long userId) {
         return couponService.getCoupon(userId);
+    }
+
+    @GetMapping("/user-get-coupon")
+    @ResponseStatus(HttpStatus.OK)
+    public ResponseEntity<List<Coupon>> getUserCoupon(Model model) {
+        Long userId = (Long) model.getAttribute("userId");
+        return couponService.getCouponByUserId(userId);
     }
 
     @PostMapping("/add-coupon")
