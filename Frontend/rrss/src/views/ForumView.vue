@@ -27,13 +27,12 @@
         topics: [
           { id: 1, title: 'First Topic', content: 'This is the first topic content' },
           { id: 2, title: 'Second Topic', content: 'This is the second topic content' },
-          
         ]
       };
     },
     methods: {
       viewTopic(topic) {
-        console.log('Viewing topic:', topic);
+        this.$router.push(`/forum/categories/${topic.id}`);
       }
     }
   };
