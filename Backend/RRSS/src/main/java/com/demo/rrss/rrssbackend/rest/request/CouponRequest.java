@@ -10,5 +10,6 @@ import lombok.Setter;
 
 public class CouponRequest {
     private Long userId;
+    private String couponText;
     private String couponData;
 }
