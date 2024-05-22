@@ -19,18 +19,12 @@ export default {
   data() {
     return {
       inputs: [
-        { id: 'username', label: 'Username', type: 'text' },
-        { id: 'password', label: 'Password', type: 'password' },
-        { id: 'firstName', label: 'First Name', type: 'text' },
-        { id: 'lastName', label: 'Last Name', type: 'text' },
-        { id: 'birthDate', label: 'Birth Date', type: 'date' },
-        { id: 'registrationDate', label: 'Registration Date', type: 'date' },
-        { id: 'isAdmin', label: 'Is Admin', type: 'checkbox' },
-        { id: 'isModerator', label: 'Is Moderator', type: 'checkbox' },
-        { id: 'isMerchant', label: 'Is Merchant', type: 'checkbox' },
-        { id: 'email', label: 'Email', type: 'email' },
-        { id: 'reputation', label: 'Reputation', type: 'number' },
-        { id: 'tokenExp', label: 'Token Expiration', type: 'number' }
+        { id: 'username', label: 'Username', type: 'text' ,text: ''},
+        { id: 'password', label: 'Password', type: 'password' ,text: ''},
+        { id: 'email', label: 'Email', type: 'email' ,text: ''},
+        { id: 'firstName', label: 'First Name', type: 'text' ,text: ''},
+        { id: 'lastName', label: 'Last Name', type: 'text' ,text: ''},
+        { id: 'birthDate', label: 'Birth Date', type: 'date' ,text: ''}
       ]
     };
   },
@@ -43,7 +37,6 @@ export default {
                     firstName: formData.firstName,
                     lastName: formData.lastName,
                     birthDate: formData.birthDate,
-                    registrationDate: formData.registrationDate,
                     isAdmin: formData.isAdmin,
                     isModerator: formData.isModerator,
                     isMerchant: formData.isMerchant,

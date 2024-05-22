@@ -8,6 +8,12 @@ import ForumView from '@/views/ForumView.vue';
 import ForumCategoryEntriesView from '@/views/ForumCategoryEntriesView.vue';
 import ForumCategoryView from '@/views/ForumCategoryView.vue';
 import ForumEntryView from '@/views/ForumEntryView.vue';
+import BlogPost from '../components/BlogPost.vue';
+import BlogPosts from '../components/BlogPosts.vue';
+import MerchantPanel from '../views/MerchantPanel.vue';
+import ProfilePage from '../views/ProfilePage.vue';
+import EditProfileView from '../views/EditProfileView.vue';
+import EditProductView from '../views/EditProductView.vue';
 
 const routes = [
   {
@@ -34,6 +40,11 @@ const routes = [
     path: '/products/:productId',
     name: 'ProductDetail',
     component: () => import('@/components/ProductDetail.vue')
+  },
+  {
+    path: '/products/:productId/edit',
+    name: 'EditProductView',
+    component: EditProductView
   },
   {
     path: '/test/',
@@ -67,7 +78,33 @@ const routes = [
     name: 'ForumEntry',
     component: ForumEntryView,
     props: true
-  }
+  },
+  {
+    path: '/profile/:userId',
+    name: 'ProfilePage',
+    component: ProfilePage
+  },
+  {
+    path: '/profile/:userId/edit',
+    name: 'EditProfileView',
+    component: EditProfileView
+  },
+  {
+    path: '/merchantpanel',
+    name: 'MerchantPanel',
+    component: MerchantPanel
+  },
+  {
+    path: '/blogs',
+    name: 'BlogPosts',
+    component: BlogPosts
+  },
+  {
+    path: '/blogs/:blogId',
+    name: 'BlogPost',
+    component: BlogPost,
+    props: true
+  },
 ];
 
 const router = createRouter({

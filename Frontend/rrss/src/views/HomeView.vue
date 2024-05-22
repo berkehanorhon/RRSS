@@ -7,12 +7,12 @@
 
 <script>
 import ProductTimeline from '../components/ProductTimeline.vue';
-import Sidebar from '../components/SideBar.vue';
+import CategoryBar from '../components/CategoryBar.vue';
 
 export default {
   name: 'HomeView',
   components: {
-    'sidebar': Sidebar,
+    'sidebar': CategoryBar,
     'product-timeline': ProductTimeline
   }
 }
@@ -23,14 +23,14 @@ export default {
   display: flex;
   width: 100%;
   height: calc(100vh - 60px); /* Navbar'ın yüksekliği çıkarıldı */
-  margin-top: 60px; /* Navbar altına yerleştir */
+  border: 2px solid rgb(105, 102, 102);
 }
 
 .sidebar {
-  flex: 0 0 160px; /* Sidebar için sabit genişlik ayarlanmıştır */
-  background-color: rgb(227, 230, 142);
+  flex: 0 0 160px;
   padding: 20px;
-  overflow-y: auto; /* Uzun sidebar içeriği için kaydırma çubuğu */
+  overflow-y: auto;
+  margin-right: 2px; /* Sağdan 20px boşluk ekler */
 }
 
 .product-timeline {
