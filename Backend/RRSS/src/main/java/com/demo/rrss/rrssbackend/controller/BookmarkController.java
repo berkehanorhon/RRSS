@@ -3,17 +3,28 @@ package com.demo.rrss.rrssbackend.controller;
 import com.demo.rrss.rrssbackend.entity.BookmarkList;
 import com.demo.rrss.rrssbackend.rest.request.BookmarkListRequest;
 import com.demo.rrss.rrssbackend.service.BookmarkListService;
+import com.demo.rrss.rrssbackend.service.JwtUtil;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/bookmark")
 public class BookmarkController {
     private final BookmarkListService bookmarkListService;
+    private final JwtUtil jwtUtil;
 
-    public BookmarkController(BookmarkListService bookmarkListService) {
+    public BookmarkController(BookmarkListService bookmarkListService, JwtUtil jwtUtil) {
         this.bookmarkListService = bookmarkListService;
+        this.jwtUtil = jwtUtil;
+    }
+
+    @ModelAttribute // TODO Herhangi bir hata durumunda 403 döndürülecek
+    public void addUserIdToModel(@RequestHeader(value="Authorization") String bearerToken, Model model) {
+        String token = bearerToken.substring(7);
+        Long userId = jwtUtil.extractUserId(token);
+        model.addAttribute("userId", userId);
     }
 
     @GetMapping("/get-users-lists")
@@ -22,20 +33,20 @@ public class BookmarkController {
     }
 
     @PostMapping("/create")
-    public ResponseEntity<Void> createBookmarkList(@RequestBody BookmarkListRequest request, @RequestHeader("Authorization") String token){
-        bookmarkListService.addBookmarkList(request, token);
+    public ResponseEntity<Void> createBookmarkList(@RequestBody BookmarkListRequest request, Model model){
+        bookmarkListService.addBookmarkList(request, model);
         return new ResponseEntity<>(HttpStatus.CREATED);
     }
 
     @PutMapping("/update")
-    public ResponseEntity<Void> updateBookmarkList(@RequestBody BookmarkListRequest request, @RequestHeader("Authorization") String token){
-        bookmarkListService.updateBookmarkList(request, token);
+    public ResponseEntity<Void> updateBookmarkList(@RequestBody BookmarkListRequest request, Model model){
+        bookmarkListService.updateBookmarkList(request, model);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
     @DeleteMapping("/delete")
-    public ResponseEntity<Void> deleteBookmarkList(@RequestBody BookmarkListRequest request, @RequestHeader("Authorization") String token){
-        bookmarkListService.deleteBookmarkList(request, token);
+    public ResponseEntity<Void> deleteBookmarkList(@RequestBody BookmarkListRequest request, Model model ){
+        bookmarkListService.deleteBookmarkList(request, model);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
