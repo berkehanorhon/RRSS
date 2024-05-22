@@ -41,15 +41,14 @@ public class ProductController {
 
 	@GetMapping("/get-product")
 	@ResponseStatus(HttpStatus.OK)
-	public HashMap ProductResponse(@RequestParam Long productId) {
+	public HashMap<String, Object> ProductResponse(@RequestParam Long productId) {
 		return service.getProduct(productId);
 	}
 
 	@GetMapping("/get-users-products")
 	@ResponseStatus(HttpStatus.OK)
 	public List<Product> getUsersAllProducts(@RequestParam Long userId) {
-		List<Product> products = service.getUsersAllProducts(userId);
-		return products;
+        return service.getUsersAllProducts(userId);
 	}
 
 	@GetMapping("/get-all-products")

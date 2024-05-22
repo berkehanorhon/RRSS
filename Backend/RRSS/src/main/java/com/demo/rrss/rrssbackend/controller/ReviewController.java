@@ -1,7 +1,7 @@
 package com.demo.rrss.rrssbackend.controller;
 
+import java.util.HashMap;
 import java.util.List;
-import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -41,15 +41,14 @@ public class ReviewController {
 
 	@GetMapping("/get-review")
 	@ResponseStatus(HttpStatus.OK)
-	public Review getReview(@RequestParam Long reviewId) {
+	public HashMap<String, Object> getReview(@RequestParam Long reviewId) {
 		return service.getReview(reviewId);
 	}
 
 	@GetMapping("/get-all-reviews")
 	@ResponseStatus(HttpStatus.OK)
-	public List<Review> getAllReviews() {
-		List<Review> reviews = service.getAllReviews();
-		return reviews.stream().limit(10).collect(Collectors.toList());
+	public List<HashMap<String, Object>> getAllReviews() {
+		return service.getAllReviews();
 	}
 
 	@GetMapping("/get-users-reviews")
@@ -61,8 +60,7 @@ public class ReviewController {
 	@GetMapping("/get-products-reviews")
 	@ResponseStatus(HttpStatus.OK)
 	public List<Review> getProductsAllReviews(@RequestParam Long productId) {
-		List<Review> reviews = service.getProductsAllReviews(productId);
-		return reviews;
+        return service.getProductsAllReviews(productId);
 	}
 
 	@PostMapping(value = "/add-review", consumes = MediaType.APPLICATION_JSON_VALUE)
