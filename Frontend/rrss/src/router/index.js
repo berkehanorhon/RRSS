@@ -3,6 +3,7 @@ import { createRouter, createWebHistory } from 'vue-router'
 import BlogPost from '../components/BlogPost.vue'
 import BlogPosts from '../components/BlogPosts.vue'
 import BlogTimeline from '../components/BlogTimeline.vue'
+import Coupons from '../components/Coupons.vue'
 import AddForum from '../views/AddForum.vue'
 import AdminPanel from '../views/AdminPanel.vue'
 import HomeView from '../views/HomeView.vue'
@@ -59,6 +60,10 @@ const routes = [
     path: '/profile/:userId',
     name: 'ProfilePage',
     component: ProfilePage
+  },{
+    path: '/coupons',
+    name: 'coupons',
+    component: Coupons
   },
   {
     path: '/merchantpanel',

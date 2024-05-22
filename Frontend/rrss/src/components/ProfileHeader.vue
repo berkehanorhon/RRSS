@@ -10,6 +10,7 @@
         <div class="actions">
           <button @click="sendMessage" class="action-button">Send Message</button>
           <router-link to="/edit-profile" class="action-button">Edit Profile</router-link>
+          <router-link to="/coupons" class="action-button">My Coupons</router-link>
           <router-link to="/admin-panel" class="action-button">Admin Panel</router-link>
         </div>
       </div>
