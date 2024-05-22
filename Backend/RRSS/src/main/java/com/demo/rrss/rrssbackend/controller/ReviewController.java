@@ -59,6 +59,13 @@ public class ReviewController {
 		return reviews;
 	}
 
+	@GetMapping("/get-products-reviews")
+	@ResponseStatus(HttpStatus.OK)
+	public List<Review> getProductsAllReviews(@RequestParam Long productId) {
+		List<Review> reviews = service.getProductsAllReviews(productId);
+		return reviews;
+	}
+
 	@PostMapping(value = "/add-review", consumes = MediaType.APPLICATION_JSON_VALUE)
 	@ResponseStatus(HttpStatus.OK)
 	public void addReview(@RequestBody ReviewRequest review, Model model) {

@@ -61,4 +61,8 @@ public class ReviewService {
     public List<Review> getUsersAllReviews(Long userId) {
         return repository.findByUserId(userId);
     }
+
+    public List<Review> getProductsAllReviews(Long productId) {
+        return repository.findAllByProductId(productId);
+    }
 }

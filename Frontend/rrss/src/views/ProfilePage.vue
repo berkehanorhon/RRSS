@@ -6,9 +6,11 @@
         <h2>Blog Posts</h2>
         <BlogPosts :userId="userId" />
       </div>
-      <div class="column">
-        <h2>Reviews</h2>
-        <ReviewsTime :userId="userId" />
+      <div v-if="is_merchant !== null" class="column">
+        <h2 v-if="user.is_merchant">Products</h2>
+        <h2 v-else>Reviews</h2>
+        <ProductTimelineProfile v-if="user.is_merchant" :userId="userId" />
+        <ReviewsTime v-else :userId="userId" />
       </div>
       <div class="column">
         <h2>Bookmarked</h2>
@@ -23,6 +25,7 @@ import ProfileHeader from '../components/ProfileHeader.vue';
 import BlogPosts from '../components/BlogPosts.vue';
 import ReviewsTime from '../components/ReviewsTime.vue';
 import BookmarkedProducts from '../components/BookmarkedProducts.vue';
+import ProductTimelineProfile from '../components/ProductTimelineProfile.vue';
 import axios from 'axios';
 
 export default {
@@ -35,9 +38,11 @@ export default {
         firstName: '',
         lastName: '',
         photo: require('@/assets/logo.png'),
-        userId: this.$route.params.userId
+        userId: this.$route.params.userId,
+        is_merchant: false
       },
-      userId: this.$route.params.userId
+      userId: this.$route.params.userId,
+      products: []
     };
   },
   components: {
@@ -45,6 +50,7 @@ export default {
     BlogPosts,
     ReviewsTime,
     BookmarkedProducts,
+    ProductTimelineProfile
   },
   created() {
     this.fetchUserData();
@@ -58,6 +64,7 @@ export default {
           this.user.firstName = response.data.firstName;
           this.user.lastName = response.data.lastName;
           this.user.photo = response.data.avatarImagePath || this.user.photo;
+          this.user.is_merchant = response.data.isMerchant;
         })
         .catch(error => {
           console.error("There was an error fetching the user data:", error);
