@@ -67,7 +67,7 @@ public class ProductController {
 	@PatchMapping(value = "/update-product")
 	@ResponseStatus(HttpStatus.OK)
 	public void ProductUpdateResponse(@RequestBody ProductRequest product, Model model) {
-		service.updateProduct(product.getProduct().getProductId(), product, model);
+		service.updateProduct(product.getProductId(), product, model);
 	}
 
 	@DeleteMapping(value = "/delete-product")
