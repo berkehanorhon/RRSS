@@ -1,5 +1,6 @@
 package com.demo.rrss.rrssbackend.controller;
 
+import com.demo.rrss.rrssbackend.entity.Users;
 import com.demo.rrss.rrssbackend.rest.request.UsersProfileRequest;
 import com.demo.rrss.rrssbackend.rest.request.UsersRequest;
 import com.demo.rrss.rrssbackend.service.UsersService;
@@ -40,8 +41,8 @@ public class UsersController {
 
     @PatchMapping(value = "/update-user")
     @ResponseStatus(HttpStatus.OK)
-    public void updateUser(@RequestBody UsersRequest user, Model model) {
-        service.updateUser(user.getUsername(), user, model);
+    public void updateUser(@RequestBody Users user, Model model) {
+        service.updateUser(user.getUserId(), user, model);
     }
 
     @DeleteMapping(value = "/delete-user")

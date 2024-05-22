@@ -35,6 +35,7 @@ export default {
         firstName: '',
         lastName: '',
         photo: require('@/assets/logo.png'),
+        userId: this.$route.params.userId
       },
       userId: this.$route.params.userId
     };
