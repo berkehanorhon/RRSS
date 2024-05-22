@@ -1,29 +1,34 @@
 <template>
   <div class="container">
     <div v-if="error">
-    <p>{{ error }}</p>
+      <p>{{ error }}</p>
     </div>
     <div v-else-if="product" class="product-detail">
-    <h1>{{ product.title }}</h1>
-    <img :src="getImage(product)" alt="Product Image" />
-    <p>{{ product.description }}</p>
-    <p>Category ID: {{ product.categoryId }}</p>
-    <p>Product ID: {{ product.productId }}</p>
-    <p>Publish Date: {{ product.publishDate }}</p>
-    <p>User ID: {{ product.userId }}</p>
-    <div v-if="!error">
-      <ReviewForm :productId="product.productId" :userId="product.userId" @review-submitted="fetchProduct" />
-    </div>
+      <h1>{{ product.title }}</h1>
+      <img :src="getImage(product)" alt="Product Image" />
+      <p>{{ product.description }}</p>
+      <p>Category ID: {{ product.categoryId }}</p>
+      <p>Product ID: {{ product.productId }}</p>
+      <p>Publish Date: {{ product.publishDate }}</p>
+      <p>User ID: {{ product.userId }}</p>
+      <div v-if="!error">
+        <ReviewForm :productId="product.productId" :userId="product.userId" @review-submitted="fetchProduct" />
+      </div>
+      <div v-if="product.userId == userId">
+      </div>
+      <div v-if="product.userId == userId">
+        <button @click="editProduct" class="edit-button">Edit Product</button>
+      </div>
     </div>
     <p v-if="counter && error">Redirecting in {{ counter }} seconds...</p>
   </div>
-  </template>
-  
-  <script>
-  import axios from 'axios';
-  import ReviewForm from './ReviewForm.vue';
+</template>
 
-  export default {
+<script>
+import axios from 'axios';
+import ReviewForm from './ReviewForm.vue';
+
+export default {
   name: 'ProductDetail',
   components: {
     ReviewForm,
@@ -34,6 +39,7 @@
       error: null,
       reviewData: '',
       productId: this.$route.params.productId,
+      userId: localStorage.getItem('userId'),
       defaultImage: require('@/assets/logo.png'),
     };
   },
@@ -50,6 +56,9 @@
     },
     getImage(product) {
       return product.image || this.defaultImage;
+    },
+    editProduct() {
+      this.$router.push(`/products/${this.productId}/edit`);
     },
   },
   mounted() {
@@ -100,5 +109,15 @@
   .nav-button:disabled {
     background-color: #ccc;
     cursor: not-allowed;
+  }
+
+  .edit-button {
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    background-color: #007BFF;
+    color: #fff;
+    cursor: pointer;
+    margin-top: 20px;
   }
   </style>

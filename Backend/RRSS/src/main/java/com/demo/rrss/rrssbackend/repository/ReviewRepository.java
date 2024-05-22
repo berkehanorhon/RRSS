@@ -15,7 +15,7 @@ public interface ReviewRepository extends CrudRepository<Review, Long> {
     List<Object[]> countReviewsByProductIds(@Param("productIds") List<Long> productIds);
 
     List<Review> findByUserId(Long userId);
-
+    List<Review> findAllByProductId(Long productId);
     @Query("SELECT r.productId FROM Review r WHERE r.userId = :userId")
     List<Long> findProductIdsByUserId(@Param("userId") Long userId);
 }
