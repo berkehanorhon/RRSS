@@ -12,6 +12,6 @@ public class PermissionRequest {
     private boolean setAdmin;
     private boolean setMerchant;
     private boolean setModerator;
-    private boolean banUser;
+    private boolean setBanUser;
 
 }

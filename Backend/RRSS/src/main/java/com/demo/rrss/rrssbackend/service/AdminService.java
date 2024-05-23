@@ -153,6 +153,7 @@ public class AdminService {
             usersRequest.setAvatarImagePath(user.getAvatarImagePath());
             usersRequest.setReputation(user.getReputation());
             usersRequest.setUserId(user.getUserId());
+            usersRequest.setIsBanned(user.getIsBanned());
             usersRequestList.add(usersRequest);
         }
     
@@ -245,9 +246,9 @@ public class AdminService {
                 userToBeUpdated.get().setIsModerator(true);
             else if(request.isSetModerator() == false)
                 userToBeUpdated.get().setIsModerator(false);
-            if(request.isBanUser() == true)
+            if(request.isSetBanUser() == true)
                 userToBeUpdated.get().setIsBanned(true);
-            else if(request.isBanUser() == false)
+            else if(request.isSetBanUser() == false)
                 userToBeUpdated.get().setIsBanned(false);
             
             userRepository.save(userToBeUpdated.get());

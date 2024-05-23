@@ -69,6 +69,7 @@ public class AuthenticationService {
 		user.setIsAdmin(false);
 		user.setIsModerator(false);
 		user.setIsMerchant(false);
+		user.setIsBanned(false);
 		user.setEmail(request.getEmail());
 		user.setReputation(0);
 		user.setTokenExp(new java.sql.Timestamp(new Date().getTime()));
