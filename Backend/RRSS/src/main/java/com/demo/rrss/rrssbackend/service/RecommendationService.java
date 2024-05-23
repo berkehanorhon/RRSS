@@ -2,8 +2,8 @@ package com.demo.rrss.rrssbackend.service;
 
 import com.demo.rrss.rrssbackend.entity.Product;
 import com.demo.rrss.rrssbackend.repository.*;
+import com.demo.rrss.rrssbackend.rest.request.RecommendationRequest;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.HttpStatusCode;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
@@ -30,7 +30,7 @@ public class RecommendationService {
 
     private static final int RECOMMENDATION_LIMIT_PER_CATEGORY = 5;
 
-    public Set<Product> getRecommendation(Long userId) {
+    public Set<RecommendationRequest> getRecommendation(Long userId) {
 
         // long startTime = System.nanoTime();
         // Kullanıcının rating verdiği ürünleri çek.
@@ -81,7 +81,7 @@ public class RecommendationService {
         // long afterReviewCountsRepoFetchTime = System.nanoTime();
         // System.out.println("Time to fetch review counts: " + (afterReviewCountsRepoFetchTime - afterAverageRatingsRepoFetchTime) / 1000000 + " ms");
         // Şimdi önermeye sıra geldi.
-        Set<Product> newRecommendedProducts = new HashSet<>();
+        Set<RecommendationRequest> newRecommendedProducts = new HashSet<>();
         for (Long categoryId : categoryIds) {
             // Kategorideki ürünleri çek.
             List<Product> productsInCategory = productRepository.findProductsByCategoryId(categoryId);
@@ -109,7 +109,16 @@ public class RecommendationService {
 
                 // Eğer kullanıcı zaten daha önce bir şekilde bu ürünü beğenmişse, listesine eklemişse önüne çıkarma.
                 if (!interestedProducts.contains(product)) {
-                    newRecommendedProducts.add(product);
+                    RecommendationRequest recommendationRequest = new RecommendationRequest();
+                    recommendationRequest.setProductId(product.getProductId());
+                    recommendationRequest.setUserId(userId);
+                    recommendationRequest.setCategoryId(product.getCategoryId());
+                    recommendationRequest.setRatingCount(productRatingRepository.findRatingCountByProductId(product.getProductId()));
+                    recommendationRequest.setAverageRating(productRatingRepository.getAverageRatingOrZero(product.getProductId()));
+                    recommendationRequest.setImagePath(product.getImagePath());
+                    recommendationRequest.setTitle(product.getTitle());
+                    recommendationRequest.setDescription(product.getDescription());
+                    newRecommendedProducts.add(recommendationRequest);
                     // Belli bir sayıda öneriden sonra önerme, bunu yukarıdaki global değişken ile değiştirebiliriz.
                     if (newRecommendedProducts.size() >= RECOMMENDATION_LIMIT_PER_CATEGORY) {
                         break;
