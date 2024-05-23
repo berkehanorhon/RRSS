@@ -20,6 +20,9 @@ public class Coupon {
     @Column(name = "user_id")
     private Long userId;
 
+    @Column(name = "coupon_text", nullable = false)
+    private String couponText;
+
     @Column(name = "coupon_data", nullable = false)
     private String couponData;
 

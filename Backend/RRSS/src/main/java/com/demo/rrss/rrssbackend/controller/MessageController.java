@@ -2,6 +2,7 @@ package com.demo.rrss.rrssbackend.controller;
 
 
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -18,6 +19,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.demo.rrss.rrssbackend.entity.Message;
+import com.demo.rrss.rrssbackend.rest.request.ConversationRequest;
 import com.demo.rrss.rrssbackend.rest.request.MessageBoxRequest;
 import com.demo.rrss.rrssbackend.rest.request.MessageRequest;
 import com.demo.rrss.rrssbackend.service.MessageService;
@@ -44,15 +46,20 @@ public class MessageController {
 
     @GetMapping("/get-message-box")
     @ResponseStatus(HttpStatus.OK)
-    public ResponseEntity<List<MessageBoxRequest>> getMessageBox(Model model) {
-        List<MessageBoxRequest> msgBoxes = messageService.getDirectMessageBoxes(model);
-        return ResponseEntity.ok(msgBoxes);
+    public List<Map<Long, MessageBoxRequest>> getMessageBox(Model model) {
+        return messageService.getDirectMessageBoxes(model);
     }
 
     @PostMapping("/send-message")
     @ResponseStatus(HttpStatus.OK)
     public void sendMessage(@RequestBody MessageRequest messageRequest,Model model) {
         messageService.saveMessage(messageRequest,model);
+    }
+
+    @PostMapping("/get-conversation-with-user")
+    @ResponseStatus(HttpStatus.OK)
+    public ResponseEntity<ConversationRequest> getConversation(@RequestParam Long userId, Model model) {
+        return ResponseEntity.ok(messageService.getConversation(userId, model));
     }
 
     @GetMapping("/get-message")

@@ -1,29 +1,50 @@
 package com.demo.rrss.rrssbackend.service;
 
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 import org.springframework.ui.Model;
+
 import com.demo.rrss.rrssbackend.entity.Product;
+import com.demo.rrss.rrssbackend.entity.Users;
+import com.demo.rrss.rrssbackend.repository.ProductRatingRepository;
 import com.demo.rrss.rrssbackend.repository.ProductRepository;
+import com.demo.rrss.rrssbackend.repository.UsersRepository;
 import com.demo.rrss.rrssbackend.rest.request.ProductRequest;
 
 @Service
 public class ProductService {
 	@Autowired
 	ProductRepository repository;
+	@Autowired
+	UsersRepository uRepository;
+	@Autowired
+	ProductRatingRepository prRepository;
 
-	public Product getProduct(Long productId) {
-		return repository.findById(productId)
-				.orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Product not found"));
+	public HashMap<String, Object> getProduct(Long productId) {
+		Product product = repository.findById(productId).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Product not found"));
+
+		HashMap<String, Object> productMap = new HashMap<>();
+		productMap.put("productId", product.getProductId());
+		productMap.put("title", product.getTitle());
+		productMap.put("description", product.getDescription());
+		productMap.put("publishDate", product.getPublishDate());
+		productMap.put("userId", product.getUserId());
+		productMap.put("categoryId", product.getCategoryId());
+		productMap.put("imagePath", product.getImagePath());
+		productMap.put("averageRating", prRepository.getAverageRatingOrZero(product.getProductId()));
+		productMap.put("ratingCount", prRepository.findRatingCountByProductId(product.getProductId()));
+		return productMap;
 	}
 
-	public void addProduct(ProductRequest request, Model model) { // TODO yetki kontrolü eklenecek
+	public void addProduct(ProductRequest request, Model model) {
 		Long userId = (Long) model.getAttribute("userId"); 
+		Users user = uRepository.findById(userId).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found"));
+		if (!user.getIsMerchant())
+			throw new ResponseStatusException(HttpStatus.FORBIDDEN, "User is not a merchant");
 		Product product = new Product();
 		product.setCategoryId(request.getCategoryId());
 		product.setDescription(request.getDescription());
@@ -34,39 +55,55 @@ public class ProductService {
 		repository.save(product);
 	}
 
-	public void updateProduct(Long productId, ProductRequest request) { // TODO yetki kontrolü eklenecek
+	public void updateProduct(Long productId, ProductRequest request, Model model) {
+		Long userId = (Long) model.getAttribute("userId");
 		Optional<Product> existingProduct = repository.findById(productId);
-		if (existingProduct.isPresent()) {
+		if (existingProduct.isPresent() && Objects.equals(existingProduct.get().getUserId(), userId)){
 			Product product = existingProduct.get();
 			product.setCategoryId(request.getCategoryId());
 			product.setDescription(request.getDescription());
-			product.setPublishDate(new java.sql.Timestamp(new java.util.Date().getTime()));
+			product.setPublishDate(new java.sql.Timestamp(new java.util.Date().getTime())); // TODO kalsın mı
 			product.setTitle(request.getTitle());
-			product.setUserId(request.getUserId());
 			repository.save(product);
 		} else {
-			throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Product not found");
+			throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Product not found or you do not have permission to update this product.");
 		}
 	}
 
-	public void deleteProduct(Long productId) { // TODO yetki kontrolü eklenecek
-		if (repository.existsById(productId))
+	public void deleteProduct(Long productId, Model model) {
+		Long userId = (Long) model.getAttribute("userId");
+		Product product = repository.findById(productId).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Product not found"));
+		if (Objects.equals(product.getUserId(), userId))
 			repository.deleteById(productId);
 		else
-			throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Product not found");
-
+			throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Product not found or you do not have permission to delete this product.");
 	}
 
-	public List<Product> getAllProducts(Long categoryId) { // TODO yetki kontrolü eklenecek
-		if (categoryId == -1)
-			return repository.findAllMax50();
-		else {
-			List<Product> products = repository.findProductsByCategoryId(categoryId);
-			return products;
+	public HashSet<HashMap<String, Object>> getAllProducts(Long categoryId) {
+		List<Product> products;
+		HashSet<HashMap<String, Object>> response = new HashSet<>();
+		if (categoryId == -1) {
+			products = repository.findAllMax50();
+		} else {
+			products = repository.findProductsByCategoryId(categoryId);
 		}
+		for (Product product : products) {
+			HashMap<String, Object> productMap = new HashMap<>();
+			productMap.put("productId", product.getProductId());
+			productMap.put("title", product.getTitle());
+			productMap.put("description", product.getDescription());
+			productMap.put("publishDate", product.getPublishDate());
+			productMap.put("userId", product.getUserId());
+			productMap.put("categoryId", product.getCategoryId());
+			productMap.put("imagePath", product.getImagePath());
+			productMap.put("averageRating", prRepository.getAverageRatingOrZero(product.getProductId()));
+			productMap.put("ratingCount", prRepository.findRatingCountByProductId(product.getProductId()));
+			response.add(productMap);
+		}
+		return response;
 	}
 
-    public List<Product> getUsersAllProducts(Long userId) {
+	public List<Product> getUsersAllProducts(Long userId) {
 		return repository.findByUserId(userId);
 	}
 }

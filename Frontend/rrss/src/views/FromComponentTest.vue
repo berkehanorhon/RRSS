@@ -37,7 +37,7 @@ export default {
 </script>
 
 <style>
-.container {
+.container {  
   flex-direction: column;
   align-items: center;
   justify-content: flex-start;

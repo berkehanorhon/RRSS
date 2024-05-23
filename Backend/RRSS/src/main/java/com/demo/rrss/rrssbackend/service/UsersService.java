@@ -68,17 +68,16 @@ public class UsersService {
     }
 
     @SuppressWarnings("null")
-    public void updateUser(String userName, UsersRequest user, Model model) {
-        Optional<Users> existingUser = repository.findByUsername(userName);
+    public void updateUser(Long userId, Users user, Model model) {
+        Optional<Users> existingUser = repository.findById(userId);
         if (existingUser.isPresent() && model.getAttribute("userId").equals(existingUser.get().getUserId())){
             Users updatedUser = existingUser.get();
             updatedUser.setUsername(user.getUsername());
             updatedUser.setEmail(user.getEmail());
             updatedUser.setFirstName(user.getFirstName());
             updatedUser.setLastName(user.getLastName());
-            updatedUser.setBirthDate(user.getBirthdate());
-            updatedUser.setAvatarImagePath(user.getAvatarImagePath());
-            updatedUser.setReputation(user.getReputation());
+            updatedUser.setBirthDate(user.getBirthDate());
+            // updatedUser.setAvatarImagePath(user.getAvatarImagePath()); # TODO EKLENECEK!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
             repository.save(updatedUser);
         } else {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found or you are not authorized to update this user");

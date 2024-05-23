@@ -1,16 +1,34 @@
 import FromComponentTest from '@/views/FromComponentTest.vue'
-import { createRouter, createWebHistory } from 'vue-router'
-import BlogPost from '../components/BlogPost.vue'
-import BlogPosts from '../components/BlogPosts.vue'
-import BlogTimeline from '../components/BlogTimeline.vue'
-import Coupons from '../components/Coupons.vue'
-import AddForum from '../views/AddForum.vue'
+import EditProfileView from '../views/EditProfileView.vue';
 import AdminPanel from '../views/AdminPanel.vue'
-import HomeView from '../views/HomeView.vue'
-import LoginView from '../views/LoginView.vue'
+import BlogPost from '../components/BlogPost.vue';
+import BlogTimeline from '../components/BlogTimeline.vue'
+import AddForum from '../views/AddForum.vue'
+import BlogPosts from '../components/BlogPosts.vue';
+import CreateBookmarkList from '../views/CreateBookmarkList.vue';
 import MerchantPanel from '../views/MerchantPanel.vue'
+import ForumCategoryView from '@/views/ForumCategoryView.vue';
+import BlogPost from '../components/BlogPost.vue'
+import ProfilePage from '../views/ProfilePage.vue';
+import FromComponentTest from '@/views/FromComponentTest.vue';
+import { createRouter, createWebHistory } from 'vue-router';
+import MerchantPanel from '../views/MerchantPanel.vue';
+import LoginView from '../views/LoginView.vue'
+import EditProductView from '../views/EditProductView.vue';
 import ProfilePage from '../views/ProfilePage.vue'
+import MessageView from '@/views/MessageView.vue';
+import BlogPosts from '../components/BlogPosts.vue'
 import RegisterView from '../views/RegisterView.vue'
+import HomeView from '../views/HomeView.vue'
+import ProductTimelineBookmarks from '../components/ProductTimelineBookmarks.vue';
+import HomeView from '../views/HomeView.vue';
+import ForumView from '@/views/ForumView.vue';
+import ForumEntryView from '@/views/ForumEntryView.vue';
+import RegisterView from '../views/RegisterView.vue';
+import ForumCategoryEntriesView from '@/views/ForumCategoryEntriesView.vue';
+import LoginView from '../views/LoginView.vue';
+import { createRouter, createWebHistory } from 'vue-router'
+import Coupons from '../components/Coupons.vue'
 
 const routes = [
   {
@@ -21,10 +39,7 @@ const routes = [
   {
     path: '/about',
     name: 'about',
-    // route level code-splitting
-    // this generates a separate chunk (about.[hash].js) for this route
-    // which is lazy-loaded when the route is visited.
-    component: () => import(/* webpackChunkName: "about" */ '../views/AboutView.vue')
+    component: () => import('../views/AboutView.vue')
   },
   {
     path: '/login',
@@ -52,9 +67,42 @@ const routes = [
     component: () => import('@/components/ProductDetail.vue')
   },
   {
+    path: '/products/:productId/edit',
+    name: 'EditProductView',
+    component: EditProductView
+  },
+  {
     path: '/test/',
     name: 'FormTest',
     component: FromComponentTest
+  },
+  {
+    path: '/messenger/:userId',
+    name: 'Messenger',
+    component: MessageView,
+    props: true
+  },
+  {
+    path: '/forum',
+    name: 'Forum',
+    component: ForumView
+  },
+  {
+    path: '/forum/categories',
+    name: 'ForumCategories',
+    component: ForumCategoryView
+  },
+  {
+    path: '/forum/categories/:categoryId',
+    name: 'ForumCategoryEntries',
+    component: ForumCategoryEntriesView,
+    props: true
+  },
+  {
+    path: '/forum/categories/:categoryId/:entryId',
+    name: 'ForumEntry',
+    component: ForumEntryView,
+    props: true
   },
   {
     path: '/profile/:userId',
@@ -64,6 +112,11 @@ const routes = [
     path: '/coupons',
     name: 'coupons',
     component: Coupons
+  },
+  {
+    path: '/profile/:userId/edit',
+    name: 'EditProfileView',
+    component: EditProfileView
   },
   {
     path: '/merchantpanel',
@@ -76,9 +129,20 @@ const routes = [
     component: BlogPosts
   },
   {
+
     path: '/blogtimeline',
     name: 'BlogTimeline',
     component: BlogTimeline
+  },
+  {
+    path: '/bookmarklists/:bookmarkListId',
+    name: 'BookmarkList',
+    component: ProductTimelineBookmarks
+  },
+  {
+    path: '/createbookmarklist',
+    name: 'CreateBookmarkList',
+    component: CreateBookmarkList
   },
   {
     path: '/blogs/:blogId',
@@ -86,12 +150,11 @@ const routes = [
     component: BlogPost,
     props: true
   },
-]
+];
 
 const router = createRouter({
   history: createWebHistory(),
-  //history: createWebHashHistory(),
   routes
-})
+});
 
-export default router
+export default router;

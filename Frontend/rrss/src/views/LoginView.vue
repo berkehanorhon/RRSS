@@ -19,9 +19,9 @@
     data() {
       return {
         inputs: [
-          { id: 'username', label: 'Username', type: 'text' },
-          { id: 'password', label: 'Password', type: 'password' },
-          { id: 'asd', label: 'Remember me', type: 'checkbox' }
+          { id: 'username', label: 'Username', type: 'text' , text: ''},
+          { id: 'password', label: 'Password', type: 'password' , text: ''},
+          { id: 'asd', label: 'Remember me', type: 'checkbox' , text: ''}
         ]
       };
     },

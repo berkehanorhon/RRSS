@@ -1,5 +1,7 @@
 package com.demo.rrss.rrssbackend.controller;
 
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -39,22 +41,20 @@ public class ProductController {
 
 	@GetMapping("/get-product")
 	@ResponseStatus(HttpStatus.OK)
-	public Product ProductResponse(@RequestParam Long productId) {
+	public HashMap<String, Object> ProductResponse(@RequestParam Long productId) {
 		return service.getProduct(productId);
 	}
 
 	@GetMapping("/get-users-products")
 	@ResponseStatus(HttpStatus.OK)
 	public List<Product> getUsersAllProducts(@RequestParam Long userId) {
-		List<Product> products = service.getUsersAllProducts(userId);
-		return products;
+        return service.getUsersAllProducts(userId);
 	}
 
 	@GetMapping("/get-all-products")
 	@ResponseStatus(HttpStatus.OK)
-	public List<Product> getAllProducts(@RequestParam Long categoryId) {
-		List<Product> products = service.getAllProducts(categoryId);
-		return products;
+	public HashSet getAllProducts(@RequestParam Long categoryId) {
+		return service.getAllProducts(categoryId);
 	}
 
 	@PostMapping(value = "/add-product", consumes = MediaType.APPLICATION_JSON_VALUE)
@@ -65,13 +65,13 @@ public class ProductController {
 
 	@PatchMapping(value = "/update-product")
 	@ResponseStatus(HttpStatus.OK)
-	public void ProductUpdateResponse(@RequestBody ProductRequest product) {
-		service.updateProduct(product.getProductId(), product);
+	public void ProductUpdateResponse(@RequestBody ProductRequest product, Model model) {
+		service.updateProduct(product.getProductId(), product, model);
 	}
 
 	@DeleteMapping(value = "/delete-product")
 	@ResponseStatus(HttpStatus.OK)
-	public void ProductDeleteResponse(@RequestParam Long productId) {
-		service.deleteProduct(productId);
+	public void ProductDeleteResponse(@RequestParam Long productId, Model model) {
+		service.deleteProduct(productId, model);
 	}
 }

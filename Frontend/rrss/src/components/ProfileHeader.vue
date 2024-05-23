@@ -9,9 +9,10 @@
         <p>Last Name: {{ user.lastName }}</p>
         <div class="actions">
           <button @click="sendMessage" class="action-button">Send Message</button>
-          <router-link to="/edit-profile" class="action-button">Edit Profile</router-link>
           <router-link to="/coupons" class="action-button">My Coupons</router-link>
           <router-link to="/admin-panel" class="action-button">Admin Panel</router-link>
+          <router-link :to="`/profile/${this.$route.params.userId}/edit`" class="action-button">Edit Profile</router-link>
+          <router-link :to="`/createbookmarklist`" class="action-button">Create Bookmark List</router-link>
         </div>
       </div>
     </div>
