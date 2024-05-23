@@ -2,7 +2,10 @@ package com.demo.rrss.rrssbackend.service;
 
 import com.demo.rrss.rrssbackend.entity.Product;
 import com.demo.rrss.rrssbackend.repository.*;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.HttpStatusCode;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -61,7 +64,7 @@ public class RecommendationService {
         // Bütün ortalama rating ve review sayılarını çek.
         List<Object[]> averageRatingsData = productRatingRepository.findAverageRatingsByProductIds(productIds);
         if (averageRatingsData == null) {
-            throw new RuntimeException("No products found in the categories of the interested products. Average ratings could not be calculated.");
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "No products found in the categories of the interested products. Average ratings could not be calculated.");
         }
         Map<Long, Double> averageRatings = averageRatingsData.stream()
                 .collect(Collectors.toMap(data -> (Long) data[0], data -> (Double) data[1]));
@@ -70,7 +73,7 @@ public class RecommendationService {
         // System.out.println("Time to fetch average ratings: " + (afterAverageRatingsRepoFetchTime - afterProductByCategoryFetchTime) / 1000000 + " ms");
         List<Object[]> reviewCountsData = reviewRepository.countReviewsByProductIds(productIds);
         if (reviewCountsData == null) {
-            throw new RuntimeException("No products found in the categories of the interested products. Review counts could not be calculated.");
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "No products found in the categories of the interested products. Review counts could not be calculated.");
         }
         Map<Long, Long> reviewCounts = reviewCountsData.stream()
                 .collect(Collectors.toMap(data -> (Long) data[0], data -> (Long) data[1]));
