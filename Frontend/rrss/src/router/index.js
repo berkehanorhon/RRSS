@@ -19,6 +19,8 @@ import ForumView from '@/views/ForumView.vue';
 import ForumEntryView from '@/views/ForumEntryView.vue';
 import ForumCategoryEntriesView from '@/views/ForumCategoryEntriesView.vue';
 import Coupons from '../components/Coupons.vue'
+import BlogPost from '@/components/BlogPost.vue';
+import BlogPosts from '@/components/BlogPosts.vue';
 
 const routes = [
   {
