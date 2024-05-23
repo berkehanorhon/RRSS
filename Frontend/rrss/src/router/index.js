@@ -8,26 +8,18 @@ import BlogPosts from '../components/BlogPosts.vue';
 import CreateBookmarkList from '../views/CreateBookmarkList.vue';
 import MerchantPanel from '../views/MerchantPanel.vue'
 import ForumCategoryView from '@/views/ForumCategoryView.vue';
-import BlogPost from '../components/BlogPost.vue'
 import ProfilePage from '../views/ProfilePage.vue';
-import FromComponentTest from '@/views/FromComponentTest.vue';
 import { createRouter, createWebHistory } from 'vue-router';
-import MerchantPanel from '../views/MerchantPanel.vue';
 import LoginView from '../views/LoginView.vue'
 import EditProductView from '../views/EditProductView.vue';
-import ProfilePage from '../views/ProfilePage.vue'
+import ConversationsListView from '../views/ConversationsListView.vue';
 import MessageView from '@/views/MessageView.vue';
-import BlogPosts from '../components/BlogPosts.vue'
 import RegisterView from '../views/RegisterView.vue'
 import HomeView from '../views/HomeView.vue'
 import ProductTimelineBookmarks from '../components/ProductTimelineBookmarks.vue';
-import HomeView from '../views/HomeView.vue';
 import ForumView from '@/views/ForumView.vue';
 import ForumEntryView from '@/views/ForumEntryView.vue';
-import RegisterView from '../views/RegisterView.vue';
 import ForumCategoryEntriesView from '@/views/ForumCategoryEntriesView.vue';
-import LoginView from '../views/LoginView.vue';
-import { createRouter, createWebHistory } from 'vue-router'
 import Coupons from '../components/Coupons.vue'
 
 const routes = [
@@ -75,6 +67,11 @@ const routes = [
     path: '/test/',
     name: 'FormTest',
     component: FromComponentTest
+  },
+  {
+    path: '/messenger',
+    name: 'ConversationsList',
+    component: ConversationsListView
   },
   {
     path: '/messenger/:userId',
