@@ -8,6 +8,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.server.ResponseStatusException;
 
 @RestController
 @RequestMapping("/bookmark")
@@ -20,12 +21,23 @@ public class BookmarkController {
         this.jwtUtil = jwtUtil;
     }
 
-    @ModelAttribute // TODO Herhangi bir hata durumunda 403 döndürülecek
-    public void addUserIdToModel(@RequestHeader(value="Authorization") String bearerToken, Model model) {
-        String token = bearerToken.substring(7);
-        Long userId = jwtUtil.extractUserId(token);
-        model.addAttribute("userId", userId);
-    }
+    @ModelAttribute
+	public void addUserIdToModel(@RequestHeader(value="Authorization", required=false) String bearerToken, Model model) {
+		if (bearerToken == null || !bearerToken.startsWith("Bearer ")) {
+			throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Authorization header is missing or invalid");
+		}
+		String token = bearerToken.substring(7);
+		Long userId;
+		try {
+			userId = jwtUtil.extractUserId(token);
+		} catch (Exception e) {
+			throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Invalid token");
+		}
+		if (userId == null) {
+			throw new ResponseStatusException(HttpStatus.FORBIDDEN, "User ID not found in token");
+		}
+		model.addAttribute("userId", userId);
+	}
 
     @GetMapping("/get-users-lists")
     public ResponseEntity<?> getBookmarkListFromUser(@RequestParam Long userId, Model model){

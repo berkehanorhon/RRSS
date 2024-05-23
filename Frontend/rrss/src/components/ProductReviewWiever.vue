@@ -57,11 +57,14 @@
       async fetchReviews() {
         try {
           const response = await axios.get(`http://localhost:8080/get-products-reviews?productId=${this.productId}`);
-          this.reviews = await Promise.all(response.data.map(async review => {
+          let reviews = await Promise.all(response.data.map(async review => {
             const starRatingResponse = await axios.get(`http://localhost:8080/get-review-given-star?userId=${review.userId}&productId=${this.productId}`);
             const userResponse = await axios.get(`http://localhost:8080/get-user?userId=${review.userId}`);
             return { ...review, starRating: starRatingResponse.data, username: userResponse.data.username };
           }));
+
+          // Sort reviews by reviewId in descending order
+          this.reviews = reviews.sort((a, b) => b.reviewId - a.reviewId);
         } catch (error) {
           console.error(error);
         }
