@@ -10,6 +10,9 @@ import org.springframework.ui.Model;
 import org.springframework.web.server.ResponseStatusException;
 
 import com.demo.rrss.rrssbackend.entity.Forum;
+import com.demo.rrss.rrssbackend.repository.ForumPostLikeRepository;
+import com.demo.rrss.rrssbackend.repository.ForumPostRepository;
+import com.demo.rrss.rrssbackend.repository.ForumReplyRepository;
 import com.demo.rrss.rrssbackend.repository.ForumRepository;
 import com.demo.rrss.rrssbackend.repository.UsersRepository;
 import com.demo.rrss.rrssbackend.rest.request.ForumRequest;
@@ -19,8 +22,16 @@ import com.demo.rrss.rrssbackend.rest.request.ForumRequest;
 public class ForumService {
     @Autowired
 	ForumRepository repository;
+
+	@Autowired
+	ForumPostRepository forumPostRepository;
+
+	@Autowired
+	ForumReplyRepository forumReplyRepository;
+
 	@Autowired
 	UsersRepository userRepository;
+
 	public Forum getForum(Long forumId) {
 		Optional<Forum> response = repository.findById(forumId);
 		return response.orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Forum not found"));
@@ -37,6 +48,7 @@ public class ForumService {
 		forum.setCreationDate(new java.sql.Timestamp(new java.util.Date().getTime()));
 		repository.save(forum);
 	}
+
 
 	public void updateForum(Long forumId, ForumRequest request, Model model) {
 		Long userId = (Long) model.getAttribute("userId");
@@ -60,8 +72,10 @@ public class ForumService {
 		if(!userRepository.findById(userId).get().getIsAdmin()) {
 			throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "You do not have permission to do that!");
 		}
-		if (repository.existsById(forumId))
-			repository.deleteById(forumId);
+		if (repository.existsById(forumId)){
+      forumPostRepository.deleteByForumId(forumId);
+			repository.deleteById(forumId);}
+
 		else
 			throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Forum not found");
     }

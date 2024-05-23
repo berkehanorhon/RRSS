@@ -42,14 +42,14 @@ public class ForumPostLikeService {
 		repository.save(forumPostLike);
 	}
 
-
-	public void deleteForumPostLike(Long forumPostId, Model model) {
-		Long userId = (Long) model.getAttribute("userId");
-		if (repository.existsByForumPostId(forumPostId) && repository.findByForumPostId(forumPostId).getUserId() == userId)
-			repository.deleteByForumPostId(forumPostId);
-		else
-			throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Like not found or you do not have permission to delete it.");
-	}
-
+	
+	//public void deleteForumPostLike(Long forumPostId, Model model) {
+	//	Long userId = (Long) model.getAttribute("userId");
+	//	if (repository.existsByForumPostId(forumPostId) && repository.findByForumPostId(forumPostId).getUserId() == userId)
+	//		repository.deleteByForumPostId(forumPostId);
+	//	else
+	//		throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Like not found or you do not have permission to delete it.");
+	//}
+	
 	
 }

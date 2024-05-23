@@ -10,5 +10,6 @@ import com.demo.rrss.rrssbackend.entity.Users;
 @Repository
 public interface UsersRepository extends CrudRepository<Users, Long> {
 	Optional<Users> findByUsername(String username);
+	Optional<Users> findByUserId(Long userId);
 	Optional<Users> findByEmail(String email);
 }

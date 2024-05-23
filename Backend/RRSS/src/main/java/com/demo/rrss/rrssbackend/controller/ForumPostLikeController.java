@@ -60,10 +60,10 @@ public class ForumPostLikeController {
 	}
 
 
-	@DeleteMapping(value = "/delete-forum-post-like")
-	@ResponseStatus(HttpStatus.OK)
-	public void deleteForumPostLike(@RequestParam Long forumPostId, Model model) {
-		service.deleteForumPostLike(forumPostId, model);
-	}
+	//@DeleteMapping(value = "/delete-forum-post-like")
+	//@ResponseStatus(HttpStatus.OK)
+	//public void deleteForumPostLike(@RequestParam Long forumPostId, Model model) {
+	//	service.deleteForumPostLike(forumPostId, model);
+	//}
 
 }

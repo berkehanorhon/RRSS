@@ -68,12 +68,6 @@ public class ForumController {
 		service.addForum(forum, model);
 	}
 
-	@PatchMapping(value = "/update-forum")
-	@ResponseStatus(HttpStatus.OK)
-	public void ForumUpdateResponse(@RequestBody ForumRequest forum, Model model) {
-		service.updateForum(forum.getForumId(), forum, model);
-	}
-
 	@DeleteMapping(value = "/delete-forum")
 	@ResponseStatus(HttpStatus.OK)
 	public void ForumDeleteResponse(@RequestParam Long forumId, Model model) {
