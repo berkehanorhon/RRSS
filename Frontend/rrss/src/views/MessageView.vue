@@ -43,41 +43,78 @@ export default {
       user1: { id: 1, name: "John" },
       user2: { id: null, name: "User" }, 
       allMessages: {
-        "1": [
-          {
-            senderId: 2,
-            receiverId: 1,
-            sentDate: "2024-05-19T19:33:47.270+00:00",
-            message: "Selamlar Efenim6",
-          },
-          {
-            senderId: 2,
-            receiverId: 1,
-            sentDate: "2024-05-19T19:34:01.520+00:00",
-            message: "Selamlar Efenim6"
-          }
-        ],
-        "3": [
-          {
-            senderId: 3,
-            receiverId: 1,
-            sentDate: "2024-05-19T19:33:47.270+00:00",
-            message: "Selamlar Efenim6"
-          },
-          {
-            senderId: 1,
-            receiverId: 3,
-            sentDate: "2024-05-19T19:33:47.270+00:00",
-            message: "Selamlar Efenfsddfsfsdim6"
-          },
-          {
-            senderId: 3,
-            receiverId: 1,
-            sentDate: "2024-05-19T19:34:01.520+00:00",
-            message: "Selamlar Efenim6"
-          }
-        ]
-      }
+  "1": [
+    {
+      "senderId": 2,
+      "receiverId": 1,
+      "sentDate": "2024-05-19T19:33:47.270+00:00",
+      "message": "hey bro how u doin?"
+    },
+    {
+      "senderId": 2,
+      "receiverId": 1,
+      "sentDate": "2024-05-19T19:34:01.520+00:00",
+      "message": "Just finished my work, you?"
+    }
+  ],
+  "2": [
+    {
+      "senderId": 1,
+      "receiverId": 2,
+      "sentDate": "2024-05-19T19:35:00.000+00:00",
+      "message": "Just finished my work, you?"
+    },
+    {
+      "senderId": 2,
+      "receiverId": 1,
+      "sentDate": "2024-05-19T19:36:00.000+00:00",
+      "message": "I'm doing fine, thanks!"
+    }
+  ],
+  "3": [
+    {
+      "senderId": 3,
+      "receiverId": 1,
+      "sentDate": "2024-05-19T19:33:47.270+00:00",
+      "message": "Getting ready for the meeting."
+    },
+    {
+      "senderId": 1,
+      "receiverId": 3,
+      "sentDate": "2024-05-19T19:33:47.270+00:00",
+      "message": "Selamlar Efenfsddfsfsdim6"
+    },
+    {
+      "senderId": 3,
+      "receiverId": 1,
+      "sentDate": "2024-05-19T19:34:01.520+00:00",
+      "message": "Selamlar Efenim6"
+    }
+  ],
+  "4": [
+    {
+      "senderId": 4,
+      "receiverId": 1,
+      "sentDate": "2024-05-19T19:42:00.000+00:00",
+      "message": "Sure, no problem."
+    },
+    {
+      "senderId": 1,
+      "receiverId": 4,
+      "sentDate": "2024-05-19T19:41:00.000+00:00",
+      "message": "Can we talk later?"
+    }
+  ],
+  "5": [
+    {
+      "senderId": 5,
+      "receiverId": 1,
+      "sentDate": "2024-05-19T19:45:00.000+00:00",
+      "message": "Sure, no problem."
+    }
+  ]
+}
+
     };
   },
   created() {

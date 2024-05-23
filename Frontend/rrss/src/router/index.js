@@ -14,6 +14,7 @@ import MerchantPanel from '../views/MerchantPanel.vue';
 import ProfilePage from '../views/ProfilePage.vue';
 import EditProfileView from '../views/EditProfileView.vue';
 import EditProductView from '../views/EditProductView.vue';
+import ConversationsListView from '../views/ConversationsListView.vue';
 
 const routes = [
   {
@@ -50,6 +51,11 @@ const routes = [
     path: '/test/',
     name: 'FormTest',
     component: FromComponentTest
+  },
+  {
+    path: '/messenger',
+    name: 'ConversationsList',
+    component: ConversationsListView
   },
   {
     path: '/messenger/:userId',
