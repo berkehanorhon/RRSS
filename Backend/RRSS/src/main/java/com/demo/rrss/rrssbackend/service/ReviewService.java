@@ -38,6 +38,15 @@ public class ReviewService {
 		this.ProductRatingRepo = ProductRatingRepo;
 	}
 
+	private static final List<String> COUPON_DESCRIPTIONS =
+			Arrays.asList("10% discount on all products", "20% discount on all products",
+					"30% discount on all products", "40% discount on all products",
+					"50% discount on all products", "60% discount on all products",
+					"70% discount on all products", "80% discount on all products",
+					"Free shipping on all products", "Free shipping on orders over 10$",
+					"Free shipping on orders over 20$", "Free shipping on orders over 30$",
+					"Free shipping on orders over 40$", "Free shipping on orders over 50$");
+
 	private HashMap<String, Object> addFieldsToReview(Review response) {
 		HashMap<String, Object> reviewMap = new HashMap<>();
 		reviewMap.put("reviewId", response.getReviewId());
@@ -102,6 +111,9 @@ public class ReviewService {
 		Coupon coupon = new Coupon();
 		coupon.setUserId(userId);
 		coupon.setCouponData(UUID.randomUUID().toString().replace("-", "").substring(0, 12));
+		Random rand = new Random();
+		int randomIndex = rand.nextInt(COUPON_DESCRIPTIONS.size());
+		coupon.setCouponText(COUPON_DESCRIPTIONS.get(randomIndex));
 		couponRepository.save(coupon);
 	}
 
