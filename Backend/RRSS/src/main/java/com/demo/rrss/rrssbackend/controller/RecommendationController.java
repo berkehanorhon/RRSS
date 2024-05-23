@@ -1,6 +1,6 @@
 package com.demo.rrss.rrssbackend.controller;
 
-import com.demo.rrss.rrssbackend.entity.Product;
+import com.demo.rrss.rrssbackend.rest.request.RecommendationRequest;
 import com.demo.rrss.rrssbackend.service.JwtUtil;
 import com.demo.rrss.rrssbackend.service.RecommendationService;
 
@@ -42,7 +42,7 @@ public class RecommendationController {
 	}
 
     @GetMapping("/get")
-    public Set<Product> recommendProducts(Model model) {
+    public Set<RecommendationRequest> recommendProducts(Model model) {
         Long userId = (Long) model.getAttribute("userId");
         return recommendationService.getRecommendation(userId);
     }
