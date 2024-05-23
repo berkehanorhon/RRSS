@@ -1,7 +1,7 @@
 import FromComponentTest from '@/views/FromComponentTest.vue'
 import EditProfileView from '../views/EditProfileView.vue';
 import AdminPanel from '../views/AdminPanel.vue'
-import BlogTimeline from '../components/BlogTimeline.vue'
+// import BlogTimeline from '../components/BlogTimeline.vue'
 import AddForum from '../views/AddForum.vue'
 import CreateBookmarkList from '../views/CreateBookmarkList.vue';
 import ForumCategoryView from '@/views/ForumCategoryView.vue';
@@ -20,7 +20,7 @@ import ForumEntryView from '@/views/ForumEntryView.vue';
 import ForumCategoryEntriesView from '@/views/ForumCategoryEntriesView.vue';
 import Coupons from '../components/Coupons.vue'
 import BlogPost from '@/components/BlogPost.vue';
-import BlogPosts from '@/components/BlogPosts.vue';
+// import BlogPosts from '@/components/BlogPosts.vue';
 
 const routes = [
   {
@@ -119,17 +119,6 @@ const routes = [
     path: '/merchantpanel',
     name: 'MerchantPanel',
     component: MerchantPanel
-  },
-  {
-    path: '/blogs',
-    name: 'BlogPosts',
-    component: BlogPosts
-  },
-  {
-
-    path: '/blogtimeline',
-    name: 'BlogTimeline',
-    component: BlogTimeline
   },
   {
     path: '/bookmarklists/:bookmarkListId',

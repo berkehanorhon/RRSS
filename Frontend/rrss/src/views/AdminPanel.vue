@@ -43,7 +43,7 @@ export default {
     ReviewManagement,
     BlogManagement,
     ForumManagement, 
-    ForumPostManagement,// Add the ProductsManagement component
+    ForumPostManagement,
   },
 };
 </script>

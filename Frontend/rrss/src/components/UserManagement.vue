@@ -4,8 +4,8 @@
       <input v-model="searchQuery" placeholder="Search users" class="search-input"/>
       <div class="user-list">
         <ul>
-          <li v-for="user in filteredUsers" :key="user.user_id" @click="selectUser(user)" :class="{ selected: user.user_id === selectedUser?.user_id }">
-            {{ user.username }} (ID: {{ user.user_id }}) - 
+          <li v-for="user in filteredUsers" :key="user.userId" @click="selectUser(user)" :class="{ selected: user.userId === selectedUser?.userId }">
+            {{ user.username }} (ID: {{ user.userId }}) - 
             {{ user.isAdmin ? 'Admin' : '' }} 
             {{ user.isMerchant ? 'Merchant' : '' }} 
             {{ user.isModerator ? 'Moderator' : '' }}
@@ -20,20 +20,27 @@
       <button @click="toggleModerator" class="action-button">{{ selectedUser.isModerator ? 'Unset as Moderator' : 'Set as Moderator' }}</button>
       <button @click="banUser" class="action-button ban-button">Ban User</button>
     </div>
+    <div v-if="errorMessage" class="error-message">{{ errorMessage }}</div>
+    <div v-if="successMessage" class="success-message">{{ successMessage }}</div>
   </div>
 </template>
 
 <script>
-import usersData from '../mocks/Users.json'; // Import the JSON file
+import axios from 'axios';
 
 export default {
   name: 'UserManagement',
   data() {
     return {
       searchQuery: '',
-      users: usersData,
-      selectedUser: usersData[0],
+      users: [],
+      selectedUser: null,
+      errorMessage: '',
+      successMessage: '',
     };
+  },
+  created() {
+    this.loadUsers();
   },
   computed: {
     filteredUsers() {
@@ -41,42 +48,80 @@ export default {
     },
   },
   methods: {
+    async loadUsers() {
+      try {
+        const response = await axios.get('http://localhost:8080/get-all-users');
+        this.users = response.data;
+      } catch (error) {
+        console.error('Error loading users:', error);
+        this.errorMessage = 'Error loading users.';
+      }
+    },
     selectUser(user) {
       this.selectedUser = user;
     },
-    toggleAdmin() {
+    async toggleAdmin() {
       if (this.selectedUser) {
-        this.selectedUser.isAdmin = !this.selectedUser.isAdmin;
-        this.updateUserData(this.selectedUser.user_id, { isAdmin: this.selectedUser.isAdmin });
-      }
-    },
-    toggleMerchant() {
-      if (this.selectedUser) {
-        this.selectedUser.isMerchant = !this.selectedUser.isMerchant;
-        this.updateUserData(this.selectedUser.user_id, { isMerchant: this.selectedUser.isMerchant });
-      }
-    },
-    toggleModerator() {
-      if (this.selectedUser) {
-        this.selectedUser.isModerator = !this.selectedUser.isModerator;
-        this.updateUserData(this.selectedUser.user_id, { isModerator: this.selectedUser.isModerator });
-      }
-    },
-    banUser() {
-      if (this.selectedUser) {
-        alert(`User ${this.selectedUser.username} has been banned`);
-        // Ban user işlemi burada uygulanacak
-      }
-    },
-    updateUserData(userId, updatedData) {
-      // Mock verilerinizi güncelleyin
-      this.users = this.users.map(user => {
-        if (user.user_id === userId) {
-          return { ...user, ...updatedData };
+        try {
+          const updatedStatus = !this.selectedUser.isAdmin;
+          await this.updateUserData(this.selectedUser.userId, { isAdmin: updatedStatus });
+          this.successMessage = `User ${this.selectedUser.username} is now ${updatedStatus ? 'an Admin' : 'not an Admin'}`;
+        } catch (error) {
+          this.errorMessage = 'Error updating Admin status.';
         }
-        return user;
-      });
-      // Gerçek uygulamada, burada bir API çağrısı yaparak sunucudaki verileri güncelleyebilirsiniz.
+      }
+    },
+    async toggleMerchant() {
+      if (this.selectedUser) {
+        try {
+          const updatedStatus = !this.selectedUser.isMerchant;
+          await this.updateUserData(this.selectedUser.userId, { isMerchant: updatedStatus });
+          this.successMessage = `User ${this.selectedUser.username} is now ${updatedStatus ? 'a Merchant' : 'not a Merchant'}`;
+        } catch (error) {
+          this.errorMessage = 'Error updating Merchant status.';
+        }
+      }
+    },
+    async toggleModerator() {
+      if (this.selectedUser) {
+        try {
+          const updatedStatus = !this.selectedUser.isModerator;
+          await this.updateUserData(this.selectedUser.userId, { isModerator: updatedStatus });
+          this.successMessage = `User ${this.selectedUser.username} is now ${updatedStatus ? 'a Moderator' : 'not a Moderator'}`;
+        } catch (error) {
+          this.errorMessage = 'Error updating Moderator status.';
+        }
+      }
+    },
+    async banUser() {
+      if (this.selectedUser) {
+        try {
+          await axios.post('http://localhost:8080/admin/ban-user', { userId: this.selectedUser.userId });
+          this.successMessage = `User ${this.selectedUser.username} has been banned`;
+          this.errorMessage = '';
+        } catch (error) {
+          this.errorMessage = 'Error banning user.';
+        }
+      }
+    },
+    async updateUserData(userId, updatedData) {
+      try {
+        const response = await axios.post('http://localhost:8080/admin/update-user', { userId, ...updatedData });
+        if (response.status === 200) {
+          this.users = this.users.map(user => {
+            if (user.userId === userId) {
+              return { ...user, ...updatedData };
+            }
+            return user;
+          });
+          this.selectedUser = this.users.find(user => user.userId === userId);
+        } else {
+          this.errorMessage = 'Error updating user data.';
+        }
+      } catch (error) {
+        this.errorMessage = 'Error updating user data.';
+        throw error;
+      }
     },
   },
 };
@@ -158,5 +203,15 @@ export default {
 
 .ban-button:hover {
   background-color: #c82333;
+}
+
+.error-message {
+  color: red;
+  margin-top: 10px;
+}
+
+.success-message {
+  color: green;
+  margin-top: 10px;
 }
 </style>

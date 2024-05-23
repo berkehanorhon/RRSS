@@ -20,4 +20,5 @@ public class UsersRequest {
     private Boolean isMerchant;
     private String avatarImagePath;
     private Integer reputation;
+    private Long userId;
 }
