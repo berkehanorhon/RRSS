@@ -25,4 +25,8 @@ public interface ProductRatingRepository extends JpaRepository<ProductRating, Lo
     default Float getAverageRatingOrZero(Long productId) {
         return findAverageRatingByProductId(productId).orElse(0.0f);
     }
+
+    ProductRating findByUserIdAndProductId(Long userId, Long productId);
+
+    void deleteByUserIdAndProductId(Long userId, Long productId);
 }

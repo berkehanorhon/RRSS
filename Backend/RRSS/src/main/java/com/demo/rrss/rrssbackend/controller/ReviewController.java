@@ -45,6 +45,12 @@ public class ReviewController {
 		return service.getReview(reviewId);
 	}
 
+	@GetMapping("/get-review-given-star")
+	@ResponseStatus(HttpStatus.OK)
+	public Short getReviewGivenStar(@RequestParam Long productId, @RequestParam Long userId) {
+		return service.getReviewGivenStar(productId, userId);
+	}
+
 	@GetMapping("/get-all-reviews")
 	@ResponseStatus(HttpStatus.OK)
 	public List<HashMap<String, Object>> getAllReviews() {

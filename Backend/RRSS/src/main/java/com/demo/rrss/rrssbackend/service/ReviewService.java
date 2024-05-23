@@ -65,7 +65,7 @@ public class ReviewService {
 			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Star rating must be between 1 and 5.");
 		Review existingReview = repository.findByUserIdAndProductId(userId, request.getProductId());
 		if (existingReview != null)
-			throw new ResponseStatusException(HttpStatus.FORBIDDEN, "You have already reviewed this product.");
+			throw new ResponseStatusException(HttpStatus.CONFLICT, "You have already reviewed this product.");
 		saveReview(request, userId);
 		repository.findByUserIdAndProductId(userId, request.getProductId());
 		productRating.setUserId(userId);
@@ -117,14 +117,16 @@ public class ReviewService {
 			throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Review not found or you do not have permission to update it.");
 		}
 	}
-
+	
+	@Transactional
 	public void deleteReview(Long reviewId, Model model) {
 		Long userId = (Long) model.getAttribute("userId");
 		Optional<Review> reviewOptional = repository.findById(reviewId);
-		if (reviewOptional.isPresent()) {
+		if (reviewOptional.isPresent() && reviewOptional.get().getUserId() == userId){
 			Review review = reviewOptional.get();
 			if (Objects.equals(review.getUserId(), userId)) {
 				repository.deleteById(reviewId);
+				ProductRatingRepo.deleteByUserIdAndProductId(review.getUserId(), review.getProductId());
 			}
 		}
 		else
@@ -149,4 +151,8 @@ public class ReviewService {
 	public List<Review> getProductsAllReviews(Long productId) {
         return repository.findAllByProductId(productId);
     }
+
+	public Short getReviewGivenStar(Long productId, Long userId) {
+		return ProductRatingRepo.findByUserIdAndProductId(userId, productId).getStarRating();
+	}
 }

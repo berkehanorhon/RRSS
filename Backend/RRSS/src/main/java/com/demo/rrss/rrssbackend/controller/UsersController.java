@@ -35,8 +35,8 @@ public class UsersController {
 
     @GetMapping("/get-user-profile")
     @ResponseStatus(HttpStatus.OK)
-    public UsersProfileRequest getUserProfile(@RequestParam Long userId) {
-        return service.getUserProfile(userId);
+    public UsersProfileRequest getUserProfile(@RequestParam Long userId, Model model) {
+        return service.getUserProfile(userId,model);
     }
 
     @PatchMapping(value = "/update-user")

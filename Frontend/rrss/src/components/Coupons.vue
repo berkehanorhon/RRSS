@@ -8,8 +8,10 @@
         <div v-for="coupon in row" :key="coupon.id" class="coupon">
             <h4>{{ coupon.couponName }}</h4>
             <img :src="getCouponImage(coupon)" alt="Coupon Image" class="coupon-image" />
-          <p>Coupon Code: {{ coupon.couponData }}</p>
-          <p>Creation Date: {{ coupon.creationDate }}</p>
+          <p>Coupon Description: {{ coupon.couponText }}</p>
+          <p>Coupon Code: <strong>{{ coupon.couponData }}</strong></p>
+          <p>Creation Date:</p>
+          <p>{{ formatDate(coupon.creationDate) }}</p>
         </div>
       </div>
     </div>
@@ -22,8 +24,7 @@
 </template>
 
 <script>
-import couponsData from '../mocks/Coupons.json'; // Import the JSON file
-
+import axios from 'axios';
 export default {
   name: 'CouponTimeline',
   data() {
@@ -34,6 +35,9 @@ export default {
       itemsPerPage: 18,
       windowWidth: 0
     };
+  },
+  created() {
+    this.fetchCoupons();
   },
   computed: {
     chunkSize() {
@@ -60,7 +64,6 @@ export default {
     }
   },
   mounted() {
-    this.fetchCoupons();
     this.windowWidth = window.innerWidth;
     window.addEventListener('resize', () => {
       this.windowWidth = window.innerWidth;
@@ -72,15 +75,17 @@ export default {
     });
   },
   methods: {
-    fetchCoupons() {
-      this.coupons = Object.entries(couponsData).map(([couponId, coupon]) => ({
-        id: couponId,
-        couponName: coupon.couponName,
-        couponData: coupon.couponData,
-        creationDate: coupon.creationDate,
-        ...coupon,
-        couponImage: this.defaultImage
-      }));
+    formatDate(dateString) {
+      const options = { year: 'numeric', month: 'long', day: 'numeric', hour: '2-digit', minute: '2-digit' };
+      return new Date(dateString).toLocaleDateString(undefined, options);
+    },
+    async fetchCoupons() {
+      try {
+        const response = await axios.get('http://localhost:8080/user-get-coupon');
+        this.coupons = response.data;
+      } catch (error) {
+        console.error(error);
+      }
     },
     getCouponImage(coupon) {
       return coupon.couponImage || this.defaultImage;

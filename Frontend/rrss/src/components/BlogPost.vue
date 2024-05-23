@@ -21,11 +21,10 @@
 </template>
 
 <script>
-import blogsData from '../mocks/Blogs.json'; // Import the JSON file
+import axios from 'axios';
 
 export default {
   name: 'BlogPost',
-  props: ['blogId'],
   data() {
     return {
       blog: null,
@@ -34,18 +33,30 @@ export default {
       liked: false  // User's like status
     };
   },
-  created() {
-    this.fetchBlog();
+  async created() {
+    await this.fetchBlog();
   },
   methods: {
-    fetchBlog() {
-        console.log('Fetching blog with ID:', this.blogId);
-        this.blog = blogsData[this.blogId];
-        console.log('Fetched blog:', this.blog);
-        // Initialize likeCount from the blog data if available
-        if (this.blog && this.blog.likes) {
-          this.likeCount = this.blog.likes;
+    async fetchBlog() {
+      try {
+        const response = await axios.get(`http://localhost:8080/get-blog-post?blogPostId=${this.$route.params.blogId}`);
+        if (response.status === 200) {
+          this.blog = {
+            id: response.data.blogPostId,
+            postName: response.data.postName,
+            postData: response.data.postData,
+            image: response.data.imagePath || this.defaultImage,
+          };
+          // Initialize likeCount from the blog data if available
+          if (this.blog && this.blog.likes) {
+            this.likeCount = this.blog.likes;
+          }
+        } else {
+          throw new Error();
         }
+      } catch (error) {
+        console.error('Failed to fetch blog', error);
+      }
     },
     toggleLike() {
       if (this.liked) {

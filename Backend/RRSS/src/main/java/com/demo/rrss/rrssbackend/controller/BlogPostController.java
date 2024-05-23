@@ -52,6 +52,12 @@ public class BlogPostController {
 		return blogPosts.stream().limit(10).collect(Collectors.toList());
 	}
 
+	@GetMapping("/get-users-all-blog-posts")
+	@ResponseStatus(HttpStatus.OK)
+	public List<BlogPost> getAllBlogPosts(@RequestParam Long userId) {
+		return service.getUsersAllBlogPosts(userId);
+	}
+
 	@PostMapping(value = "/add-blog-post", consumes = MediaType.APPLICATION_JSON_VALUE)
 	@ResponseStatus(HttpStatus.OK)
 	public void addBlogPost(@RequestBody BlogPostRequest blogPost, Model model) {

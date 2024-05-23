@@ -28,7 +28,7 @@ export default {
       if (this.isLoggedIn) {
       let userId = localStorage.getItem('userId');
       if (userId) {
-        this.$router.push(`/profile/${userId}`);
+        window.location.href = `/profile/${userId}`;
       } else {
         this.$router.push('/');
       }

@@ -54,7 +54,7 @@ public class UsersService {
         return userRequest;
     }
 
-    public UsersProfileRequest getUserProfile(Long userId) {
+    public UsersProfileRequest getUserProfile(Long userId, Model model) {
         Optional<Users> response = repository.findById(userId);
         Users user = response.orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found"));
     
@@ -63,7 +63,7 @@ public class UsersService {
         userProfileRequest.setProducts(pservice.getUsersAllProducts(userId));
         userProfileRequest.setBlogPosts(bpservice.getUsersAllBlogPosts(userId));
         userProfileRequest.setReviews(rservice.getUsersAllReviews(userId));
-        userProfileRequest.setBookmarkLists(blservice.getUsersAllBookmarkLists(userId));
+        userProfileRequest.setBookmarkLists(blservice.getUsersAllBookmarkLists(userId, model));
         return userProfileRequest;
     }
 
