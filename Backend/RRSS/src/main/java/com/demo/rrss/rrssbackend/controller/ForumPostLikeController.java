@@ -1,7 +1,7 @@
 package com.demo.rrss.rrssbackend.controller;
 
 import org.springframework.web.bind.annotation.RestController;
-
+import org.springframework.web.server.ResponseStatusException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -28,10 +28,21 @@ public class ForumPostLikeController {
 	@Autowired
 	ForumPostLikeService service;
 
-	@ModelAttribute // TODO Herhangi bir hata durumunda 403 döndürülecek
-	public void addUserIdToModel(@RequestHeader(value="Authorization") String bearerToken, Model model) {
+	@ModelAttribute
+	public void addUserIdToModel(@RequestHeader(value="Authorization", required=false) String bearerToken, Model model) {
+		if (bearerToken == null || !bearerToken.startsWith("Bearer ")) {
+			throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Authorization header is missing or invalid");
+		}
 		String token = bearerToken.substring(7);
-		Long userId = jwtUtil.extractUserId(token);
+		Long userId;
+		try {
+			userId = jwtUtil.extractUserId(token);
+		} catch (Exception e) {
+			throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Invalid token");
+		}
+		if (userId == null) {
+			throw new ResponseStatusException(HttpStatus.FORBIDDEN, "User ID not found in token");
+		}
 		model.addAttribute("userId", userId);
 	}
 

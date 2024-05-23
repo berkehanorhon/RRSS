@@ -23,7 +23,7 @@ public class BlogPost {
     @Column(name = "post_name", nullable = false)
     private String postName;
 
-    @Column(name = "post_data", nullable = false)
+    @Column(name = "post_data", nullable = false, length = 1500)
     private String postData;
 
     @CreationTimestamp

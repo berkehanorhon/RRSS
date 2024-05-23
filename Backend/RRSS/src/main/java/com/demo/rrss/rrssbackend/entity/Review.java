@@ -9,7 +9,7 @@ import java.sql.Timestamp;
 @Setter
 @Getter
 @Entity
-@Table(name = "Review")
+@Table(name = "Review", uniqueConstraints = @UniqueConstraint(columnNames = {"product_id", "user_id"}))
 public class Review {
 
     @Id
@@ -29,6 +29,5 @@ public class Review {
 
     @Column(name = "review_data", nullable = false)
     private String reviewData;
-
 
 }

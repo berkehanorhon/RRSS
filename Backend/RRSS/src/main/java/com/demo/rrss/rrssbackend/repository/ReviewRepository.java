@@ -13,11 +13,12 @@ import com.demo.rrss.rrssbackend.entity.Review;
 public interface ReviewRepository extends CrudRepository<Review, Long> {
     @Query("SELECT r.productId, COUNT(r) FROM Review r WHERE r.productId IN :productIds GROUP BY r.productId")
     List<Object[]> countReviewsByProductIds(@Param("productIds") List<Long> productIds);
-
+    Review findByUserIdAndProductId(Long userId, Long productId);
     List<Review> findByUserId(Long userId);
     List<Review> findAllByProductId(Long productId);
     @Query("SELECT r.productId FROM Review r WHERE r.userId = :userId")
     List<Long> findProductIdsByUserId(@Param("userId") Long userId);
-
     public void deleteByReviewId(Long reviewId);
+    @Query(nativeQuery = true, value = "SELECT * FROM Review ORDER BY publish_date DESC LIMIT 50")
+    List<Review> findAllMax50();
 }

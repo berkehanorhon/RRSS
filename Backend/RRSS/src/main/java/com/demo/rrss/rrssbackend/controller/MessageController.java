@@ -2,6 +2,7 @@ package com.demo.rrss.rrssbackend.controller;
 
 
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -16,6 +17,7 @@ import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.server.ResponseStatusException;
 
 import com.demo.rrss.rrssbackend.entity.Message;
 import com.demo.rrss.rrssbackend.rest.request.ConversationRequest;
@@ -36,18 +38,28 @@ public class MessageController {
     @Autowired
 	private JwtUtil jwtUtil;
 
-    @ModelAttribute // TODO Herhangi bir hata durumunda 403 döndürülecek
-	public void addUserIdToModel(@RequestHeader(value="Authorization") String bearerToken, Model model) {
+    @ModelAttribute
+	public void addUserIdToModel(@RequestHeader(value="Authorization", required=false) String bearerToken, Model model) {
+		if (bearerToken == null || !bearerToken.startsWith("Bearer ")) {
+			throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Authorization header is missing or invalid");
+		}
 		String token = bearerToken.substring(7);
-		Long userId = jwtUtil.extractUserId(token);
+		Long userId;
+		try {
+			userId = jwtUtil.extractUserId(token);
+		} catch (Exception e) {
+			throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Invalid token");
+		}
+		if (userId == null) {
+			throw new ResponseStatusException(HttpStatus.FORBIDDEN, "User ID not found in token");
+		}
 		model.addAttribute("userId", userId);
 	}
 
     @GetMapping("/get-message-box")
     @ResponseStatus(HttpStatus.OK)
-    public ResponseEntity<List<MessageBoxRequest>> getMessageBox(Model model) {
-        List<MessageBoxRequest> msgBoxes = messageService.getDirectMessageBoxes(model);
-        return ResponseEntity.ok(msgBoxes);
+    public List<Map<Long, MessageBoxRequest>> getMessageBox(Model model) {
+        return messageService.getDirectMessageBoxes(model);
     }
 
     @PostMapping("/send-message")

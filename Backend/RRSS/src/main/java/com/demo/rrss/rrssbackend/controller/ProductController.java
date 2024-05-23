@@ -1,5 +1,7 @@
 package com.demo.rrss.rrssbackend.controller;
 
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,6 +18,7 @@ import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.server.ResponseStatusException;
 
 import com.demo.rrss.rrssbackend.entity.Product;
 import com.demo.rrss.rrssbackend.rest.request.ProductRequest;
@@ -30,31 +33,40 @@ public class ProductController {
 	@Autowired
 	private JwtUtil jwtUtil;
 
-	@ModelAttribute // TODO Herhangi bir hata durumunda 403 döndürülecek
-	public void addUserIdToModel(@RequestHeader(value="Authorization") String bearerToken, Model model) {
+	@ModelAttribute
+	public void addUserIdToModel(@RequestHeader(value="Authorization", required=false) String bearerToken, Model model) {
+		if (bearerToken == null || !bearerToken.startsWith("Bearer ")) {
+			throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Authorization header is missing or invalid");
+		}
 		String token = bearerToken.substring(7);
-		Long userId = jwtUtil.extractUserId(token);
+		Long userId;
+		try {
+			userId = jwtUtil.extractUserId(token);
+		} catch (Exception e) {
+			throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Invalid token");
+		}
+		if (userId == null) {
+			throw new ResponseStatusException(HttpStatus.FORBIDDEN, "User ID not found in token");
+		}
 		model.addAttribute("userId", userId);
 	}
 
 	@GetMapping("/get-product")
 	@ResponseStatus(HttpStatus.OK)
-	public Product ProductResponse(@RequestParam Long productId) {
+	public HashMap<String, Object> ProductResponse(@RequestParam Long productId) {
 		return service.getProduct(productId);
 	}
 
 	@GetMapping("/get-users-products")
 	@ResponseStatus(HttpStatus.OK)
 	public List<Product> getUsersAllProducts(@RequestParam Long userId) {
-		List<Product> products = service.getUsersAllProducts(userId);
-		return products;
+        return service.getUsersAllProducts(userId);
 	}
 
 	@GetMapping("/get-all-products")
 	@ResponseStatus(HttpStatus.OK)
-	public List<Product> getAllProducts(@RequestParam Long categoryId) {
-		List<Product> products = service.getAllProducts(categoryId);
-		return products;
+	public HashSet getAllProducts(@RequestParam Long categoryId) {
+		return service.getAllProducts(categoryId);
 	}
 
 	@PostMapping(value = "/add-product", consumes = MediaType.APPLICATION_JSON_VALUE)

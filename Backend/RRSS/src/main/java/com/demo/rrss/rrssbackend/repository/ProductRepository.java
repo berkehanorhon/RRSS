@@ -23,9 +23,18 @@ public interface ProductRepository extends CrudRepository<Product, Long> {
 	@Query("SELECT p.productId FROM Product p WHERE p.categoryId IN :categoryIds")
 	List<Long> findProductIdsByCategoryIds(@Param("categoryIds") Set<Long> categoryIds);
 
+	@Query("SELECT p FROM Product p WHERE p.productId IN :productIds")
+	List<Product> findAllByIdsSet(@Param("productIds") Set<Long> productIds);
+
+	@Query("SELECT p FROM Product p WHERE p.productId IN :productIds")
+	List<Product> findAllByIdsList(@Param("productIds") List<Long> productIds);
+
+
+
 	List<Product> findByUserId(Long userId);
 
 	@Modifying
-    @Transactional
+  @Transactional
 	public void deleteByProductId(Long productId);
+
 }

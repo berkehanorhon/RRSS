@@ -23,7 +23,7 @@
 </template>
 
 <script>
-import blogsData from '../mocks/Blogs.json'; // Import the JSON file
+import axios from 'axios';
 
 export default {
   name: 'BlogTimeline',
@@ -33,8 +33,13 @@ export default {
       defaultImage: require('@/assets/logo.png'),
       currentPage: 1,
       itemsPerPage: 18,
-      windowWidth: 0
+      windowWidth: 0,
+      userId: null,
     };
+  },
+  async created() {
+    this.userId = this.$route.params.userId;
+    await this.fetchBlogs();
   },
   computed: {
     chunkSize() {
@@ -61,7 +66,6 @@ export default {
     }
   },
   mounted() {
-    this.fetchBlogs();
     this.windowWidth = window.innerWidth;
     window.addEventListener('resize', () => {
       this.windowWidth = window.innerWidth;
@@ -73,15 +77,23 @@ export default {
     });
   },
  methods: {
-    fetchBlogs() {
-  this.blogs = Object.entries(blogsData).map(([blogId, blog]) => ({
-    id: blogId,
-    postName: blog.postName,
-    postData: blog.postData,
-    ...blog,
-    image: this.defaultImage
-  }));
-},
+  async fetchBlogs() {
+      try {
+        const response = await axios.get(`http://localhost:8080/get-users-all-blog-posts?userId=${this.userId}`);
+        if (response.status === 200) {
+          this.blogs = response.data.map(blog => ({
+            id: blog.blogPostId,
+            postName: blog.postName,
+            postData: blog.postData,
+            image: blog.imagePath || this.defaultImage,
+          }));
+        } else {
+          throw new Error();
+        }
+      } catch (error) {
+        console.error('Failed to fetch blogs', error);
+      }
+    },
     getImage(blog) {
       return blog.imagePath || this.defaultImage;
     },

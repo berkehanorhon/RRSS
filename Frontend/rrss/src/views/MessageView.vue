@@ -18,11 +18,13 @@
       />
       <button @click="sendMessage">Send</button>
     </div>
+    <div v-if="errorMessage" class="error-message">{{ errorMessage }}</div>
   </div>
 </template>
 
 <script>
 import MessageComponent from "../components/MessageComponent.vue";
+import axios from "axios";
 
 export default {
   name: "MessageView",
@@ -37,77 +39,65 @@ export default {
   },
   data() {
     return {
-      currentUser: "John", 
+      currentUser: "",
       newMessage: "",
       messages: [],
-      user1: { id: 1, name: "John" },
-      user2: { id: null, name: "User" }, 
-      allMessages: {
-        "1": [
-          {
-            senderId: 2,
-            receiverId: 1,
-            sentDate: "2024-05-19T19:33:47.270+00:00",
-            message: "Selamlar Efenim6",
-          },
-          {
-            senderId: 2,
-            receiverId: 1,
-            sentDate: "2024-05-19T19:34:01.520+00:00",
-            message: "Selamlar Efenim6"
-          }
-        ],
-        "3": [
-          {
-            senderId: 3,
-            receiverId: 1,
-            sentDate: "2024-05-19T19:33:47.270+00:00",
-            message: "Selamlar Efenim6"
-          },
-          {
-            senderId: 1,
-            receiverId: 3,
-            sentDate: "2024-05-19T19:33:47.270+00:00",
-            message: "Selamlar Efenfsddfsfsdim6"
-          },
-          {
-            senderId: 3,
-            receiverId: 1,
-            sentDate: "2024-05-19T19:34:01.520+00:00",
-            message: "Selamlar Efenim6"
-          }
-        ]
-      }
+      errorMessage: "",
+      user1: { id: null, name: "" },
+      user2: { id: null, name: "" },
     };
   },
   created() {
-    this.setUser2();
     this.loadMessages();
   },
   methods: {
-    setUser2() {
-      this.user2.id = parseInt(this.userId);
-      this.user2.name = this.userId === "2" ? "Jane" : "Unknown User";
-    },
-    loadMessages() {
-      const rawMessages = this.allMessages[this.userId] || [];
+    async loadMessages() {
+      try {
+        const response = await axios.post(`http://localhost:8080/get-conversation-with-user?userId=${this.userId}`);
+        const data = response.data;
+        
+        const users = data.users;
+        this.user1.id = parseInt(this.userId);
+        this.user1.name = users[this.userId];
+        this.user2.id = this.user1.id === 1 ? 2 : 1; // Assuming the current user is always "John" with id 1
+        this.user2.name = users[this.user2.id.toString()];
+        this.currentUser = this.user2.name;
 
-      const formattedMessages = rawMessages.map((msg) => ({
-        content: msg.message,
-        sender: msg.senderId === this.user1.id ? this.user1.name : this.user2.name,
-        sentDate: msg.sentDate,
-      }));
+        const rawMessages = data.messages || [];
 
-      this.messages = formattedMessages;
+        const formattedMessages = rawMessages.map((msg) => ({
+          content: msg.message,
+          sender: msg.senderId === this.user2.id ? this.user2.name : this.user1.name,
+          sentDate: msg.sentDate,
+        }));
+
+        this.messages = formattedMessages;
+      } catch (error) {
+        console.error("Error loading messages:", error);
+      }
     },
-    sendMessage() {
+    async sendMessage() {
       if (this.newMessage.trim() !== "") {
-        this.messages.push({
-          content: this.newMessage,
-          sender: this.currentUser,
-          sentDate: new Date().toISOString(),
-        });
-        this.newMessage = "";
+        try {
+          const response = await axios.post("http://localhost:8080/send-message", {
+            receiverId: this.user1.id,
+            message: this.newMessage
+          });
+
+          if (response.status === 200) {
+            this.messages.push({
+              content: this.newMessage,
+              sender: this.currentUser,
+              sentDate: new Date().toISOString(),
+            });
+            this.newMessage = "";
+            this.errorMessage = "";
+          } else {
+            this.errorMessage = "Error sending message.";
+          }
+        } catch (error) {
+          this.errorMessage = "Error sending message.";
+        }
       }
     },
   },
@@ -117,31 +107,30 @@ export default {
 <style scoped>
 .message-view {
   width: 100%;
-  max-width: 600px; 
-  margin: 0 auto; 
+  max-width: 600px;
+  margin: 0 auto;
   padding: 20px;
 }
 
 .chat-container {
-  height: calc(100vh - 150px); 
+  height: calc(100vh - 150px);
   overflow-y: auto;
   padding-bottom: 10px;
 }
 
 .input-container {
-  display: block;
+  display: flex;
   margin-top: 10px;
 }
 
 .input-container input {
-  width: calc(100% - 100px); 
+  flex-grow: 1;
   padding: 10px;
   font-size: 16px;
-  box-sizing: border-box; 
+  box-sizing: border-box;
 }
 
 .input-container button {
-  width: 100px;
   padding: 10px;
   font-size: 16px;
   background-color: #007bff;
@@ -149,10 +138,15 @@ export default {
   border: none;
   border-radius: 5px;
   cursor: pointer;
-  box-sizing: border-box; 
+  box-sizing: border-box;
 }
 
 .input-container button:hover {
   background-color: #0056b3;
+}
+
+.error-message {
+  color: red;
+  margin-top: 10px;
 }
 </style>

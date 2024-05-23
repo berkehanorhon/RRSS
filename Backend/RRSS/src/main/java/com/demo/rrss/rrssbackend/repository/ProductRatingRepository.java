@@ -7,13 +7,27 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
 import java.util.List;
+import java.util.Optional;
+import java.util.Set;
 
 public interface ProductRatingRepository extends JpaRepository<ProductRating, Long> {
     @Query("SELECT r.productId FROM ProductRating r WHERE r.userId = :userId AND r.starRating >= :starRating")
-    List<Long> findProductIdsByUserIdAndStarRatingGreaterThanEqual(@Param("userId") Long userId, @Param("starRating") short starRating);
+    Set<Long> findProductIdsByUserIdAndStarRatingGreaterThanEqual(@Param("userId") Long userId, @Param("starRating") short starRating);
 
     @Query("SELECT r.productId, AVG(r.starRating) FROM ProductRating r WHERE r.productId IN :productIds GROUP BY r.productId")
     List<Object[]> findAverageRatingsByProductIds(@Param("productIds") List<Long> productIds);
 
-    Float findAvarageRatingByProductId(Long productId);
+    @Query("SELECT AVG(pr.starRating) FROM ProductRating pr WHERE pr.productId = :productId")
+    Optional<Float> findAverageRatingByProductId(@Param("productId") Long productId);
+
+    @Query("SELECT COUNT(pr) FROM ProductRating pr WHERE pr.productId = :productId")
+    Long findRatingCountByProductId(@Param("productId") Long productId);
+
+    default Float getAverageRatingOrZero(Long productId) {
+        return findAverageRatingByProductId(productId).orElse(0.0f);
+    }
+
+    ProductRating findByUserIdAndProductId(Long userId, Long productId);
+
+    void deleteByUserIdAndProductId(Long userId, Long productId);
 }
