@@ -4,12 +4,12 @@ import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
 
-@Getter
 @Setter
+@Getter
 @Data
+public class AddCategoryRequest {
 
-public class CouponRequest {
-    private Long userId;
-    private String couponText;
-    private String couponData;
+	private String categoryName;
+
+	private String description;
 }

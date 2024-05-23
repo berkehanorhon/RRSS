@@ -60,11 +60,6 @@ public class ForumReplyController {
 		service.addForumReply(forumReply,model);
 	}
 
-	@PatchMapping(value = "/update-reply")
-	@ResponseStatus(HttpStatus.OK)
-	public void updateForumReply(@RequestBody ForumReplyRequest forumReply, Model model) {
-		service.updateForumReply(forumReply.getForumReplyId(), forumReply, model);
-	}
 
 	@DeleteMapping(value = "/delete-reply")
 	@ResponseStatus(HttpStatus.OK)

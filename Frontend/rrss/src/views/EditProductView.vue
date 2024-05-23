@@ -1,58 +1,63 @@
 <template>
-    <div class="container">
-      <FormComponent
-        title="Edit Product"
-        buttonLabel="Edit Product"
-        :inputs="inputs"
-        :submitForm="handleSubmit"
-      />
-    </div>
+  <div class="container">
+    <FormComponent
+      title="Edit Product"
+      buttonLabel="Edit Product"
+      :inputs="inputs"
+      :submitForm="handleSubmit"
+    />
+  </div>
 </template>
-  
+
 <script>
 import FormComponent from '../components/FormComponent.vue';
 import axios from 'axios';
 export default {
-    components: {
-      FormComponent
-    },
-    data() {
-      return {
-        inputs: [
-          { id: 'title', label: 'Product Title', type: 'text' ,text: ''},
-          { id: 'description', label: 'Description', type: 'text' ,text: ''},
-          { id: 'categoryId', label: 'Category ID', type: 'number' ,text: ''}
-        ]
-      };
-    },
-    async created() {
-        const response = await axios.get(`http://localhost:8080/get-product?productId=${this.$route.params.productId}`);
-        const product = response.data;
-        this.inputs.forEach(input => {
-        input.text = product[input.id] || '';
-        });
-    },
-    methods: {
-        async handleSubmit(formData) {
-            try {
-            const response = await axios.patch(`http://localhost:8080/update-product`, {
-                productId: this.$route.params.productId,
-                title: formData.title,
-                description: formData.description,
-                categoryId: formData.categoryId
-            });
+  components: {
+    FormComponent
+  },
+  data() {
+    return {
+      inputs: [
+        { id: 'title', label: 'Product Title', type: 'text' ,text: ''},
+        { id: 'description', label: 'Description', type: 'text' ,text: ''},
+        { id: 'categoryId', label: 'Category ID', type: 'select' ,text: '', options: []}
+      ]
+    };
+  },
+  async created() {
+    const response = await axios.get(`http://localhost:8080/get-product?productId=${this.$route.params.productId}`);
+    const product = response.data;
+    this.inputs.forEach(input => {
+      input.text = product[input.id] || '';
+    });
 
-            if (response.status === 200) {
-                window.location.href = `/products/${this.$route.params.productId}`;
-            }
-            } catch (error) {
-            console.error(error);
-            }
+    const categoriesResponse = await axios.get('http://localhost:8080/get-all-categories');
+    const categories = categoriesResponse.data;
+    const categoryInput = this.inputs.find(input => input.id === 'categoryId');
+    categoryInput.options = categories.map(category => ({ value: category.categoryId, text: category.categoryName }));
+  },
+  methods: {
+    async handleSubmit(formData) {
+      try {
+        const response = await axios.patch(`http://localhost:8080/update-product`, {
+          productId: this.$route.params.productId,
+          title: formData.title,
+          description: formData.description,
+          categoryId: formData.categoryId
+        });
+
+        if (response.status === 200) {
+          window.location.href = `/products/${this.$route.params.productId}`;
         }
+      } catch (error) {
+        console.error(error);
+      }
     }
+  }
 };
 </script>
-  
+
 <style>
 .container {
   flex-direction: column;

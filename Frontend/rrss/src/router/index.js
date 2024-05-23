@@ -1,20 +1,26 @@
-import { createRouter, createWebHistory } from 'vue-router';
-import HomeView from '../views/HomeView.vue';
-import LoginView from '../views/LoginView.vue';
-import RegisterView from '../views/RegisterView.vue';
-import FromComponentTest from '@/views/FromComponentTest.vue';
-import MessageView from '@/views/MessageView.vue';
-import ForumView from '@/views/ForumView.vue';
-import ForumCategoryEntriesView from '@/views/ForumCategoryEntriesView.vue';
-import ForumCategoryView from '@/views/ForumCategoryView.vue';
-import ForumEntryView from '@/views/ForumEntryView.vue';
-import BlogPost from '../components/BlogPost.vue';
-import BlogPosts from '../components/BlogPosts.vue';
-import MerchantPanel from '../views/MerchantPanel.vue';
-import ProfilePage from '../views/ProfilePage.vue';
+import FromComponentTest from '@/views/FromComponentTest.vue'
 import EditProfileView from '../views/EditProfileView.vue';
+import AdminPanel from '../views/AdminPanel.vue'
+import BlogPost from '../components/BlogPost.vue';
+import BlogTimeline from '../components/BlogTimeline.vue'
+import AddForum from '../views/AddForum.vue'
+import BlogPosts from '../components/BlogPosts.vue';
+import CreateBookmarkList from '../views/CreateBookmarkList.vue';
+import MerchantPanel from '../views/MerchantPanel.vue'
+import ForumCategoryView from '@/views/ForumCategoryView.vue';
+import ProfilePage from '../views/ProfilePage.vue';
+import { createRouter, createWebHistory } from 'vue-router';
+import LoginView from '../views/LoginView.vue'
 import EditProductView from '../views/EditProductView.vue';
 import ConversationsListView from '../views/ConversationsListView.vue';
+import MessageView from '@/views/MessageView.vue';
+import RegisterView from '../views/RegisterView.vue'
+import HomeView from '../views/HomeView.vue'
+import ProductTimelineBookmarks from '../components/ProductTimelineBookmarks.vue';
+import ForumView from '@/views/ForumView.vue';
+import ForumEntryView from '@/views/ForumEntryView.vue';
+import ForumCategoryEntriesView from '@/views/ForumCategoryEntriesView.vue';
+import Coupons from '../components/Coupons.vue'
 
 const routes = [
   {
@@ -36,6 +42,16 @@ const routes = [
     path: '/register',
     name: 'register',
     component: RegisterView
+  },
+  {
+    path: '/admin-panel',
+    name: 'AdminPanel',
+    component: AdminPanel
+  },
+  {
+    path: '/add-forum',
+    name: 'AddForum',
+    component: AddForum
   },
   {
     path: '/products/:productId',
@@ -89,6 +105,10 @@ const routes = [
     path: '/profile/:userId',
     name: 'ProfilePage',
     component: ProfilePage
+  },{
+    path: '/coupons',
+    name: 'coupons',
+    component: Coupons
   },
   {
     path: '/profile/:userId/edit',
@@ -104,6 +124,22 @@ const routes = [
     path: '/blogs',
     name: 'BlogPosts',
     component: BlogPosts
+  },
+  {
+
+    path: '/blogtimeline',
+    name: 'BlogTimeline',
+    component: BlogTimeline
+  },
+  {
+    path: '/bookmarklists/:bookmarkListId',
+    name: 'BookmarkList',
+    component: ProductTimelineBookmarks
+  },
+  {
+    path: '/createbookmarklist',
+    name: 'CreateBookmarkList',
+    component: CreateBookmarkList
   },
   {
     path: '/blogs/:blogId',

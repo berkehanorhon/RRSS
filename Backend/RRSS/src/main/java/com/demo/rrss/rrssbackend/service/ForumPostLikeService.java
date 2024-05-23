@@ -12,9 +12,9 @@ import org.springframework.web.server.ResponseStatusException;
 import com.demo.rrss.rrssbackend.entity.ForumPostLike;
 import com.demo.rrss.rrssbackend.repository.ForumPostLikeRepository;
 import com.demo.rrss.rrssbackend.rest.request.ForumPostLikeRequest;
-import com.demo.rrss.rrssbackend.entity.ForumPost;
+
 import com.demo.rrss.rrssbackend.repository.ForumPostRepository;
-import com.demo.rrss.rrssbackend.rest.request.ForumPostRequest;
+
 
 @Service
 public class ForumPostLikeService {
@@ -43,10 +43,10 @@ public class ForumPostLikeService {
 	}
 
 
-	public void deleteForumPostLike(Long forumPostLikeId, Model model) {
+	public void deleteForumPostLike(Long forumPostId, Model model) {
 		Long userId = (Long) model.getAttribute("userId");
-		if (repository.existsById(forumPostLikeId) && repository.findById(forumPostLikeId).get().getUserId() == userId)
-			repository.deleteById(forumPostLikeId);
+		if (repository.existsByForumPostId(forumPostId) && repository.findByForumPostId(forumPostId).getUserId() == userId)
+			repository.deleteByForumPostId(forumPostId);
 		else
 			throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Like not found or you do not have permission to delete it.");
 	}

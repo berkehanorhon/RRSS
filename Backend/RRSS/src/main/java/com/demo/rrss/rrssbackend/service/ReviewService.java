@@ -1,9 +1,7 @@
 package com.demo.rrss.rrssbackend.service;
 
 import java.math.BigDecimal;
-import java.util.List;
-import java.util.Objects;
-import java.util.Optional;
+import java.util.*;
 
 import com.demo.rrss.rrssbackend.entity.Coupon;
 import com.demo.rrss.rrssbackend.entity.ProductRating;
@@ -12,7 +10,6 @@ import com.demo.rrss.rrssbackend.repository.ProductRatingRepository;
 import com.demo.rrss.rrssbackend.repository.ReviewRatingRepository;
 import com.demo.rrss.rrssbackend.repository.UserBalanceRepository;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -20,7 +17,6 @@ import org.springframework.ui.Model;
 import org.springframework.web.server.ResponseStatusException;
 
 import com.demo.rrss.rrssbackend.entity.Review;
-import com.demo.rrss.rrssbackend.entity.ReviewRating;
 import com.demo.rrss.rrssbackend.repository.ReviewRepository;
 import com.demo.rrss.rrssbackend.rest.request.ReviewRequest;
 
@@ -29,17 +25,36 @@ public class ReviewService {
 	private final ReviewRepository repository;
 	private final UserBalanceRepository balanceRepository;
 	private final CouponRepository couponRepository;
-	@Autowired
-	ProductRatingRepository ProductRatingRepo;
-	public ReviewService(ReviewRepository repository, UserBalanceRepository balanceRepository, CouponRepository couponRepository) {
+	private final ReviewRatingRepository reviewRatingRepository;
+	private final ProductRatingRepository ProductRatingRepo;
+  
+	public ReviewService(ReviewRepository repository, ReviewRatingRepository reviewRatingRepository,
+						 UserBalanceRepository balanceRepository, CouponRepository couponRepository,
+						 ProductRatingRepository ProductRatingRepo) {
 		this.repository = repository;
+		this.reviewRatingRepository = reviewRatingRepository;
 		this.balanceRepository = balanceRepository;
 		this.couponRepository = couponRepository;
+		this.ProductRatingRepo = ProductRatingRepo;
 	}
 
-	public Review getReview(Long reviewId) {
-		Optional<Review> response = repository.findById(reviewId);
-		return response.orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Review not found"));
+	private HashMap<String, Object> addFieldsToReview(Review response) {
+		HashMap<String, Object> reviewMap = new HashMap<>();
+		reviewMap.put("reviewId", response.getReviewId());
+		reviewMap.put("productId", response.getProductId());
+		reviewMap.put("userId", response.getUserId());
+		reviewMap.put("reviewData", response.getReviewData());
+		reviewMap.put("publishDate", response.getPublishDate());
+		Float rating = reviewRatingRepository.getAverageRatingOrZero(response.getReviewId()).orElse(0.0f);
+		Integer ratingCount = reviewRatingRepository.findRatingCountByReviewId(response.getReviewId()).orElse(0);
+		reviewMap.put("rating", rating);
+		reviewMap.put("ratingCount", ratingCount);
+		return reviewMap;
+	}
+
+	public HashMap<String, Object> getReview(Long reviewId) {
+		Review response = repository.findById(reviewId).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Review not found"));
+        return addFieldsToReview(response);
 	}
 
 	@Transactional
@@ -86,7 +101,7 @@ public class ReviewService {
 	private void createCoupon(Long userId) {
 		Coupon coupon = new Coupon();
 		coupon.setUserId(userId);
-		coupon.setCouponData("You have earned a coupon for your review. Reach out to the merchants to use your coupon!");
+		coupon.setCouponData(UUID.randomUUID().toString().replace("-", "").substring(0, 12));
 		couponRepository.save(coupon);
 	}
 
@@ -116,15 +131,22 @@ public class ReviewService {
 			throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Review not found or you do not have permission to delete it.");
 	}
 
-	public List<Review> getAllReviews() {
-		return (List<Review>) repository.findAll();
+	public List<HashMap<String, Object>> getAllReviews() {
+		List<Review> reviews = repository.findAllMax50();
+		List<HashMap<String, Object>> response = new ArrayList<>();
+		for (Review review : reviews) {
+			response.add(addFieldsToReview(review));
+		}
+		return response;
 	}
 
+	// TODO Yukarıdaki list<hashMap<String, Object>> şekline çevirebiliriz. İhtiyaca bağlı.
     public List<Review> getUsersAllReviews(Long userId) {
         return repository.findByUserId(userId);
     }
 
-    public List<Review> getProductsAllReviews(Long productId) {
+	// TODO Yukarıdaki list<hashMap<String, Object>> şekline çevirebiliriz. İhtiyaca bağlı.
+	public List<Review> getProductsAllReviews(Long productId) {
         return repository.findAllByProductId(productId);
     }
 }

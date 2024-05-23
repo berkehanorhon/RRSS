@@ -34,18 +34,6 @@ public class ForumReplyService {
 		repository.save(forumReply);
 	}
 
-	public void updateForumReply(Long forumReplyId, ForumReplyRequest request, Model model) {
-		Optional<ForumReply> existingForumReply = repository.findById(forumReplyId);
-		Long userId = (Long) model.getAttribute("userId");
-		if (existingForumReply.isPresent() && existingForumReply.get().getUserId() == userId){
-			ForumReply forumReply = existingForumReply.get();
-			forumReply.setPostData(request.getPostData());
-			forumReply.setCreationDate(new java.sql.Timestamp(new java.util.Date().getTime()));
-			repository.save(forumReply);
-		} else {
-			throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Reply not found or you do not have permission to update it.");
-		}
-	}
 
 	public void deleteForumReply(Long forumReplyId, Model model) {
 		Long userId = (Long) model.getAttribute("userId");

@@ -2,6 +2,7 @@ package com.demo.rrss.rrssbackend.service;
 
 import com.demo.rrss.rrssbackend.entity.Coupon;
 import com.demo.rrss.rrssbackend.repository.CouponRepository;
+import com.demo.rrss.rrssbackend.repository.UsersRepository;
 import com.demo.rrss.rrssbackend.rest.request.CouponRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -9,15 +10,25 @@ import org.springframework.stereotype.Service;
 import org.springframework.ui.Model;
 import org.springframework.web.server.ResponseStatusException;
 
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 @Service
 public class CouponService {
     private final CouponRepository couponRepository;
+    private final UsersRepository userRepository;
 
-    public CouponService(CouponRepository couponRepository) {
+    private static final List<String> COUPON_DESCRIPTIONS =
+            Arrays.asList("10% discount on all products", "20% discount on all products",
+                    "30% discount on all products", "40% discount on all products",
+                    "50% discount on all products", "60% discount on all products",
+                    "70% discount on all products", "80% discount on all products",
+                    "Free shipping on all products", "Free shipping on orders over 10$",
+                    "Free shipping on orders over 20$", "Free shipping on orders over 30$",
+                    "Free shipping on orders over 40$", "Free shipping on orders over 50$");
+
+    public CouponService(CouponRepository couponRepository, UsersRepository userRepository) {
         this.couponRepository = couponRepository;
+        this.userRepository = userRepository;
     }
 
     public Coupon getCoupon(Long couponId) {
@@ -33,10 +44,22 @@ public class CouponService {
     public Coupon addCoupon(CouponRequest request, Model model) {
         // Bu kısımda merchant mantığını kurgulamaya çalıştım, eğer requestten userId geliyorsa merchant vermiş demektir.
         // Eğer gelmiyorsa kuponu sistem vermiş demektir. (Model)
-        Long userId = request.getUserId() == null ? (Long) model.getAttribute("userId") : request.getUserId();
+
+        Long userId = request.getUserId();
+        if (userId != null) {
+            if (userRepository.findById(userId).isEmpty()) {
+                throw new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found");
+            }
+        } else {
+            userId = (Long) model.getAttribute("userId");
+        }
+
         Coupon coupon = new Coupon();
         coupon.setUserId(userId);
-        coupon.setCouponData(request.getCouponData());
+        Random rand = new Random();
+        int randomIndex = rand.nextInt(COUPON_DESCRIPTIONS.size());
+        coupon.setCouponText(request.getCouponText() == null ? COUPON_DESCRIPTIONS.get(randomIndex) : request.getCouponText());
+        coupon.setCouponData(UUID.randomUUID().toString().replace("-", "").substring(0, 12));
         couponRepository.save(coupon);
         return coupon;
     }
@@ -45,7 +68,7 @@ public class CouponService {
         Optional<Coupon> existingCoupon = couponRepository.findById(couponId);
         if (existingCoupon.isPresent()) {
             Coupon coupon = existingCoupon.get();
-            coupon.setCouponData(request.getCouponData());
+            coupon.setCouponText(request.getCouponText());
             couponRepository.save(coupon);
             return coupon;
         } else {
