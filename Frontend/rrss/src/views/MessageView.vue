@@ -1,6 +1,6 @@
 <template>
   <div class="message-view">
-    <h1>{{ user1.name }} and {{ user2.name }}'s Conversation</h1>
+    <h1>Conversation with {{ user1.name }}</h1>
     <div class="chat-container">
       <MessageComponent
         v-for="(message, index) in messages"
@@ -70,6 +70,8 @@ export default {
           sender: msg.senderId === this.user1.id ? this.user1.name : this.user2.name,
           sentDate: msg.sentDate,
         }));
+
+        console.log(users)
 
         this.messages = formattedMessages;
       } catch (error) {
