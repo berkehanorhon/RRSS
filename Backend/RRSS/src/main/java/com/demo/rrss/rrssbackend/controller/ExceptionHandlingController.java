@@ -49,7 +49,7 @@ public class ExceptionHandlingController {
         } else {
             message = "An unexpected error occurred. Please contact the administrator";
         }
-        ErrorResponse errorResponse = new ErrorResponse(status.toString(), message, e.getReason(), LocalDateTime.now());
+        ErrorResponse errorResponse = new ErrorResponse(status.toString(), e.getReason(), message, LocalDateTime.now());
         return new ResponseEntity<>(errorResponse, status);
     }
 }
