@@ -223,7 +223,6 @@ public class AdminService {
             }
             userRepository.save(userToBeUpdated.get());
         }
-        
         else {
             throw new ResponseStatusException(HttpStatus.FORBIDDEN, "You don't have permission to set user roles!");
         }
