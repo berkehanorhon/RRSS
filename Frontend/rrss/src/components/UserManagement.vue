@@ -9,7 +9,8 @@
             {{ user.isAdmin ? 'Admin' : '' }} 
             {{ user.isMerchant ? 'Merchant' : '' }} 
             {{ user.isModerator ? 'Moderator' : '' }}
-            {{ !(user.isAdmin || user.isMerchant || user.isModerator) ? ' User' : '' }}
+            {{ user.isBanned ? 'Banned' : '' }}
+            {{ !(user.isAdmin || user.isMerchant || user.isModerator || user.isBanned) ? ' User' : '' }}
           </li>
         </ul>
       </div>
@@ -18,7 +19,7 @@
       <button @click="toggleAdmin" class="action-button">{{ selectedUser.isAdmin ? 'Unset as Admin' : 'Set as Admin' }}</button>
       <button @click="toggleMerchant" class="action-button">{{ selectedUser.isMerchant ? 'Unset as Merchant' : 'Set as Merchant' }}</button>
       <button @click="toggleModerator" class="action-button">{{ selectedUser.isModerator ? 'Unset as Moderator' : 'Set as Moderator' }}</button>
-      <button @click="banUser" class="action-button ban-button">Ban User</button>
+      <button @click="toggleBan" class="action-button ban-button">{{ selectedUser.isBanned ? 'Unban User' : 'Ban User' }}</button>
     </div>
     <div v-if="errorMessage" class="error-message">{{ errorMessage }}</div>
     <div v-if="successMessage" class="success-message">{{ successMessage }}</div>
@@ -102,14 +103,17 @@ export default {
         }
       }
     },
-    async banUser() {
+    async toggleBan() {
       if (this.selectedUser) {
         try {
-          await axios.post('http://localhost:8080/admin/ban-user', { userId: this.selectedUser.userId });
-          this.successMessage = `User ${this.selectedUser.username} has been banned`;
-          this.errorMessage = '';
+          const updatedStatus = !this.selectedUser.isBanned;
+          const response = await this.updateUserData(this.selectedUser.userId, { setBanned: updatedStatus });
+          if (response.status === 200) {
+            this.selectedUser.isBanned = updatedStatus;
+            this.successMessage = `User ${this.selectedUser.username} is now ${updatedStatus ? 'banned' : 'not banned'}`;
+          }
         } catch (error) {
-          this.errorMessage = 'Error banning user.';
+          this.errorMessage = 'Error updating ban status.';
         }
       }
     },
@@ -127,7 +131,7 @@ export default {
         } else {
           this.errorMessage = 'Error updating user data.';
         }
-        return response; // return the response object
+        return response;
       } catch (error) {
         this.errorMessage = 'Error updating user data.';
         throw error;

@@ -25,6 +25,7 @@ import com.demo.rrss.rrssbackend.entity.Review;
 import com.demo.rrss.rrssbackend.entity.Users;
 import com.demo.rrss.rrssbackend.rest.request.PermissionRequest;
 import com.demo.rrss.rrssbackend.rest.request.UsersRequest;
+import com.demo.rrss.rrssbackend.rest.request.UsersRequestAdmin;
 import com.demo.rrss.rrssbackend.service.AdminService;
 import com.demo.rrss.rrssbackend.service.JwtUtil;
 
@@ -83,8 +84,8 @@ public class AdminController {
 
     @GetMapping(value = "/get-all-users")
 	@ResponseStatus(HttpStatus.OK)
-    public List<UsersRequest> getAllUsers(Model model){
-        List<UsersRequest> allUsers = adminService.getAllUsers(model);
+    public List<UsersRequestAdmin> getAllUsers(Model model){
+        List<UsersRequestAdmin> allUsers = adminService.getAllUsers(model);
         return allUsers.stream().limit(50).collect(Collectors.toList());
     }
 
