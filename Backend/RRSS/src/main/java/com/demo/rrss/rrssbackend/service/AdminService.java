@@ -17,6 +17,7 @@ import com.demo.rrss.rrssbackend.repository.ForumPostLikeRepository;
 import com.demo.rrss.rrssbackend.repository.ForumPostRepository;
 import com.demo.rrss.rrssbackend.repository.ForumReplyRepository;
 import com.demo.rrss.rrssbackend.repository.ForumRepository;
+import com.demo.rrss.rrssbackend.repository.ProductRatingRepository;
 import com.demo.rrss.rrssbackend.repository.ProductRepository;
 import com.demo.rrss.rrssbackend.repository.ReviewRepository;
 import com.demo.rrss.rrssbackend.repository.UsersRepository;
@@ -69,6 +70,9 @@ public class AdminService {
 
     @Autowired
     ForumReplyRepository forumReplyRepository;
+
+    @Autowired
+    ProductRatingRepository ratingRepository;
 
     @Autowired 
     UsersService userService;
@@ -126,6 +130,8 @@ public class AdminService {
         Long userId = (Long) model.getAttribute("userId");
         Optional<Users> existingUser = userRepository.findById(userId);
         if(existingUser.get().getIsAdmin()){
+            Optional<Review> existingReview = reviewRepository.findById(reviewId);
+            ratingRepository.deleteByUserIdAndProductId(existingReview.get().getUserId(), existingReview.get().getProductId());
             reviewRepository.deleteByReviewId(reviewId);
         }
         else {
