@@ -22,4 +22,5 @@ public interface ProductRepository extends CrudRepository<Product, Long> {
 	List<Long> findProductIdsByCategoryIds(@Param("categoryIds") Set<Long> categoryIds);
 
 	List<Product> findByUserId(Long userId);
+
 }

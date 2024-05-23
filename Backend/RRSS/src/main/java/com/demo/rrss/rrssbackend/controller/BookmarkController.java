@@ -28,8 +28,8 @@ public class BookmarkController {
     }
 
     @GetMapping("/get-users-lists")
-    public ResponseEntity<?> getBookmarkListFromUser(@RequestParam Long userId){
-        return new ResponseEntity<>(bookmarkListService.getUsersAllBookmarkLists(userId), HttpStatus.OK);
+    public ResponseEntity<?> getBookmarkListFromUser(@RequestParam Long userId, Model model){
+        return new ResponseEntity<>(bookmarkListService.getUsersAllBookmarkLists(userId, model), HttpStatus.OK);
     }
 
     @PostMapping("/create")
@@ -56,8 +56,8 @@ public class BookmarkController {
     }
 
     @PostMapping("/list/add")
-    public ResponseEntity<Void> addBookmark(@RequestParam Long bookmarkListId, @RequestParam Long productId) {
-        bookmarkListService.addBookmarkToList(bookmarkListId, productId);
+    public ResponseEntity<Void> addBookmark(@RequestParam Long bookmarkListId, @RequestParam Long productId, Model model) {
+        bookmarkListService.addBookmarkToList(bookmarkListId, productId, model);
         return new ResponseEntity<>(HttpStatus.CREATED);
     }
 

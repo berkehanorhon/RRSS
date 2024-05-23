@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.demo.rrss.rrssbackend.entity.Category;
+import com.demo.rrss.rrssbackend.rest.request.AddCategoryRequest;
 import com.demo.rrss.rrssbackend.service.CategoryService;
 
 @RestController
@@ -38,7 +39,7 @@ public class CategoryController {
 
 	@PostMapping(value = "/add-category", consumes = MediaType.APPLICATION_JSON_VALUE)
 	@ResponseStatus(HttpStatus.CREATED)
-	public void CategoryResponse(@RequestBody Category category) {
+	public void CategoryResponse(@RequestBody AddCategoryRequest category) {
 		service.addCategory(category);
 	}
 

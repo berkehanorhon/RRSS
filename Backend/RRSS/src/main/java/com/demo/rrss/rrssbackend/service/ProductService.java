@@ -66,16 +66,17 @@ public class ProductService {
 			product.setTitle(request.getTitle());
 			repository.save(product);
 		} else {
-			throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Product not found");
+			throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Product not found or you do not have permission to update this product.");
 		}
 	}
 
 	public void deleteProduct(Long productId, Model model) {
 		Long userId = (Long) model.getAttribute("userId");
 		Product product = repository.findById(productId).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Product not found"));
-		if (Objects.equals(product.getUserId(), userId)) {
+		if (Objects.equals(product.getUserId(), userId))
 			repository.deleteById(productId);
-		}
+		else
+			throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Product not found or you do not have permission to delete this product.");
 	}
 
 	public HashSet<HashMap<String, Object>> getAllProducts(Long categoryId) {
