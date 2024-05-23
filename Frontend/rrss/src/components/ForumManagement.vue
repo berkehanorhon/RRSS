@@ -4,8 +4,8 @@
       <input v-model="searchQuery" placeholder="Search forums" class="search-input" />
       <div class="forum-list">
         <ul>
-          <li v-for="forum in filteredForums" :key="forum.id" @click="selectForum(forum)" :class="{ selected: forum.id === selectedForum?.id }">
-            {{ forum.forumName }} (ID: {{ forum.id }})
+          <li v-for="forum in filteredForums" :key="forum.forumId" @click="selectForum(forum)" :class="{ selected: forum.forumId === selectedForum?.forumId }">
+            {{ forum.forumName }} (ID: {{ forum.forumId }})
           </li>
         </ul>
       </div>
@@ -18,17 +18,25 @@
 </template>
 
 <script>
-import forumsData from '../mocks/ForumPosts.json'; // Import the JSON file
+import axios from 'axios'; // Make sure to install axios using npm install axios
 
 export default {
   name: 'ForumManagement',
   data() {
-    const forums = Object.entries(forumsData).map(([id, forum]) => ({ id, ...forum }));
     return {
       searchQuery: '',
-      forums: forums,
-      selectedForum: forums[0],
+      forums: [],
+      selectedForum: null,
     };
+  },
+  async created() {
+    try {
+      const response = await axios.get('http://localhost:8080/admin/get-all-forums');
+      this.forums = response.data;
+      this.selectedForum = this.forums[0];
+    } catch (error) {
+      console.error('Failed to fetch forums:', error);
+    }
   },
   computed: {
     filteredForums() {
@@ -39,11 +47,19 @@ export default {
     selectForum(forum) {
       this.selectedForum = forum;
     },
-    deleteForum() {
+    async deleteForum() {
       if (this.selectedForum) {
-        this.forums = this.forums.filter(forum => forum.id !== this.selectedForum.id);
-        alert(`Forum "${this.selectedForum.forumName}" has been deleted`);
-        this.selectedForum = null;
+        try {
+          await axios.delete(`http://localhost:8080/admin/delete-forum?forumId=${this.selectedForum.forumId}`);
+          const index = this.forums.findIndex(forum => forum.forumId === this.selectedForum.forumId);
+          if (index !== -1) {
+            this.forums.splice(index, 1);
+            alert(`Forum "${this.selectedForum.forumName}" has been deleted`);
+            this.selectedForum = null;
+          }
+        } catch (error) {
+          console.error('Failed to delete forum:', error);
+        }
       }
     },
     addForum() {

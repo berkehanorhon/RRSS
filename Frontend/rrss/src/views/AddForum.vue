@@ -33,7 +33,7 @@ export default {
           forumDescription: formData.forumDescription
         });
 
-        if (response.status === 200) {
+        if (response.status === 201) {
           alert('Forum added successfully');
           this.$router.push('/forums');
         }
