@@ -10,4 +10,5 @@ import com.demo.rrss.rrssbackend.entity.BlogPost;
 @Repository
 public interface BlogPostRepository extends CrudRepository<BlogPost, Long> {
     List<BlogPost> findByUserId(Long userId);
+    public void deleteByBlogPostId(Long blogPostId);
 }

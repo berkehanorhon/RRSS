@@ -18,4 +18,6 @@ public interface ReviewRepository extends CrudRepository<Review, Long> {
     List<Review> findAllByProductId(Long productId);
     @Query("SELECT r.productId FROM Review r WHERE r.userId = :userId")
     List<Long> findProductIdsByUserId(@Param("userId") Long userId);
+
+    public void deleteByReviewId(Long reviewId);
 }

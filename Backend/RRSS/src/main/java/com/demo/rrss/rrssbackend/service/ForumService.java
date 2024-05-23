@@ -14,6 +14,9 @@ import org.springframework.ui.Model;
 import org.springframework.web.server.ResponseStatusException;
 
 import com.demo.rrss.rrssbackend.entity.Forum;
+import com.demo.rrss.rrssbackend.repository.ForumPostLikeRepository;
+import com.demo.rrss.rrssbackend.repository.ForumPostRepository;
+import com.demo.rrss.rrssbackend.repository.ForumReplyRepository;
 import com.demo.rrss.rrssbackend.repository.ForumRepository;
 import com.demo.rrss.rrssbackend.rest.request.ForumRequest;
 
@@ -22,6 +25,13 @@ import com.demo.rrss.rrssbackend.rest.request.ForumRequest;
 public class ForumService {
     @Autowired
 	ForumRepository repository;
+
+	@Autowired
+	ForumPostRepository forumPostRepository;
+
+	@Autowired
+	ForumReplyRepository forumReplyRepository;
+
 
 	public Forum getForum(Long forumId) {
 		Optional<Forum> response = repository.findById(forumId);
@@ -36,22 +46,13 @@ public class ForumService {
 		repository.save(forum);
 	}
 
-	public void updateForum(Long forumId, ForumRequest request) {
-		Optional<Forum> existingForum = repository.findById(forumId);
-		if (existingForum.isPresent()){
-			Forum forum = existingForum.get();
-			forum.setForumDescription(request.getForumDescription());
-            forum.setForumName(request.getForumName());
-			forum.setCreationDate(new java.sql.Timestamp(new java.util.Date().getTime()));
-			repository.save(forum);
-		} else {
-			throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Forum not found");
-		}
-	}
-
 	public void deleteForum(Long forumId) {
-		if (repository.existsById(forumId))
-			repository.deleteById(forumId);
+		if (repository.existsById(forumId)){
+			
+			forumPostRepository.deleteByForumId(forumId);
+			repository.deleteById(forumId);	
+		}
+			
 		else
 			throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Forum not found");
     }

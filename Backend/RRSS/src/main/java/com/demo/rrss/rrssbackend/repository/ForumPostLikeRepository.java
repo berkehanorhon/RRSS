@@ -20,8 +20,5 @@ public interface ForumPostLikeRepository extends CrudRepository<ForumPostLike, L
     @Transactional
     @Query("DELETE FROM ForumPostLike f WHERE f.forumPostId = :forumPostId")
     public void deleteByForumPostId(Long forumPostId);
-    
-    @Query("SELECT f FROM ForumPostLike f WHERE f.forumPostId = :forumPostId")
-    public ForumPostLike findByForumPostId(Long forumPostId);
 
 }
