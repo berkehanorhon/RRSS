@@ -27,6 +27,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.server.ResponseStatusException;
 import com.demo.rrss.rrssbackend.rest.request.PermissionRequest;
 import com.demo.rrss.rrssbackend.rest.request.UsersRequest;
+import com.demo.rrss.rrssbackend.rest.request.UsersRequestAdmin;
 
 
 @Service
@@ -132,15 +133,15 @@ public class AdminService {
         }
     }
 
-        public List<UsersRequest> getAllUsers(Model model) {
+        public List<UsersRequestAdmin> getAllUsers(Model model) {
         Long userId = (Long) model.getAttribute("userId");
         if (!userRepository.findById(userId).get().getIsAdmin())
             throw new ResponseStatusException(HttpStatus.FORBIDDEN, "You are not authorized to view all users!");
         Iterable<Users> users = userRepository.findAll();
-        List<UsersRequest> usersRequestList = new ArrayList<>();
+        List<UsersRequestAdmin> usersRequestList = new ArrayList<>();
     
         for (Users user : users) {
-            UsersRequest usersRequest = new UsersRequest();
+            UsersRequestAdmin usersRequest = new UsersRequestAdmin();
             usersRequest.setUsername(user.getUsername());
             usersRequest.setEmail(user.getEmail());
             usersRequest.setFirstName(user.getFirstName());
@@ -155,7 +156,7 @@ public class AdminService {
             usersRequestList.add(usersRequest);
         }
     
-        usersRequestList.sort(Comparator.comparing(UsersRequest::getUserId));
+        usersRequestList.sort(Comparator.comparing(UsersRequestAdmin::getUserId));
     
         return usersRequestList;
     }
