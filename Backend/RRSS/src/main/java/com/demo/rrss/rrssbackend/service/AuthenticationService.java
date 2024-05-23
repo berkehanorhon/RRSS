@@ -6,6 +6,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
 
 import org.mindrot.jbcrypt.BCrypt;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,19 +37,29 @@ public class AuthenticationService {
 	}
 
 	public Users getUserByUsername(String username) {
-		return repository.findByUsername(username)
-				.orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found"));
+		Optional<Users> user = repository.findByUsername(username);
+		if (user.isPresent()) {
+			return user.get();
+		} else {
+			return null;
+		}
+	}
+
+	public Users getUserByEmail(String email) {
+		Optional<Users> user = repository.findByEmail(email);
+		if (user.isPresent()) {
+			return user.get();
+		} else {
+			return null;
+		}
 	}
 
 	public void addUser(AuthenticationRequest request) {
-		try {
-			Users existingUser = getUserByUsername(request.getUsername());
-			throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Username already exists");
-		} catch (ResponseStatusException e) {
-			if (!e.getReason().equals("User not found")) {
-				throw e;
-			}
-		}
+		Users existingUser = repository.findByUsername(request.getUsername()).orElse(null);
+		Users existingUser2 = repository.findByEmail(request.getEmail()).orElse(null);
+	
+		if (existingUser != null || existingUser2 != null)
+			throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Username or E-mail already exists");
 
 		Users user = new Users();
 		user.setUsername(request.getUsername());

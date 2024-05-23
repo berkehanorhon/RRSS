@@ -104,12 +104,16 @@ textarea {
 }
 
 .popup-success {
-  background-color: #DFF0D8; /* Light green */
-  color: #3C763D; /* Dark green */
+  background-color: #DFF0D8;
+  color: #3C763D;
+  width: 100%;
+  margin: 0 auto;
 }
 
 .popup-error {
-  background-color: #F2DEDE; /* Light red */
-  color: #A94442; /* Dark red */
+  background-color: #F2DEDE;
+  color: #A94442;
+  width: 100%;
+  margin: 0 auto;
 }
 </style>

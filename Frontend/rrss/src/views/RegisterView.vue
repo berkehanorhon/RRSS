@@ -6,9 +6,10 @@
       :inputs="inputs"
       :submitForm="handleSubmit"
     />
-    <p v-if="registrationSuccess" class="success-message">
-      Your registration is successful, redirecting to the login page...
-    </p>
+    <div v-if="popupVisible" :class="{'popup-success': popupSuccess, 'popup-error': !popupSuccess}">
+      <p>{{ popupMessage }}</p>
+      <button class="submit-button" @click="popupVisible = false">OK</button>
+    </div>
   </div>
 </template>
 
@@ -21,7 +22,6 @@ export default {
   },
   data() {
     return {
-      registrationSuccess: false,
       inputs: [
         { id: 'username', label: 'Username', type: 'text' ,text: ''},
         { id: 'password', label: 'Password', type: 'password' ,text: ''},
@@ -29,36 +29,46 @@ export default {
         { id: 'firstName', label: 'First Name', type: 'text' ,text: ''},
         { id: 'lastName', label: 'Last Name', type: 'text' ,text: ''},
         { id: 'birthDate', label: 'Birth Date', type: 'date' ,text: ''}
-      ]
+      ],
+      popupVisible: false,
+      popupMessage: '',
+      popupSuccess: false,
     };
   },
   methods: {
     async handleSubmit(formData) {
-            try {
-                const response = await axios.post('http://127.0.0.1:8080/auth/register', {
-                    username: formData.username,
-                    password: formData.password,
-                    firstName: formData.firstName,
-                    lastName: formData.lastName,
-                    birthDate: formData.birthDate,
-                    isAdmin: formData.isAdmin,
-                    isModerator: formData.isModerator,
-                    isMerchant: formData.isMerchant,
-                    email: formData.email,
-                    reputation: formData.reputation,
-                    tokenExp: formData.tokenExp
-                });
+      try {
+        const response = await axios.post('http://127.0.0.1:8080/auth/register', {
+          username: formData.username,
+          password: formData.password,
+          firstName: formData.firstName,
+          lastName: formData.lastName,
+          birthDate: formData.birthDate,
+          isAdmin: formData.isAdmin,
+          isModerator: formData.isModerator,
+          isMerchant: formData.isMerchant,
+          email: formData.email,
+          reputation: formData.reputation,
+          tokenExp: formData.tokenExp
+        });
 
-                if (response.status === 201) {
-                  this.registrationSuccess = true;
-                  setTimeout(() => {
-                    window.location.href = '/login';
-                  }, 3000);
-                }
-              } catch (error) {
-                console.error(error);
-              }
+        if (response.status === 201) {
+          this.popupMessage = 'Your registration is successful, redirecting to the login page...';
+          this.popupSuccess = true;
+          this.popupVisible = true;
+          setTimeout(() => {
+            window.location.href = '/login';
+          }, 3000);
+        } else {
+          throw new Error('Registration failed');
         }
+      } catch (error) {
+        console.error(error);
+        this.popupMessage = error.response && error.response.data.message ? error.response.data.message : 'An error occurred!';
+        this.popupSuccess = false;
+        this.popupVisible = true;
+      }
+    }
   }
 };
 </script>
@@ -82,10 +92,22 @@ export default {
   cursor: pointer;
   border-radius: 5px;
 }
-.success-message {
-  color: green;
-}
+
 .form-submit-button:hover {
   background-color: #696969;
+}
+
+.popup-success {
+  background-color: #DFF0D8;
+  color: #3C763D;
+  width: 20%;
+  margin: 0 auto;
+}
+
+.popup-error {
+  background-color: #F2DEDE;
+  color: #A94442;
+  width: 20%;
+  margin: 0 auto;
 }
 </style>
