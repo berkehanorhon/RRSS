@@ -30,6 +30,8 @@ import com.demo.rrss.rrssbackend.rest.request.PermissionRequest;
 import com.demo.rrss.rrssbackend.rest.request.UsersRequest;
 import com.demo.rrss.rrssbackend.rest.request.UsersRequestAdmin;
 
+import jakarta.transaction.Transactional;
+
 
 @Service
 public class AdminService {
@@ -126,6 +128,7 @@ public class AdminService {
         }
     }
 
+    @Transactional
     public void deleteReview(Long reviewId, Model model){
         Long userId = (Long) model.getAttribute("userId");
         Optional<Users> existingUser = userRepository.findById(userId);
