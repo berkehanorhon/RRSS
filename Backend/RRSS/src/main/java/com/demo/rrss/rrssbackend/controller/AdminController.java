@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.demo.rrss.rrssbackend.entity.BlogPost;
+import com.demo.rrss.rrssbackend.entity.Forum;
 import com.demo.rrss.rrssbackend.entity.ForumPost;
 import com.demo.rrss.rrssbackend.entity.Product;
 import com.demo.rrss.rrssbackend.entity.Review;
@@ -125,5 +126,13 @@ public class AdminController {
     public void updateUserPermission(@RequestBody PermissionRequest request, Model model){
         adminService.updateUserPermission(request, model);
     }
+
+    @GetMapping(value = "/get-all-forums")
+	@ResponseStatus(HttpStatus.OK)
+    public List<Forum> getAllForums(Model model){
+        List<Forum> allForums = adminService.getAllForums(model);
+        return allForums.stream().limit(50).collect(Collectors.toList());
+    }
+
 
 }
