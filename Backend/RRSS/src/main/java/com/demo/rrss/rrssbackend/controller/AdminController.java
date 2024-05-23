@@ -135,5 +135,4 @@ public class AdminController {
         return allForums.stream().limit(50).collect(Collectors.toList());
     }
 
-
 }

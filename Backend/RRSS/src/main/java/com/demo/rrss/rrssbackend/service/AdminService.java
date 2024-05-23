@@ -245,12 +245,17 @@ public class AdminService {
                 userToBeUpdated.get().setIsModerator(true);
             else if(request.isSetModerator() == false)
                 userToBeUpdated.get().setIsModerator(false);
+            if(request.isBanUser() == true)
+                userToBeUpdated.get().setIsBanned(true);
+            else if(request.isBanUser() == false)
+                userToBeUpdated.get().setIsBanned(false);
+            
             userRepository.save(userToBeUpdated.get());
-        }
-        
+        }        
         else {
             throw new ResponseStatusException(HttpStatus.FORBIDDEN, "You don't have permission to set user roles!");
-        }
+        } 
+
     }
 
 }

@@ -57,4 +57,7 @@ public class Users {
 
     @Column(name = "token_exp")
     private Timestamp tokenExp;
+
+    @Column(name = "is_banned")
+    private Boolean isBanned;
 }
