@@ -8,10 +8,11 @@ import org.springframework.data.repository.query.Param;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 public interface ProductRatingRepository extends JpaRepository<ProductRating, Long> {
     @Query("SELECT r.productId FROM ProductRating r WHERE r.userId = :userId AND r.starRating >= :starRating")
-    List<Long> findProductIdsByUserIdAndStarRatingGreaterThanEqual(@Param("userId") Long userId, @Param("starRating") short starRating);
+    Set<Long> findProductIdsByUserIdAndStarRatingGreaterThanEqual(@Param("userId") Long userId, @Param("starRating") short starRating);
 
     @Query("SELECT r.productId, AVG(r.starRating) FROM ProductRating r WHERE r.productId IN :productIds GROUP BY r.productId")
     List<Object[]> findAverageRatingsByProductIds(@Param("productIds") List<Long> productIds);
