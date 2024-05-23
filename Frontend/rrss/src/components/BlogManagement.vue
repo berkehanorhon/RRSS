@@ -5,7 +5,7 @@
       <div class="blog-list">
         <ul>
           <li v-for="blog in filteredBlogs" :key="blog.id" @click="selectBlog(blog)" :class="{ selected: blog === selectedBlog }">
-            {{ blog.postName }} (ID: {{ blog.id }})
+            {{ blog.postName }} (ID: {{ blog.blogPostId }})
           </li>
         </ul>
       </div>
@@ -17,32 +17,48 @@
 </template>
 
 <script>
-import blogsData from '../mocks/Blogs.json'; // Import the JSON file
+import axios from 'axios'; // Make sure to install axios using npm install axios
 
 export default {
   name: 'BlogManagement',
   data() {
-    const blogs = Object.entries(blogsData).map(([id, blog]) => ({ id, ...blog }));
     return {
       searchQuery: '',
-      blogs: blogs,
-      selectedBlog: blogs[0],
+      blogs: [],
+      selectedBlog: null,
     };
+  },
+  async created() {
+    try {
+      const response = await axios.get('http://localhost:8080/admin/get-all-blog-posts');
+      this.blogs = response.data;
+      this.selectedBlog = this.blogs[0];
+    } catch (error) {
+      console.error('Failed to fetch blogs:', error);
+    }
   },
   computed: {
     filteredBlogs() {
-      return this.blogs.filter(blog => blog.postName.toLowerCase().includes(this.searchQuery.toLowerCase()));
+      return this.blogs.filter(blog => blog.postName && blog.postName.toLowerCase().includes(this.searchQuery.toLowerCase()));
     },
   },
   methods: {
     selectBlog(blog) {
       this.selectedBlog = blog;
     },
-    deleteBlog() {
+    async deleteBlog() {
       if (this.selectedBlog) {
-        this.blogs = this.blogs.filter(blog => blog !== this.selectedBlog);
-        alert(`Blog "${this.selectedBlog.postName}" has been deleted`);
-        this.selectedBlog = null;
+        try {
+          await axios.delete(`http://localhost:8080/admin/delete-blog-post?blogPostId=${this.selectedBlog.blogPostId}`);
+          const index = this.blogs.findIndex(blog => blog.blogPostId === this.selectedBlog.blogPostId);
+          if (index !== -1) {
+            this.blogs.splice(index, 1);
+            alert(`Blog "${this.selectedBlog.postName}" has been deleted`);
+            this.selectedBlog = null;
+          }
+        } catch (error) {
+          console.error('Failed to delete blog:', error);
+        }
       }
     },
   },

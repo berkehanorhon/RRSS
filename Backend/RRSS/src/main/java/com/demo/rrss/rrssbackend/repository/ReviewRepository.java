@@ -9,6 +9,8 @@ import org.springframework.stereotype.Repository;
 
 import com.demo.rrss.rrssbackend.entity.Review;
 
+import jakarta.transaction.Transactional;
+
 @Repository
 public interface ReviewRepository extends CrudRepository<Review, Long> {
     @Query("SELECT r.productId, COUNT(r) FROM Review r WHERE r.productId IN :productIds GROUP BY r.productId")
@@ -18,6 +20,9 @@ public interface ReviewRepository extends CrudRepository<Review, Long> {
     List<Review> findAllByProductId(Long productId);
     @Query("SELECT r.productId FROM Review r WHERE r.userId = :userId")
     List<Long> findProductIdsByUserId(@Param("userId") Long userId);
+
+    @Modifiable
+    @Transactional
     public void deleteByReviewId(Long reviewId);
     @Query(nativeQuery = true, value = "SELECT * FROM Review ORDER BY publish_date DESC LIMIT 50")
     List<Review> findAllMax50();

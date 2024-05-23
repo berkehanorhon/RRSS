@@ -1,5 +1,7 @@
 package com.demo.rrss.rrssbackend.service;
 
+import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
 
@@ -24,6 +26,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.ui.Model;
 import org.springframework.web.server.ResponseStatusException;
 import com.demo.rrss.rrssbackend.rest.request.PermissionRequest;
+import com.demo.rrss.rrssbackend.rest.request.UsersRequest;
 
 
 @Service
@@ -129,16 +132,32 @@ public class AdminService {
         }
     }
 
-    public List<Users> getAllUsers(Model model){
+        public List<UsersRequest> getAllUsers(Model model) {
         Long userId = (Long) model.getAttribute("userId");
-        Optional<Users> existingUser = userRepository.findById(userId);
-        if(existingUser.get().getIsAdmin()){
-            List<Users> allUsers = (List<Users>) userRepository.findAll();
-            return allUsers;
+        if (!userRepository.findById(userId).get().getIsAdmin())
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "You are not authorized to view all users!");
+        Iterable<Users> users = userRepository.findAll();
+        List<UsersRequest> usersRequestList = new ArrayList<>();
+    
+        for (Users user : users) {
+            UsersRequest usersRequest = new UsersRequest();
+            usersRequest.setUsername(user.getUsername());
+            usersRequest.setEmail(user.getEmail());
+            usersRequest.setFirstName(user.getFirstName());
+            usersRequest.setLastName(user.getLastName());
+            usersRequest.setBirthdate(user.getBirthDate());
+            usersRequest.setIsAdmin(user.getIsAdmin());
+            usersRequest.setIsModerator(user.getIsModerator());
+            usersRequest.setIsMerchant(user.getIsMerchant());
+            usersRequest.setAvatarImagePath(user.getAvatarImagePath());
+            usersRequest.setReputation(user.getReputation());
+            usersRequest.setUserId(user.getUserId());
+            usersRequestList.add(usersRequest);
         }
-        else {
-            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "You don't have permission to get all users!");
-        }
+    
+        usersRequestList.sort(Comparator.comparing(UsersRequest::getUserId));
+    
+        return usersRequestList;
     }
 
     public List<Review> getAllReviews(Model model){
@@ -201,26 +220,30 @@ public class AdminService {
         }
     }
 
-    public void updateUserPermission(Long userIdToBeUpdated, PermissionRequest request, Model model) {  
+    public void updateUserPermission(PermissionRequest request, Model model) {  
         Long userId = (Long) model.getAttribute("userId");
         Optional<Users> existingUser = userRepository.findById(userId);
-
+        if(request.getUserId() == userId){
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "You can't change your own permissions!");
+        }
+        if(request.getUserId() == null){
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "User ID is missing!");
+        }
         if(existingUser.get().getIsAdmin()){
-            Optional<Users> userToBeUpdated = userRepository.findById(userIdToBeUpdated);
+            Optional<Users> userToBeUpdated = userRepository.findById(request.getUserId());
 
             if(request.isSetAdmin() == true)
                 userToBeUpdated.get().setIsAdmin(true);
             else if(request.isSetAdmin() == false)
                 userToBeUpdated.get().setIsAdmin(false);
-            else if(request.isSetMerchant() == true)
+            if(request.isSetMerchant() == true)
                 userToBeUpdated.get().setIsMerchant(true);
             else if(request.isSetMerchant() == false)
                 userToBeUpdated.get().setIsMerchant(false);
-            else if(request.isSetModerator() == true)
+            if(request.isSetModerator() == true)
                 userToBeUpdated.get().setIsModerator(true);
-            else if(request.isSetModerator() == false){
-                userToBeUpdated.get().setIsModerator(false); 
-            }
+            else if(request.isSetModerator() == false)
+                userToBeUpdated.get().setIsModerator(false);
             userRepository.save(userToBeUpdated.get());
         }
         

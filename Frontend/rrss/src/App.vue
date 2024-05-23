@@ -1,10 +1,10 @@
 <template>
   <nav>
     <router-link to="/">Home</router-link> |
-    <router-link to="/about">About</router-link> |
+    <router-link to="/get-recommendation">Get Recommendation</router-link> |
     <router-link v-if="!isLoggedIn" to="/login">Login</router-link>
     <router-link v-if="isLoggedIn" to="/login" @click="logout">Logout</router-link> |
-    <router-link :to="isLoggedIn ? '/' : '/register'">Register</router-link>
+    <router-link :to="isLoggedIn ? '/messenger' : '/register'">{{ isLoggedIn ? 'Messenger' : 'Register' }}</router-link>
     <button class="user-icon-button" @click="navigateUser">
       <span class="balance" v-if="isLoggedIn">Balance: {{ user_balance }}</span>
       <img src="https://img.icons8.com/ios-filled/50/000000/user-male-circle.png" alt="User" />

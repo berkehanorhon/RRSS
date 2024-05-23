@@ -17,17 +17,25 @@
 </template>
 
 <script>
-import reviewsData from '../mocks/Reviews.json'; // Import the JSON file
+import axios from 'axios'; // Make sure to install axios using npm install axios
 
 export default {
   name: 'ReviewManagement',
   data() {
-    const reviews = reviewsData;
     return {
       searchQuery: '',
-      reviews: reviews,
-      selectedReview: reviews[0],
+      reviews: [],
+      selectedReview: null,
     };
+  },
+  async created() {
+    try {
+      const response = await axios.get('http://localhost:8080/admin/get-all-reviews');
+      this.reviews = response.data;
+      this.selectedReview = this.reviews[0];
+    } catch (error) {
+      console.error('Failed to fetch reviews:', error);
+    }
   },
   computed: {
     filteredReviews() {
@@ -38,11 +46,19 @@ export default {
     selectReview(review) {
       this.selectedReview = review;
     },
-    deleteReview() {
+    async deleteReview() {
       if (this.selectedReview) {
-        this.reviews = this.reviews.filter(review => review !== this.selectedReview);
-        alert(`Review "${this.selectedReview.reviewData}" has been deleted`);
-        this.selectedReview = null;
+        try {
+          await axios.delete(`http://localhost:8080/admin/delete-review?reviewId=${this.selectedReview.reviewId}`);
+          const index = this.reviews.findIndex(review => review.reviewId === this.selectedReview.reviewId);
+          if (index !== -1) {
+            this.reviews.splice(index, 1);
+            alert(`Review "${this.selectedReview.reviewData}" has been deleted`);
+            this.selectedReview = null;
+          }
+        } catch (error) {
+          console.error('Failed to delete review:', error);
+        }
       }
     },
   },

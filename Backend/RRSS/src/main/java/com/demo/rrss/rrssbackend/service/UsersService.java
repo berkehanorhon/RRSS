@@ -5,6 +5,7 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
 
+import org.mindrot.jbcrypt.BCrypt;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
@@ -108,7 +109,7 @@ public class UsersService {
             updatedUser.setFirstName(user.getFirstName());
             updatedUser.setLastName(user.getLastName());
             updatedUser.setBirthDate(user.getBirthDate());
-            // updatedUser.setAvatarImagePath(user.getAvatarImagePath()); # TODO EKLENECEK!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+            updatedUser.setPassword(BCrypt.hashpw(user.getPassword(), BCrypt.gensalt()));
             repository.save(updatedUser);
         } else {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found or you are not authorized to update this user");
