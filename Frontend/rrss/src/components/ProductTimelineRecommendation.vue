@@ -43,7 +43,7 @@ export default {
     fetchProducts: {
       type: Function,
       default: function() {
-        return axios.get('http://127.0.0.1:8080/get-all-products?categoryId=-1')
+        return axios.get('http://localhost:8080/recommendation/get')
         .then(response => {
           this.products = response.data.map(product => ({
             ...product,
