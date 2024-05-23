@@ -48,24 +48,27 @@ export default {
   },
   methods: {
     submitReview() {
-      axios.post(`http://localhost:8080/add-review?star=${this.givenStar}`, {
-        productId: this.productId,
-        userId: this.userId,
-        reviewData: this.reviewData,
-      })
-      .then(() => {
-        this.$emit('review-submitted');
-        this.popupMessage = 'Review submitted successfully!';
-        this.popupSuccess = true;
-        this.popupVisible = true;
-      })
-      .catch(error => {
-        console.error("There was an error submitting the review:", error);
+    axios.post(`http://localhost:8080/add-review?star=${this.givenStar}`, {
+      productId: this.productId,
+      userId: this.userId,
+      reviewData: this.reviewData,
+    })
+    .then(() => {
+      this.$emit('review-submitted');
+      this.popupMessage = 'Review submitted successfully!';
+      this.popupSuccess = true;
+      this.popupVisible = true;
+    })
+    .catch(error => {
+      if (error.response && error.response.status === 409) {
+        this.popupMessage = 'You have already reviewed this product!';
+      } else {
         this.popupMessage = 'Failed to submit review!';
-        this.popupSuccess = false;
-        this.popupVisible = true;
-      });
-    },
+      }
+      this.popupSuccess = false;
+      this.popupVisible = true;
+    });
+  },
   },
 };
 </script>

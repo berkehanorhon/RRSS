@@ -19,11 +19,10 @@
             <span>({{ product.ratingCount }})</span>
             <star-rating v-for="n in 5" :key="n" :filled="n <= product.averageRating+0.5" />
           </div>
-      <p>{{ product.description }}</p>
-      <p>Category ID: {{ product.categoryId }}</p>
-      <p>Product ID: {{ product.productId }}</p>
-      <p>Publish Date: {{ product.publishDate }}</p>
-      <p>User ID: {{ product.userId }}</p>
+      <p>Product Description: {{ product.description }}</p>
+      <p>Category: {{ categoryName }}</p>
+      <p>Publish Date: {{ formatDate(product.publishDate) }}</p>
+      <p>User: {{ username }}</p>
       <div v-if="!error">
         <ReviewForm :productId="product.productId" :userId="product.userId" @review-submitted="fetchProduct" />
       </div>
@@ -33,6 +32,7 @@
       </div>
     </div>
     <p v-if="counter && error">Redirecting in {{ counter }} seconds...</p>
+    <ProductReviews :productId="productId" />
   </div>
 </template>
 
@@ -40,12 +40,13 @@
 import axios from 'axios';
 import ReviewForm from './ReviewForm.vue';
 import StarRating from './StarRating.vue';
-
+import ProductReviews from './ProductReviewWiever.vue';
 export default {
   name: 'ProductDetail',
   components: {
     ReviewForm,
     StarRating,
+    ProductReviews
   },
   data() {
     return {
@@ -58,29 +59,52 @@ export default {
       bookmarkList: [],
       selectedBookmarkListId: null,
       bookmarkMessage: '',
+      categoryName: '',
+      username: '',
     };
   },
   computed: {
     bookmarkMessageClass() {
-      return this.bookmarkMessage === 'Bookmarked successfully' ? 'text-green' : '';
+      if (this.bookmarkMessage === 'Bookmarked successfully') {
+        return 'text-green';
+      } else if (this.bookmarkMessage === 'Product is already bookmarked') {
+        return 'text-red';
+      }
+      return '';
     },
   },
   methods: {
-    addToBookmarkList() {
-      axios.post(`http://localhost:8080/bookmark/list/add?productId=${this.productId}&bookmarkListId=${this.selectedBookmarkListId}`, {
-        bookmarkListId: this.selectedBookmarkListId,
-        productId: this.productId,
-      })
+    formatDate(dateString) {
+      const options = { year: 'numeric', month: 'long', day: 'numeric', hour: '2-digit', minute: '2-digit' };
+      return new Date(dateString).toLocaleDateString(undefined, options);
+    },
+    fetchCategoryName(categoryId) {
+      axios.get(`http://localhost:8080/get-category?categoryId=${categoryId}`)
         .then(response => {
-          if (response.status === 201) {
-            this.bookmarkMessage = 'Bookmarked successfully';
-          }
-          console.log(response);
+          this.categoryName = response.data.categoryName;
         })
         .catch(error => {
           console.error(error);
         });
     },
+    addToBookmarkList() {
+    axios.post(`http://localhost:8080/bookmark/list/add?productId=${this.productId}&bookmarkListId=${this.selectedBookmarkListId}`, {
+      bookmarkListId: this.selectedBookmarkListId,
+      productId: this.productId,
+    })
+      .then(response => {
+        if (response.status === 201) {
+          this.bookmarkMessage = 'Bookmarked successfully';
+        }
+        console.log(response);
+      })
+      .catch(error => {
+        if (error.response && error.response.status === 409) {
+          this.bookmarkMessage = 'Product is already bookmarked';
+        }
+        console.error(error);
+      });
+  },
     fetchBookmarkList() {
       axios.get('http://localhost:8080/bookmark/get-users-lists?userId=-1')
         .then(response => {
@@ -91,15 +115,27 @@ export default {
         });
     },
     fetchProduct() {
-      axios.get(`http://localhost:8080/get-product?productId=${this.productId}`)
+    axios.get(`http://localhost:8080/get-product?productId=${this.productId}`)
+      .then(response => {
+        this.product = response.data;
+        this.fetchCategoryName(this.product.categoryId);
+        this.fetchUsername(this.product.userId);
+      })
+      .catch(error => {
+        this.error = 'An error occurred while fetching the product.';
+        console.error(error);
+      });
+  },
+  fetchUsername(userId) {
+      axios.get(`http://localhost:8080/get-user?userId=${userId}`)
         .then(response => {
-          this.product = response.data;
+          this.username = response.data.username;
         })
         .catch(error => {
-          this.error = 'An error occurred while fetching the product.';
           console.error(error);
         });
     },
+    
     getImage(product) {
       return product.image || this.defaultImage;
     },
@@ -151,7 +187,9 @@ export default {
     color: #fff;
     cursor: pointer;
   }
-
+  .text-red {
+    color: red;
+  }
   .select-dropdown {
     padding: 10px;
     border: none;

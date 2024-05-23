@@ -11,6 +11,7 @@
           </router-link>
           <h4>{{ truncatedReviewData(review.reviewData) }}</h4>
             <p>Publish Date: {{ formatDate(review.publishDate) }}</p>
+            <button v-if="review.userId === localuserId" @click="deleteReview(review.reviewId)" class="delete-button">Delete</button>
         </div>
       </div>
     </div>
@@ -34,7 +35,8 @@ export default {
       defaultImage: require('@/assets/logo.png'),
       currentPage: 1,
       itemsPerPage: 18,
-      windowWidth: 0
+      windowWidth: 0,
+      localuserId: Number(localStorage.getItem('userId')),
     };
   },
   computed: {
@@ -76,6 +78,19 @@ export default {
     });
   },
   methods: {
+    async deleteReview(reviewId) {
+      try {
+        const response = await axios.delete(`http://localhost:8080/delete-review?reviewId=${reviewId}`);
+        if (response.status === 200) {
+          alert('Review successfully deleted');
+          location.reload();
+        } else {
+          throw new Error();
+        }
+      } catch (error) {
+        alert('Failed to delete review');
+      }
+    },
     fetchReviews() {
       axios.get(`http://127.0.0.1:8080/get-users-reviews?userId=${this.userId}`)
       .then(response => {
@@ -182,5 +197,18 @@ export default {
   background-color: #007BFF;
   color: #fff;
   cursor: pointer;
+}
+.delete-button {
+  background-color: #f44336;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 16px;
+  margin: 4px 2px;
+  cursor: pointer;
+  border-radius: 5px;
 }
 </style>

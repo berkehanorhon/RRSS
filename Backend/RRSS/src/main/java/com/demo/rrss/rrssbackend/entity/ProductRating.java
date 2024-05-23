@@ -23,7 +23,7 @@ public class ProductRating {
     @Id
     @Column(name = "product_id")
     private Long productId;
-
+    
     @CreationTimestamp
     @Column(name = "rating_date", updatable = false)
     private Timestamp ratingDate;

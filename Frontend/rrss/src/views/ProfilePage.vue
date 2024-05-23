@@ -65,6 +65,8 @@ export default {
           this.user.lastName = response.data.lastName;
           this.user.photo = response.data.avatarImagePath || this.user.photo;
           this.user.is_merchant = response.data.isMerchant;
+          this.user.isAdmin = response.data.isAdmin;
+          this.user.isModerator = response.data.isModerator;
         })
         .catch(error => {
           console.error("There was an error fetching the user data:", error);
@@ -90,12 +92,13 @@ export default {
   width: 100%;
   border-radius: 10px;
   padding: 20px;
+  margin-top: 20px;
 }
 
 .blogs-reviews-bookmarks-container {
   display: flex;
   flex-direction: column;
-  margin-top: 20px;
+  margin-top: 50px;
 }
 
 .column {

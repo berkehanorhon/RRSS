@@ -11,7 +11,7 @@
             <img :src="getImage(bookmarkList)" alt="BookmarkList Image" class="bookmarkList-image" />
           </router-link>
           <p>Publish Date: {{ formatDate(bookmarkList.creationDate) }}</p>
-          <button class="delete-button" @click="deleteBookmarkList(bookmarkList.bookmarkListId)">Delete</button>
+          <button v-if="this.$route.params.userId == currentUserId" class="delete-button" @click="deleteBookmarkList(bookmarkList.bookmarkListId)">Delete</button>
         </div>
       </div>
     </div>
@@ -40,6 +40,9 @@ export default {
     };
   },
   computed: {
+    currentUserId() {
+      return localStorage.getItem('userId');
+    },
     chunkSize() {
       if (this.windowWidth > 1600) {
         return 6;

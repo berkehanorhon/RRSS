@@ -3,16 +3,21 @@
     <div class="user-info">
       <img :src="user.photo" alt="User Photo" class="user-photo" />
       <div class="user-details">
-        <h2>{{ user.username }}</h2>
+        <h2>
+          {{ user.username }}
+          <span v-if="user.isAdmin" class="admin-label">(Admin)</span>
+          <span v-else-if="user.isModerator" class="moderator-label">(Moderator)</span>
+          <span v-else-if="user.is_merchant" class="merchant-label">(Merchant)</span>
+        </h2>
         <p>Email: {{ user.email }}</p>
         <p>First Name: {{ user.firstName }}</p>
         <p>Last Name: {{ user.lastName }}</p>
         <div class="actions">
-          <button @click="sendMessage" class="action-button">Send Message</button>
-          <router-link to="/coupons" class="action-button">My Coupons</router-link>
-          <router-link to="/admin-panel" class="action-button">Admin Panel</router-link>
-          <router-link :to="`/profile/${this.$route.params.userId}/edit`" class="action-button">Edit Profile</router-link>
-          <router-link :to="`/createbookmarklist`" class="action-button">Create Bookmark List</router-link>
+          <router-link v-if="this.$route.params.userId != currentUserId" :to="`/messenger/${this.$route.params.userId}`" class="action-button">Send Message</router-link>
+          <router-link v-if="this.$route.params.userId == currentUserId" to="/coupons" class="action-button">My Coupons</router-link>
+          <router-link v-if="this.$route.params.userId == currentUserId & user.isAdmin" to="/admin-panel" class="action-button">Admin Panel</router-link>
+          <router-link v-if="this.$route.params.userId == currentUserId" :to="`/profile/${this.$route.params.userId}/edit`" class="action-button">Edit Profile</router-link>
+          <router-link v-if="this.$route.params.userId == currentUserId" :to="`/createbookmarklist`" class="action-button">Create Bookmark List</router-link>
         </div>
       </div>
     </div>
@@ -21,16 +26,15 @@
 
 <script>
 export default {
+  computed: {
+    currentUserId() {
+      return localStorage.getItem('userId');
+    }
+  },
   props: {
     user: {
       type: Object,
       required: true,
-    },
-  },
-  methods: {
-    sendMessage() {
-      // Implement send message functionality here
-      alert('Message sent!');
     },
   },
 };
@@ -72,5 +76,17 @@ export default {
   text-decoration: none;
   color: #fff;
   background-color: #2196f3;
+}
+
+.admin-label {
+  color: red;
+}
+
+.moderator-label {
+  color: blue;
+}
+
+.merchant-label {
+  color: green;
 }
 </style>
