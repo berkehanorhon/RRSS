@@ -2,6 +2,7 @@ package com.demo.rrss.rrssbackend.repository;
 
 import java.util.List;
 
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.data.repository.query.Param;
@@ -21,7 +22,7 @@ public interface ReviewRepository extends CrudRepository<Review, Long> {
     @Query("SELECT r.productId FROM Review r WHERE r.userId = :userId")
     List<Long> findProductIdsByUserId(@Param("userId") Long userId);
 
-    @Modifiable
+    @Modifying
     @Transactional
     public void deleteByReviewId(Long reviewId);
     @Query(nativeQuery = true, value = "SELECT * FROM Review ORDER BY publish_date DESC LIMIT 50")
