@@ -21,4 +21,5 @@ public class UsersRequest {
     private String avatarImagePath;
     private Integer reputation;
     private Long userId;
+    private Boolean isBanned;
 }
