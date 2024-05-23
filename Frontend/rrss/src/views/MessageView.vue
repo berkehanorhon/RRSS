@@ -67,7 +67,7 @@ export default {
 
         const formattedMessages = rawMessages.map((msg) => ({
           content: msg.message,
-          sender: msg.senderId === this.user2.id ? this.user2.name : this.user1.name,
+          sender: msg.senderId === this.user1.id ? this.user1.name : this.user2.name,
           sentDate: msg.sentDate,
         }));
 
