@@ -107,7 +107,7 @@ export default {
       if (this.selectedUser) {
         try {
           const updatedStatus = !this.selectedUser.isBanned;
-          const response = await this.updateUserData(this.selectedUser.userId, { setBanned: updatedStatus });
+          const response = await this.updateUserData(this.selectedUser.userId, { setBanUser: updatedStatus });
           if (response.status === 200) {
             this.selectedUser.isBanned = updatedStatus;
             this.successMessage = `User ${this.selectedUser.username} is now ${updatedStatus ? 'banned' : 'not banned'}`;
