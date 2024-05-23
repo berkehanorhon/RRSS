@@ -1,18 +1,13 @@
 package com.demo.rrss.rrssbackend.service;
 
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
-import org.aspectj.internal.lang.annotation.ajcDeclareAnnotation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 import org.springframework.ui.Model;
 
-import com.demo.rrss.rrssbackend.controller.UsersController;
 import com.demo.rrss.rrssbackend.entity.Product;
 import com.demo.rrss.rrssbackend.entity.Users;
 import com.demo.rrss.rrssbackend.repository.ProductRatingRepository;
@@ -28,10 +23,10 @@ public class ProductService {
 	UsersRepository uRepository;
 	@Autowired
 	ProductRatingRepository prRepository;
+
 	public HashMap<String, Object> getProduct(Long productId) {
-		Product product = repository.findById(productId)
-				.orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Product not found"));
-	
+		Product product = repository.findById(productId).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Product not found"));
+
 		HashMap<String, Object> productMap = new HashMap<>();
 		productMap.put("productId", product.getProductId());
 		productMap.put("title", product.getTitle());
@@ -63,7 +58,7 @@ public class ProductService {
 	public void updateProduct(Long productId, ProductRequest request, Model model) {
 		Long userId = (Long) model.getAttribute("userId");
 		Optional<Product> existingProduct = repository.findById(productId);
-		if (existingProduct.isPresent() && existingProduct.get().getUserId() == userId){
+		if (existingProduct.isPresent() && Objects.equals(existingProduct.get().getUserId(), userId)){
 			Product product = existingProduct.get();
 			product.setCategoryId(request.getCategoryId());
 			product.setDescription(request.getDescription());
@@ -77,16 +72,16 @@ public class ProductService {
 
 	public void deleteProduct(Long productId, Model model) {
 		Long userId = (Long) model.getAttribute("userId");
-		if (repository.existsById(productId) && repository.findById(productId).get().getUserId() == userId)
+		Product product = repository.findById(productId).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Product not found"));
+		if (Objects.equals(product.getUserId(), userId))
 			repository.deleteById(productId);
 		else
 			throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Product not found or you do not have permission to delete this product.");
-
 	}
 
-	public HashSet getAllProducts(Long categoryId) {
+	public HashSet<HashMap<String, Object>> getAllProducts(Long categoryId) {
 		List<Product> products;
-		HashSet response = new HashSet<>();
+		HashSet<HashMap<String, Object>> response = new HashSet<>();
 		if (categoryId == -1) {
 			products = repository.findAllMax50();
 		} else {

@@ -18,4 +18,7 @@ public interface ReviewRepository extends CrudRepository<Review, Long> {
     List<Review> findAllByProductId(Long productId);
     @Query("SELECT r.productId FROM Review r WHERE r.userId = :userId")
     List<Long> findProductIdsByUserId(@Param("userId") Long userId);
+
+    @Query(nativeQuery = true, value = "SELECT * FROM Review ORDER BY publish_date DESC LIMIT 50")
+    List<Review> findAllMax50();
 }
