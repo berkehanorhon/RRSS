@@ -50,7 +50,7 @@ export default {
   methods: {
     async loadUsers() {
       try {
-        const response = await axios.get('http://localhost:8080/get-all-users');
+        const response = await axios.get('http://localhost:8080/admin/get-all-users');
         this.users = response.data;
       } catch (error) {
         console.error('Error loading users:', error);
@@ -64,8 +64,11 @@ export default {
       if (this.selectedUser) {
         try {
           const updatedStatus = !this.selectedUser.isAdmin;
-          await this.updateUserData(this.selectedUser.userId, { isAdmin: updatedStatus });
-          this.successMessage = `User ${this.selectedUser.username} is now ${updatedStatus ? 'an Admin' : 'not an Admin'}`;
+          const response = await this.updateUserData(this.selectedUser.userId, { setAdmin: updatedStatus });
+          if (response.status === 200) {
+            this.selectedUser.isAdmin = updatedStatus;
+            this.successMessage = `User ${this.selectedUser.username} is now ${updatedStatus ? 'an Admin' : 'not an Admin'}`;
+          }
         } catch (error) {
           this.errorMessage = 'Error updating Admin status.';
         }
@@ -75,8 +78,11 @@ export default {
       if (this.selectedUser) {
         try {
           const updatedStatus = !this.selectedUser.isMerchant;
-          await this.updateUserData(this.selectedUser.userId, { isMerchant: updatedStatus });
-          this.successMessage = `User ${this.selectedUser.username} is now ${updatedStatus ? 'a Merchant' : 'not a Merchant'}`;
+          const response = await this.updateUserData(this.selectedUser.userId, { setMerchant: updatedStatus });
+          if (response.status === 200) {
+            this.selectedUser.isMerchant = updatedStatus;
+            this.successMessage = `User ${this.selectedUser.username} is now ${updatedStatus ? 'a Merchant' : 'not a Merchant'}`;
+          }
         } catch (error) {
           this.errorMessage = 'Error updating Merchant status.';
         }
@@ -86,8 +92,11 @@ export default {
       if (this.selectedUser) {
         try {
           const updatedStatus = !this.selectedUser.isModerator;
-          await this.updateUserData(this.selectedUser.userId, { isModerator: updatedStatus });
-          this.successMessage = `User ${this.selectedUser.username} is now ${updatedStatus ? 'a Moderator' : 'not a Moderator'}`;
+          const response = await this.updateUserData(this.selectedUser.userId, { setModerator: updatedStatus });
+          if (response.status === 200) {
+            this.selectedUser.isModerator = updatedStatus;
+            this.successMessage = `User ${this.selectedUser.username} is now ${updatedStatus ? 'a Moderator' : 'not a Moderator'}`;
+          }
         } catch (error) {
           this.errorMessage = 'Error updating Moderator status.';
         }
@@ -106,7 +115,7 @@ export default {
     },
     async updateUserData(userId, updatedData) {
       try {
-        const response = await axios.post('http://localhost:8080/admin/update-user', { userId, ...updatedData });
+        const response = await axios.patch('http://localhost:8080/admin/update-user', { userId, ...updatedData });
         if (response.status === 200) {
           this.users = this.users.map(user => {
             if (user.userId === userId) {
@@ -118,6 +127,7 @@ export default {
         } else {
           this.errorMessage = 'Error updating user data.';
         }
+        return response; // return the response object
       } catch (error) {
         this.errorMessage = 'Error updating user data.';
         throw error;

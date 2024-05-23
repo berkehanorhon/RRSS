@@ -8,7 +8,7 @@ import lombok.Setter;
 @Setter
 @Data
 public class PermissionRequest {
-
+    private Long userId;
     private boolean setAdmin;
     private boolean setMerchant;
     private boolean setModerator;

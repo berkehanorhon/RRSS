@@ -5,13 +5,11 @@ import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PatchMapping;
-import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -25,6 +23,7 @@ import com.demo.rrss.rrssbackend.entity.Product;
 import com.demo.rrss.rrssbackend.entity.Review;
 import com.demo.rrss.rrssbackend.entity.Users;
 import com.demo.rrss.rrssbackend.rest.request.PermissionRequest;
+import com.demo.rrss.rrssbackend.rest.request.UsersRequest;
 import com.demo.rrss.rrssbackend.service.AdminService;
 import com.demo.rrss.rrssbackend.service.JwtUtil;
 
@@ -83,9 +82,9 @@ public class AdminController {
 
     @GetMapping(value = "/get-all-users")
 	@ResponseStatus(HttpStatus.OK)
-    public List<Users> getAllUsers(Model model){
-        List<Users> allUsers = adminService.getAllUsers(model);
-        return allUsers.stream().limit(50).collect(Collectors.toList()); //TODO can arrange maxSize
+    public List<UsersRequest> getAllUsers(Model model){
+        List<UsersRequest> allUsers = adminService.getAllUsers(model);
+        return allUsers.stream().limit(50).collect(Collectors.toList());
     }
 
 
@@ -93,7 +92,7 @@ public class AdminController {
 	@ResponseStatus(HttpStatus.OK)
     public List<Product> getAllProducts(Model model){
         List<Product> allProducts = adminService.getAllProducts(model);
-        return allProducts.stream().limit(50).collect(Collectors.toList()); //TODO can arrange maxSize
+        return allProducts.stream().limit(50).collect(Collectors.toList());
     }
 
 
@@ -101,7 +100,7 @@ public class AdminController {
 	@ResponseStatus(HttpStatus.OK)
     public List<Review> getAllReviews(Model model){
         List<Review> allReviews = adminService.getAllReviews(model);
-        return allReviews.stream().limit(50).collect(Collectors.toList()); //TODO can arrange maxSize
+        return allReviews.stream().limit(50).collect(Collectors.toList());
     }
 
 
@@ -109,7 +108,7 @@ public class AdminController {
 	@ResponseStatus(HttpStatus.OK)
     public List<ForumPost> getAllForumPosts(Model model){
         List<ForumPost> allForumPosts = adminService.getAllForumPosts(model);
-        return allForumPosts.stream().limit(50).collect(Collectors.toList()); //TODO can arrange maxSize
+        return allForumPosts.stream().limit(50).collect(Collectors.toList());
     }
 
 
@@ -117,14 +116,14 @@ public class AdminController {
 	@ResponseStatus(HttpStatus.OK)
     public List<BlogPost> getAllBlogPosts(Model model){
         List<BlogPost> allBlogPosts = adminService.getAllBlogPosts(model);
-        return allBlogPosts.stream().limit(50).collect(Collectors.toList()); //TODO can arrange maxSize
+        return allBlogPosts.stream().limit(50).collect(Collectors.toList());
     }
     
 
     @PatchMapping(value = "/update-user")
     @ResponseStatus(HttpStatus.OK)
-    public void updateUserPermission(@RequestParam Long userId, @RequestBody PermissionRequest request, Model model){
-        adminService.updateUserPermission(userId, request, model);
+    public void updateUserPermission(@RequestBody PermissionRequest request, Model model){
+        adminService.updateUserPermission(request, model);
     }
 
 }

@@ -29,7 +29,7 @@
 
 <script>
 import UserManagement from '@/components/UserManagement.vue';
-import ProductManagement from '@/components/ProductManagement.vue'; // Import the ProductsManagement component
+import ProductManagement from '@/components/ProductManagement.vue';
 import ReviewManagement from '@/components/ReviewManagement.vue';
 import BlogManagement from '../components/BlogManagement.vue';
 import ForumManagement from '../components/ForumManagement.vue';

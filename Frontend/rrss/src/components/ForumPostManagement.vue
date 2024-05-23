@@ -4,8 +4,8 @@
       <input v-model="searchQuery" placeholder="Search forums" class="search-input" />
       <div class="forum-list">
         <ul>
-          <li v-for="forum in filteredForums" :key="forum.id" @click="selectForum(forum)" :class="{ selected: forum.id === selectedForum?.id }">
-            {{ forum.forumName }} (ID: {{ forum.id }}) - {{ forum.forumData }}
+          <li v-for="forum in filteredForums" :key="forum.forumPostId" @click="selectForum(forum)" :class="{ selected: forum.forumPostId === selectedForum?.forumPostId }">
+            {{ forum.postName }} (ID: {{ forum.forumPostId }}) - {{ forum.postData }}
           </li>
         </ul>
       </div>
@@ -17,32 +17,48 @@
 </template>
 
 <script>
-import forumsData from '../mocks/ForumPosts.json'; // Import the JSON file
+import axios from 'axios';
 
 export default {
   name: 'ForumPostManagement',
   data() {
-    const forums = Object.entries(forumsData).map(([id, forum]) => ({ id, ...forum }));
     return {
       searchQuery: '',
-      forums: forums,
-      selectedForum: forums[0],
+      forums: [],
+      selectedForum: null,
     };
+  },
+  async created() {
+    try {
+      const response = await axios.get('http://localhost:8080/admin/get-all-forum-posts');
+      this.forums = response.data;
+      this.selectedForum = this.forums[0];
+    } catch (error) {
+      console.error('Failed to fetch forums:', error);
+    }
   },
   computed: {
     filteredForums() {
-      return this.forums.filter(forum => forum.forumName.toLowerCase().includes(this.searchQuery.toLowerCase()));
+      return this.forums.filter(forum => forum.postName.toLowerCase().includes(this.searchQuery.toLowerCase()));
     },
   },
   methods: {
     selectForum(forum) {
       this.selectedForum = forum;
     },
-    deleteForum() {
+    async deleteForum() {
       if (this.selectedForum) {
-        this.forums = this.forums.filter(forum => forum.id !== this.selectedForum.id);
-        alert(`Forum "${this.selectedForum.forumName}" has been deleted`);
-        this.selectedForum = null;
+        try {
+          await axios.delete(`http://localhost:8080/admin/delete-forum-post?forumPostId=${this.selectedForum.forumPostId}`);
+          const index = this.forums.findIndex(forum => forum.forumPostId === this.selectedForum.forumPostId);
+          if (index !== -1) {
+            this.forums.splice(index, 1);
+            alert(`Forum "${this.selectedForum.postName}" has been deleted`);
+            this.selectedForum = null;
+          }
+        } catch (error) {
+          console.error('Failed to delete forum:', error);
+        }
       }
     },
   },

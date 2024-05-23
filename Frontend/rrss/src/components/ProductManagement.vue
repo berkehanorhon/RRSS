@@ -17,16 +17,25 @@
 </template>
 
 <script>
-import productsData from '../mocks/Products.json'; // Import the JSON file
+import axios from 'axios'; // Make sure to install axios using npm install axios
 
 export default {
   name: 'ProductManagement',
   data() {
     return {
       searchQuery: '',
-      products: productsData,
-      selectedProduct: productsData[0],
+      products: [],
+      selectedProduct: null,
     };
+  },
+  async created() {
+    try {
+      const response = await axios.get('http://localhost:8080/admin/get-all-products');
+      this.products = response.data;
+      this.selectedProduct = this.products[0];
+    } catch (error) {
+      console.error('Failed to fetch products:', error);
+    }
   },
   computed: {
     filteredProducts() {
@@ -37,14 +46,18 @@ export default {
     selectProduct(product) {
       this.selectedProduct = product;
     },
-    deleteProduct() {
+    async deleteProduct() {
       if (this.selectedProduct) {
-        const index = this.products.findIndex(product => product.productId === this.selectedProduct.productId);
-        if (index !== -1) {
-          this.products.splice(index, 1);
-          alert(`Product "${this.selectedProduct.title}" has been deleted`);
-          this.selectedProduct = null;
-          // Burada ürünü silme işlemi gerçekleştirilebilir
+        try {
+          await axios.delete(`http://localhost:8080/admin/delete-product?productId=${this.selectedProduct.productId}`);
+          const index = this.products.findIndex(product => product.productId === this.selectedProduct.productId);
+          if (index !== -1) {
+            this.products.splice(index, 1);
+            alert(`Product "${this.selectedProduct.title}" has been deleted`);
+            this.selectedProduct = null;
+          }
+        } catch (error) {
+          console.error('Failed to delete product:', error);
         }
       }
     },

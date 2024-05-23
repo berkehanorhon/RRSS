@@ -58,6 +58,11 @@ const routes = [
     component: () => import('@/components/ProductDetail.vue')
   },
   {
+    path: '/get-recommendation',
+    name: 'GetReceommendation',
+    component: () => import('@/views/GetRecommendationView.vue')
+  },
+  {
     path: '/products/:productId/edit',
     name: 'EditProductView',
     component: EditProductView
