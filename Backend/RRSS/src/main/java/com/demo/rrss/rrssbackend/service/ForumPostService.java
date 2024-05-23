@@ -10,7 +10,9 @@ import org.springframework.ui.Model;
 import org.springframework.web.server.ResponseStatusException;
 
 import com.demo.rrss.rrssbackend.entity.ForumPost;
+import com.demo.rrss.rrssbackend.repository.ForumPostLikeRepository;
 import com.demo.rrss.rrssbackend.repository.ForumPostRepository;
+import com.demo.rrss.rrssbackend.repository.ForumReplyRepository;
 import com.demo.rrss.rrssbackend.rest.request.ForumPostRequest;
 
 
@@ -19,6 +21,9 @@ public class ForumPostService {
 
     @Autowired
 	ForumPostRepository repository;
+
+	@Autowired 
+	ForumReplyRepository forumReplyRepository;
 
 	public ForumPost getForumPost(Long forumPostId) {
 		Optional<ForumPost> response = repository.findById(forumPostId);
@@ -56,8 +61,10 @@ public class ForumPostService {
 
 	public void deleteForumPost(Long forumPostId, Model model) {
 		Long userId = (Long) model.getAttribute("userId");
-		if (repository.existsById(forumPostId) && repository.findById(forumPostId).get().getUserId() == userId)
+		if (repository.existsById(forumPostId) && repository.findById(forumPostId).get().getUserId() == userId){
+			forumReplyRepository.deleteByForumPostId(forumPostId);
 			repository.deleteById(forumPostId);
+		}	
 		else
 			throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Post not found or you do not have permission to delete it.");
 	}

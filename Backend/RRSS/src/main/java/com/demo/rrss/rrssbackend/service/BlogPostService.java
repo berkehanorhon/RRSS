@@ -10,14 +10,19 @@ import org.springframework.ui.Model;
 import org.springframework.web.server.ResponseStatusException;
 
 import com.demo.rrss.rrssbackend.entity.BlogPost;
+import com.demo.rrss.rrssbackend.repository.BlogPostLikeRepository;
 import com.demo.rrss.rrssbackend.repository.BlogPostRepository;
 import com.demo.rrss.rrssbackend.rest.request.BlogPostRequest;
 
 
 @Service
 public class BlogPostService {
-  @Autowired
+
+  	@Autowired
 	BlogPostRepository repository;
+
+	@Autowired
+	BlogPostLikeRepository blogPostLikeRepository;
 
 	public BlogPost getBlogPost(Long blogPostId) {
 		Optional<BlogPost> response = repository.findById(blogPostId);
@@ -53,8 +58,11 @@ public class BlogPostService {
 
 	public void deleteBlogPost(Long blogPostId, Model model) {
 		Long userId = (Long) model.getAttribute("userId");
-		if (repository.existsById(blogPostId) && repository.findById(blogPostId).get().getUserId() == userId)
+		if (repository.existsById(blogPostId) && repository.findById(blogPostId).get().getUserId() == userId){
+			blogPostLikeRepository.deleteByBlogPostId(blogPostId);
 			repository.deleteById(blogPostId);
+		}
+			
 		else
 			throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Blog post not found or you do not have permission to delete it.");
 	}

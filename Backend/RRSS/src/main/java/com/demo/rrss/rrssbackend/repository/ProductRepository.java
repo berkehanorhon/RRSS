@@ -3,10 +3,12 @@ package com.demo.rrss.rrssbackend.repository;
 import java.util.List;
 import java.util.Set;
 
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.demo.rrss.rrssbackend.entity.Product;
 
@@ -30,5 +32,9 @@ public interface ProductRepository extends CrudRepository<Product, Long> {
 
 
 	List<Product> findByUserId(Long userId);
+
+	@Modifying
+  @Transactional
+	public void deleteByProductId(Long productId);
 
 }
