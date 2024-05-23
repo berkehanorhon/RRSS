@@ -28,14 +28,13 @@ export default {
   methods: {
     async handleSubmit(formData) {
       try {
-        const response = await axios.post('http://your-api-url/addforum', {
+        const response = await axios.post('http://localhost:8080/add-forum', {
           forumName: formData.forumName,
           forumDescription: formData.forumDescription
         });
 
         if (response.status === 200) {
           alert('Forum added successfully');
-          // Optionally, you can redirect the user to another page
           this.$router.push('/forums');
         }
       } catch (error) {

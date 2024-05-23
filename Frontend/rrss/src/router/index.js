@@ -1,4 +1,3 @@
-import FromComponentTest from '@/views/FromComponentTest.vue'
 import EditProfileView from '../views/EditProfileView.vue';
 import AdminPanel from '../views/AdminPanel.vue'
 // import BlogTimeline from '../components/BlogTimeline.vue'
@@ -62,11 +61,6 @@ const routes = [
     path: '/products/:productId/edit',
     name: 'EditProductView',
     component: EditProductView
-  },
-  {
-    path: '/test/',
-    name: 'FormTest',
-    component: FromComponentTest
   },
   {
     path: '/messenger',

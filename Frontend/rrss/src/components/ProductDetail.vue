@@ -22,7 +22,7 @@
       <p>Product Description: {{ product.description }}</p>
       <p>Category: {{ categoryName }}</p>
       <p>Publish Date: {{ formatDate(product.publishDate) }}</p>
-      <p>User: {{ username }}</p>
+      <p>User: <router-link :to="`/profile/${product.userId}`"><strong>{{ username }}</strong></router-link></p>
       <div v-if="!error">
         <ReviewForm :productId="product.productId" :userId="product.userId" @review-submitted="fetchProduct" />
       </div>
