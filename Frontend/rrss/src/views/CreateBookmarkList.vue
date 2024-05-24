@@ -32,6 +32,7 @@ export default {
 
         if (response.status === 201) {
           alert('Bookmark list created successfully');
+          this.$router.push('/');
         }
       } catch (error) {
         console.error(error);
