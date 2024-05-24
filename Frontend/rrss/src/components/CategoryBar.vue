@@ -24,6 +24,9 @@ export default {
     axios.get('http://localhost:8080/get-all-categories')
       .then(response => {
         this.categories = response.data;
+      })
+      .catch(error => {
+        console.error("There was an error fetching the categories:", error);
       });
   }
 };
