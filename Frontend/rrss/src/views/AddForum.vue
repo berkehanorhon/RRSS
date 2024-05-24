@@ -35,7 +35,7 @@ export default {
 
         if (response.status === 201) {
           alert('Forum added successfully');
-          this.$router.push('/forums');
+          this.$router.push('/admin-panel');
         }
       } catch (error) {
         console.error(error);

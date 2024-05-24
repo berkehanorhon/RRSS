@@ -13,6 +13,7 @@ import com.demo.rrss.rrssbackend.entity.Review;
 import com.demo.rrss.rrssbackend.entity.Users;
 import com.demo.rrss.rrssbackend.repository.BlogPostLikeRepository;
 import com.demo.rrss.rrssbackend.repository.BlogPostRepository;
+import com.demo.rrss.rrssbackend.repository.CategoryRepository;
 import com.demo.rrss.rrssbackend.repository.ForumPostLikeRepository;
 import com.demo.rrss.rrssbackend.repository.ForumPostRepository;
 import com.demo.rrss.rrssbackend.repository.ForumReplyRepository;
@@ -79,6 +80,8 @@ public class AdminService {
     @Autowired 
     UsersService userService;
 
+    @Autowired
+    CategoryRepository categoryRepository;
 
     public void deleteForum(Long forumId, Model model){
         Long userId = (Long) model.getAttribute("userId");
@@ -91,6 +94,15 @@ public class AdminService {
         else {
             throw new ResponseStatusException(HttpStatus.FORBIDDEN, "You don't have permission to delete this forum!");
         }
+    }
+
+    public void deleteCategory(Long categoryId, Model model){
+        Long userId = (Long) model.getAttribute("userId");
+        Optional<Users> existingUser = userRepository.findById(userId);
+        if(existingUser.get().getIsAdmin())
+            categoryRepository.deleteById(categoryId);
+        else 
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "You don't have permission to delete this post!");
     }
 
     public void deleteForumPost(Long forumPostId, Model model){

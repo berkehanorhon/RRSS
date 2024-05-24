@@ -60,8 +60,7 @@ public class BlogPostController {
 	@GetMapping("/get-all-blog-posts")
 	@ResponseStatus(HttpStatus.OK)
 	public List<BlogPost> getAllBlogPosts() {
-		List<BlogPost> blogPosts = service.getAllBlogPosts();
-		return blogPosts.stream().limit(10).collect(Collectors.toList());
+		return service.getAllBlogPosts();
 	}
 
 	@GetMapping("/get-users-all-blog-posts")

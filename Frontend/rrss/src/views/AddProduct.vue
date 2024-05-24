@@ -20,25 +20,32 @@ export default {
   data() {
     return {
       inputs: [
-        { id: 'categoryId', label: 'Category ID', type: 'text', required: true },
+        { id: 'categoryId', label: 'Category ID', type: 'select', options: [], required: true },
         { id: 'title', label: 'Title', type: 'text', required: true },
         { id: 'description', label: 'Description', type: 'text', required: true }
       ]
     };
   },
+  async created() {
+    try {
+      const response = await axios.get('http://localhost:8080/get-all-categories');
+      this.inputs.find(input => input.id === 'categoryId').options = response.data.map(category => ({ value: category.categoryId, text: category.categoryName }));
+    } catch (error) {
+      console.error('Failed to fetch categories:', error);
+    }
+  },
   methods: {
     async handleSubmit(formData) {
       try {
-        const response = await axios.post('http://your-api-url/addproduct', {
+        const response = await axios.post('http://localhost:8080/add-product', {
           categoryId: formData.categoryId,
           title: formData.title,
           description: formData.description
         });
 
-        if (response.status === 200) {
+        if (response.status === 201) {
           alert('Product added successfully');
-          // Optionally, you can redirect the user to another page
-          this.$router.push('/products');
+          this.$router.push('/');
         }
       } catch (error) {
         console.error(error);
@@ -48,6 +55,7 @@ export default {
   }
 };
 </script>
+
 
 <style>
 .container {

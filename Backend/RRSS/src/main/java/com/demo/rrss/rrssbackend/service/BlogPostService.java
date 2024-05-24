@@ -32,7 +32,6 @@ public class BlogPostService {
 	public void addBlogPost(BlogPostRequest request, Model model) {
 		Long userId = (Long) model.getAttribute("userId"); // Not used at the moment
 		BlogPost blogPost = new BlogPost();
-		blogPost.setBlogPostId(request.getBlogPostId());
         blogPost.setPostData(request.getPostData());
         blogPost.setImagePath(request.getImagePath());
         blogPost.setPostName(request.getPostName());

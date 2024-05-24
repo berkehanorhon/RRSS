@@ -53,6 +53,11 @@ public class AdminController {
         adminService.deleteForum(forumId, model);
     }
 
+    @DeleteMapping(value = "/delete-category")
+	@ResponseStatus(HttpStatus.OK)
+    public void deleteCategory(@RequestParam Long categoryId, Model model){
+        adminService.deleteCategory(categoryId, model);
+    }
 
     @DeleteMapping(value = "/delete-forum-post")
 	@ResponseStatus(HttpStatus.OK)

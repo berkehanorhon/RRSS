@@ -5,6 +5,10 @@
       <UserManagement />
     </div>
     <div class="section">
+      <h2>Category Management</h2>
+      <CategoryManagement />
+    </div>
+    <div class="section">
       <h2>Product Management</h2>
       <ProductManagement />
     </div>
@@ -34,6 +38,7 @@ import ReviewManagement from '@/components/ReviewManagement.vue';
 import BlogManagement from '../components/BlogManagement.vue';
 import ForumManagement from '../components/ForumManagement.vue';
 import ForumPostManagement from '../components/ForumPostManagement.vue';
+import CategoryManagement from '../components/CategoryManagement.vue';
 
 export default {
   name: 'AdminPanel',
@@ -44,6 +49,7 @@ export default {
     BlogManagement,
     ForumManagement, 
     ForumPostManagement,
+    CategoryManagement
   },
 };
 </script>

@@ -2,18 +2,18 @@
   <div class="blog-timeline">
     <div class="blog-container">
       <div class="blog-row" v-for="(row, index) in chunkedData" :key="index">
-        <div v-for="blog in row" :key="blog.blogId" class="blog">
+        <div v-for="blog in row" :key="blog.blogPostId" class="blog" @click="navigateToBlog(blog.blogPostId)">
           <div class="blog-image-wrapper">
-            <img :src="blog.image" alt="Blog Image" class="blog-image" />
+            <img :src="getImagePath(blog.imagePath)" alt="Blog Image" class="blog-image" />
           </div>
           <div class="blog-content">
             <h4>{{ blog.postName }}</h4>
             <p>{{ blog.postData }}</p>
           </div>
           <div class="blog-footer">
-            <div class="blog-date">{{ blog.publishDate }}</div>
+            <div class="blog-date">{{ formatDate(blog.publishDate) }}</div>
             <div class="like-wrapper">
-              <button class="like-button" @click="likeBlog(blog.blogId)">Like</button>
+              <button class="like-button" @click.stop="likeBlog(blog.blogPostId)">Like</button>
               <div class="like-count">{{ blog.likes }}</div>
             </div>
           </div>
@@ -29,26 +29,25 @@
 </template>
 
 <script>
+import axios from 'axios';
+import { mapGetters } from 'vuex';
+
 export default {
   name: 'BlogTimeline',
   data() {
     return {
-      blogs: [
-        { blogId: 1, postName: 'First Blog', postData: 'Description of the first blog.', image: 'https://via.placeholder.com/150', publishDate: 'May 1, 2024', likes: 5 },
-        { blogId: 2, postName: 'Second Blog', postData: 'Description of the second blog.', image: 'https://via.placeholder.com/150', publishDate: 'May 2, 2024', likes: 10 },
-        { blogId: 3, postName: 'Third Blog', postData: 'Description of the third blog.', image: 'https://via.placeholder.com/150', publishDate: 'May 3, 2024', likes: 15 },
-        // Add more mock blogs as needed
-      ],
-      defaultImage: 'https://via.placeholder.com/150',
+      blogs: [],
+      defaultImage: require('@/assets/logo.png'),
       currentPage: 1,
       itemsPerPage: 6,
       windowWidth: 0
     };
   },
   computed: {
+    ...mapGetters(['isLoggedIn']),
     chunkSize() {
       if (this.windowWidth > 1600) {
-        return 2;
+        return 1;
       } else if (this.windowWidth > 800) {
         return 1;
       } else {
@@ -69,18 +68,33 @@ export default {
   },
   mounted() {
     this.windowWidth = window.innerWidth;
-    window.addEventListener('resize', () => {
-      this.windowWidth = window.innerWidth;
-    });
+    window.addEventListener('resize', this.updateWindowWidth);
+    this.fetchBlogs();
   },
   beforeUnmount() {
-    window.removeEventListener('resize', () => {
-      this.windowWidth = window.innerWidth;
-    });
+    window.removeEventListener('resize', this.updateWindowWidth);
   },
   methods: {
-    likeBlog(blogId) {
-      const blog = this.blogs.find(blog => blog.blogId === blogId);
+    updateWindowWidth() {
+      this.windowWidth = window.innerWidth;
+    },
+    async fetchBlogs() {
+      try {
+        const response = await axios.get('http://localhost:8080/get-all-blog-posts');
+        this.blogs = response.data.map(blog => ({ ...blog, likes: 0 }));
+      } catch (error) {
+        console.error('Error fetching blogs:', error);
+      }
+    },
+    getImagePath() {
+      return this.defaultImage;
+    },
+    formatDate(dateString) {
+      const options = { year: 'numeric', month: 'long', day: 'numeric' };
+      return new Date(dateString).toLocaleDateString(undefined, options);
+    },
+    likeBlog(blogPostId) {
+      const blog = this.blogs.find(blog => blog.blogPostId === blogPostId);
       if (blog) {
         blog.likes++;
       }
@@ -94,6 +108,9 @@ export default {
       if (this.currentPage > 1) {
         this.currentPage--;
       }
+    },
+    navigateToBlog(blogPostId) {
+      this.$router.push(`/blogs/${blogPostId}`);
     }
   }
 };
@@ -127,6 +144,7 @@ export default {
   display: flex;
   flex-direction: row;
   width: 100%;
+  cursor: pointer;
 }
 
 .blog-image-wrapper {

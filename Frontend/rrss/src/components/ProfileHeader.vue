@@ -16,6 +16,8 @@
           <router-link v-if="this.$route.params.userId != currentUserId" :to="`/messenger/${this.$route.params.userId}`" class="action-button">Send Message</router-link>
           <router-link v-if="this.$route.params.userId == currentUserId" to="/coupons" class="action-button">My Coupons</router-link>
           <router-link v-if="this.$route.params.userId == currentUserId & user.isAdmin" to="/admin-panel" class="action-button">Admin Panel</router-link>
+          <router-link v-if="this.$route.params.userId == currentUserId & (user.isAdmin | user.is_merchant)" to="/add-product" class="action-button">Add Product</router-link>
+          <router-link v-if="this.$route.params.userId == currentUserId" to="/add-blogpost" class="action-button">Add BlogPost</router-link>
           <router-link v-if="this.$route.params.userId == currentUserId" :to="`/profile/${this.$route.params.userId}/edit`" class="action-button">Edit Profile</router-link>
           <router-link v-if="this.$route.params.userId == currentUserId" :to="`/createbookmarklist`" class="action-button">Create Bookmark List</router-link>
         </div>

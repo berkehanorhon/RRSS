@@ -43,7 +43,7 @@ public class ProductService {
 	public void addProduct(ProductRequest request, Model model) {
 		Long userId = (Long) model.getAttribute("userId"); 
 		Users user = uRepository.findById(userId).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found"));
-		if (!user.getIsMerchant())
+		if (!user.getIsMerchant() && !user.getIsAdmin())
 			throw new ResponseStatusException(HttpStatus.FORBIDDEN, "User is not a merchant");
 		Product product = new Product();
 		product.setCategoryId(request.getCategoryId());

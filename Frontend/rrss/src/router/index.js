@@ -1,6 +1,6 @@
 import EditProfileView from '../views/EditProfileView.vue';
 import AdminPanel from '../views/AdminPanel.vue'
-// import BlogTimeline from '../components/BlogTimeline.vue'
+import BlogTimeline from '../components/BlogTimeline.vue'
 import AddForum from '../views/AddForum.vue'
 import CreateBookmarkList from '../views/CreateBookmarkList.vue';
 import ForumCategoryView from '@/views/ForumCategoryView.vue';
@@ -19,6 +19,9 @@ import ForumEntryView from '@/views/ForumEntryView.vue';
 import ForumCategoryEntriesView from '@/views/ForumCategoryEntriesView.vue';
 import Coupons from '../components/Coupons.vue'
 import BlogPost from '@/components/BlogPost.vue';
+import AddCategory from '@/views/AddCategory.vue';
+import AddProduct from '@/views/AddProduct.vue';
+import AddBlogPost from '@/views/AddBlogPost.vue';
 // import BlogPosts from '@/components/BlogPosts.vue';
 
 const routes = [
@@ -51,6 +54,21 @@ const routes = [
     path: '/add-forum',
     name: 'AddForum',
     component: AddForum
+  },
+  {
+    path: '/add-product',
+    name: 'AddProduct',
+    component: AddProduct
+  },
+  {
+    path: '/add-blogpost',
+    name: 'AddBlogPost',
+    component: AddBlogPost
+  },
+  {
+    path: '/add-category',
+    name: 'AddCategory',
+    component: AddCategory
   },
   {
     path: '/products/:productId',
@@ -128,6 +146,11 @@ const routes = [
     path: '/createbookmarklist',
     name: 'CreateBookmarkList',
     component: CreateBookmarkList
+  },
+  {
+    path: '/blogs',
+    name: 'Blogs',
+    component: BlogTimeline
   },
   {
     path: '/blogs/:blogId',

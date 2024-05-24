@@ -15,6 +15,7 @@
           </button>
           <span>{{ likeCount }} likes</span>
         </div>
+        <button v-if="blog.userId === localUserId" @click="deleteBlog" class="delete-button">Delete Blog Post</button>
       </div>
     </div>
   </div>
@@ -30,7 +31,8 @@ export default {
       blog: null,
       defaultImage: require('@/assets/logo.png'),
       likeCount: 0, // Initial like count
-      liked: false  // User's like status
+      liked: false,  // User's like status
+      localUserId: Number(localStorage.getItem('userId'))
     };
   },
   async created() {
@@ -46,6 +48,7 @@ export default {
             postName: response.data.postName,
             postData: response.data.postData,
             image: response.data.imagePath || this.defaultImage,
+            userId: response.data.userId
           };
           // Initialize likeCount from the blog data if available
           if (this.blog && this.blog.likes) {
@@ -65,6 +68,19 @@ export default {
         this.likeCount++;
       }
       this.liked = !this.liked;
+    },
+    async deleteBlog() {
+      try {
+        const response = await axios.delete(`http://localhost:8080/delete-blog-post?blogPostId=${this.blog.id}`);
+        if (response.status === 200) {
+          alert('Blog post deleted successfully');
+          this.$router.push('/');
+        } else {
+          throw new Error();
+        }
+      } catch (error) {
+        console.error('Failed to delete blog', error);
+      }
     }
   }
 };
@@ -91,7 +107,14 @@ export default {
   padding: 10px; /* Add some padding to the container */
   display: inline-block; /* Make the container inline-block to wrap around the image */
 }
-
+.delete-button {
+  margin-top: 10px;
+  background-color: red;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  cursor: pointer;
+}
 .like-section {
   margin-top: 10px; /* Add some space above the like section */
   display: flex;

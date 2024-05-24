@@ -20,23 +20,22 @@ export default {
   data() {
     return {
       inputs: [
-        { id: 'postTitle', label: 'Post Title', type: 'text', required: true },
-        { id: 'postDescription', label: 'Post Description', type: 'text', required: true }
+        { id: 'postName', label: 'Post Title', type: 'text', required: true },
+        { id: 'postData', label: 'Post Description', type: 'text', required: true }
       ]
     };
   },
   methods: {
     async handleSubmit(formData) {
       try {
-        const response = await axios.post('http://your-api-url/addblogpost', {
-          postTitle: formData.postTitle,
-          postDescription: formData.postDescription
+        const response = await axios.post('http://localhost:8080/add-blog-post', {
+          postName: formData.postName,
+          postData: formData.postData
         });
 
         if (response.status === 200) {
           alert('Blog post added successfully');
-          // Optionally, you can redirect the user to another page
-          this.$router.push('/blog');
+          this.$router.push('/blogs');
         }
       } catch (error) {
         console.error(error);
