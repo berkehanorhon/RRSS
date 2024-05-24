@@ -207,6 +207,22 @@ export default {
 
 .page-button {
   margin: 0 10px;
+  padding: 10px 20px;
+  background-color: #007bff;
+  color: #fff;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.page-button:hover {
+  background-color: #0056b3;
+}
+
+.page-button:disabled {
+  background-color: #ccc;
+  cursor: not-allowed;
 }
 
 .page-text {
