@@ -2,7 +2,9 @@
   <div class="container">
     <div v-if="blog" class="blog-post">
       <div class="blog-content">
-        <h1>{{ blog.postName }}</h1>
+        <h1>
+          <router-link :to="`/profile/${blog.userId}`">{{ blog.postName }}</router-link>
+        </h1>
         <div class="image-container">
           <img :src="blog.imagePath || defaultImage" alt="Blog Image" class="blog-image" />
         </div>
