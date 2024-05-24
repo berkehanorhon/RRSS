@@ -58,6 +58,9 @@ export default {
       this.popupMessage = 'Review submitted successfully!';
       this.popupSuccess = true;
       this.popupVisible = true;
+      setTimeout(() => {
+        location.reload();
+      }, 1000);
     })
     .catch(error => {
       if (error.response && error.response.status === 409) {
