@@ -144,7 +144,7 @@ public class AdminService {
     public void deleteReview(Long reviewId, Model model){
         Long userId = (Long) model.getAttribute("userId");
         Optional<Users> existingUser = userRepository.findById(userId);
-        if(existingUser.get().getIsAdmin()){
+        if(existingUser.get().getIsAdmin() || existingUser.get().getIsModerator()){
             Optional<Review> existingReview = reviewRepository.findById(reviewId);
             ratingRepository.deleteByUserIdAndProductId(existingReview.get().getUserId(), existingReview.get().getProductId());
             reviewRepository.deleteByReviewId(reviewId);
@@ -186,7 +186,7 @@ public class AdminService {
     public List<Review> getAllReviews(Model model){
         Long userId = (Long) model.getAttribute("userId");
         Optional<Users> existingUser = userRepository.findById(userId);
-        if(existingUser.get().getIsAdmin()){
+        if(existingUser.get().getIsAdmin() || existingUser.get().getIsModerator()){
             List<Review> allReviews = (List<Review>) reviewRepository.findAll();
             return allReviews;
         }
