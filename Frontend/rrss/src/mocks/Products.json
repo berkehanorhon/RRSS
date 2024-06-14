@@ -1,0 +1,29 @@
+[
+    {
+        "productId": 3,
+        "userId": 1,
+        "categoryId": 1,
+        "publishDate": "2024-05-20T09:33:12.101+00:00",
+        "title": "Test Prpduc5151t Titlev5",
+        "description": "Test Product Descriptionvsss6",
+        "imagePath": null
+    },
+    {
+        "productId": 2,
+        "userId": 1,
+        "categoryId": 1,
+        "publishDate": "2024-05-19T20:18:13.915+00:00",
+        "title": "Test Prpduct Titlev5",
+        "description": "Test Product Descriptionv6",
+        "imagePath": null
+    },
+    {
+        "productId": 1,
+        "userId": 1,
+        "categoryId": 1,
+        "publishDate": "2024-05-19T20:18:11.057+00:00",
+        "title": "Test Prpduct Titlev3",
+        "description": "Test Product Descriptionv6",
+        "imagePath": null
+    }
+]

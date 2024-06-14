@@ -1,0 +1,12 @@
+[
+    { "user_id": 1, "username": "user1", "isAdmin": false, "isMerchant": false, "isModerator": false },
+    { "user_id": 2, "username": "user2", "isAdmin": true, "isMerchant": false, "isModerator": false },
+    { "user_id": 3, "username": "user3", "isAdmin": false, "isMerchant": true, "isModerator": false },
+    { "user_id": 4, "username": "user4", "isAdmin": false, "isMerchant": false, "isModerator": true },
+    { "user_id": 5, "username": "user5", "isAdmin": true, "isMerchant": true, "isModerator": true },
+    { "user_id": 6, "username": "user6", "isAdmin": true, "isMerchant": false, "isModerator": true },
+    { "user_id": 7, "username": "user7", "isAdmin": false, "isMerchant": true, "isModerator": true },
+    { "user_id": 8, "username": "user8", "isAdmin": false, "isMerchant": false, "isModerator": false },
+    { "user_id": 9, "username": "user9", "isAdmin": true, "isMerchant": true, "isModerator": false },
+    { "user_id": 10, "username": "user10", "isAdmin": false, "isMerchant": false, "isModerator": true }
+]

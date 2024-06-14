@@ -1,0 +1,17 @@
+[
+      {
+        "couponId": "1",
+        "couponData": "50% off on all products",
+        "creationDate": "2024-05-23T08:00:00Z"
+      },
+      {
+        "couponId": "2",
+        "couponData": "Free shipping on orders over $50",
+        "creationDate": "2024-05-22T10:00:00Z"
+      },
+      {
+        "couponId": "3",
+        "couponData": "$10 off on your next purchase",
+        "creationDate": "2024-05-21T15:00:00Z"
+      }
+    ]
